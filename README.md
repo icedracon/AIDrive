@@ -7,16 +7,15 @@
 </p>
 
 <p align="center">
-  <b>One workspace. Every AI. Your context stays.</b><br>
-  Claude Code, Codex and OpenCode share files, decisions, handoffs and messages; Claude Code and Codex sessions are captured too. On your computer, under your rules.
+  <b>Switch assistants. Keep the project moving.</b><br>
+  A local shared workspace for Claude Code, Codex and OpenCode.<br>Versioned files. Decisions with sources. Handoffs that keep their context.
 </p>
 
 <p align="center">
   <img alt="Status: experimental preview" src="https://img.shields.io/badge/status-experimental%20preview-c9a227">
   <img alt="License: Apache-2.0 OR MIT" src="https://img.shields.io/badge/license-Apache--2.0%20OR%20MIT-2f6f4f">
+  <a href="https://github.com/icedracon/AIDrive/actions/workflows/ci.yml"><img alt="CI status" src="https://github.com/icedracon/AIDrive/actions/workflows/ci.yml/badge.svg"></a>
   <img alt="MCP over stdio" src="https://img.shields.io/badge/MCP-stdio-1f9e63">
-  <img alt="Rust 1.92+" src="https://img.shields.io/badge/rust-1.92%2B-b7410e">
-  <img alt="PostgreSQL 17, bundled" src="https://img.shields.io/badge/PostgreSQL-17%20bundled-336791">
 </p>
 
 <p align="center">
@@ -30,26 +29,45 @@
 </p>
 
 > [!WARNING]
-> **Experimental source preview.** AIDrive runs locally, stores text files only and is still being checked with pilot users. [ROADMAP.md](ROADMAP.md) records what is verified and what is not. Read [Limits](#limits) before you rely on it.
+> **Experimental source preview.** Pilot acceptance is still open. This source publication is not a verified pilot package. [ROADMAP.md](ROADMAP.md) records what is verified and what is not. Read [Limits](#limits) before you rely on it.
 
 <p align="center">
-  <img src="docs/media/workspace-console.webp" width="900" alt="The workspace console: pick an assistant (Claude Code, Codex or OpenCode), a project and an exact session; a glowing connector links the chosen assistant to its conversation">
+  <img src="docs/media/project-gallery.webp" width="100%" alt="AIDrive project gallery: distinct visual identities for synthetic projects in a dark local workspace">
 </p>
 
 ## Why AIDrive
 
 Using two or three AI coding assistants on one project means each session starts cold, decisions get lost between tools, and one assistant quietly overwrites another's work. AIDrive gives them one shared, governed project state.
 
-- **Shared files with versions.** Every write names the version it read. A write based on an old version is refused (HTTP 409), never silently merged over someone else's change.
-- **Decisions with evidence.** Knowledge and handoffs cite exact file versions or session moments. When the evidence changes, they are marked for re-checking instead of being trusted blindly.
-- **Continue from captured checkpoints.** Claude Code and Codex sessions in a bound folder are captured automatically (redacted on your machine first), so the next assistant can see where the last one stopped. Capture can lag or be refused (see [Limits](#limits)); check what was captured before relying on it.
-- **Assistants talk to each other.** Messages go to one exact chat of one assistant; replies come back to the chat that asked.
-- **You stay in charge.** Strict review or review by exception, and per-key roles (low, medium, grand) enforced in PostgreSQL row-level security. Only you issue keys.
-- **Local.** API, web app and a bundled PostgreSQL run on `127.0.0.1`. Nothing is hosted.
+| Keep work safe | Carry context forward | Stay in control |
+| :--- | :--- | :--- |
+| Every write names its source version. Stale writes are refused with HTTP 409. | Handoffs and decisions cite exact sources. Changed evidence is flagged for review. | Review proposals, assign per-key roles and inspect changes in one local workspace. |
+
+Claude Code and Codex can capture sessions in bound folders, with local redaction before storage. Messages address an **exact chat**, so choosing an assistant does not lose the project or session identity. Check [capture and delivery limits](#limits) before relying on either.
 
 ## Install
 
-The release is one folder (or zip) for Windows and Linux. It needs no internet, admin rights, Rust, Node.js, Docker, WSL or system PostgreSQL. Open a terminal in your project folder and run its installer:
+**Start from source for this preview.** No downloadable release has been published yet. You need Rust 1.92+ and Node.js for the web app; PostgreSQL 17 is bundled by the API build.
+
+```bash
+git clone https://github.com/icedracon/AIDrive.git
+cd AIDrive
+```
+
+```bash
+cargo install --locked --path apps/api          # aidrive-api, PostgreSQL 17 bundled inside
+cargo install --locked --path apps/mcp-server   # aidrive-mcp-server
+AIDRIVE_LOCAL_TRUST=1 aidrive-api --embedded-db # keep running
+```
+
+On PowerShell, first set `$env:AIDRIVE_LOCAL_TRUST="1"`, then run `aidrive-api --embedded-db`. Keep local trust on loopback.
+
+Then in each project folder: `aidrive-mcp-server connect --client claude` (or `codex`, `opencode`; add `--capture` to capture sessions) and `aidrive-mcp-server install-hooks` once. Web app: `cd apps/web`, `npm ci`, then `npm run dev`. Open **http://localhost:3000** and restart your assistant to load MCP configuration. Building the release folder: `bash scripts/package-release.sh`. Details in [docs/REFERENCE.md](docs/REFERENCE.md).
+
+<details>
+<summary><b>Packaged installer workflow — for a built release folder</b></summary>
+
+The packaging scripts produce one folder (or zip) for Windows and Linux; final clean-machine pilot acceptance remains open. It needs no internet, admin rights, Rust, Node.js, Docker, WSL or system PostgreSQL. Open a terminal in your project folder and run its installer:
 
 ```powershell
 C:\path\to\AIDrive\install.cmd        # Windows
@@ -61,8 +79,7 @@ sh /path/to/AIDrive/install.sh        # Linux
 
 It checks the archive against `SHA256SUMS`, installs `aidrive` and `aidrive-mcp-server`, starts AIDrive in the background (API, web app and PostgreSQL 17 on loopback), installs the session hooks for Claude Code and Codex, and connects Claude Code, Codex and OpenCode to a space named after the folder. Then open **http://localhost:7480**.
 
-<details>
-<summary><b>Commands after install</b></summary>
+**Commands after install**
 
 ```text
 aidrive up [--project DIR] [--capture|--no-capture] [--no-connect]   # safe to re-run
@@ -72,18 +89,7 @@ aidrive uninstall                                                       # stop, 
 ```
 
 Data lives in `%LOCALAPPDATA%\AIDrive` or `~/.local/share/AIDrive`. Updating: run the newer release's installer; data is kept and migrations run on start.
-</details>
 
-<details>
-<summary><b>From source (developers)</b></summary>
-
-```bash
-cargo install --locked --path apps/api          # aidrive-api, PostgreSQL 17 bundled inside
-cargo install --locked --path apps/mcp-server   # aidrive-mcp-server
-AIDRIVE_LOCAL_TRUST=1 aidrive-api --embedded-db # keep running
-```
-
-Then in each project folder: `aidrive-mcp-server connect --client claude` (or `codex`, `opencode`; add `--capture` to capture sessions) and `aidrive-mcp-server install-hooks` once. Web app: `cd apps/web && npm ci && npm run dev`. Building the release folder: `bash scripts/package-release.sh`. Details in [docs/REFERENCE.md](docs/REFERENCE.md).
 </details>
 
 ## Quick start
@@ -91,7 +97,7 @@ Then in each project folder: `aidrive-mcp-server connect --client claude` (or `c
 1. **Start a session** of Claude Code or Codex in the project folder. AIDrive puts a short project brief into it: project rules, approved decisions, what waits for you, where the last session stopped.
 2. **Work as usual.** The assistant reads and writes shared files with `read_file` and `update_file`, records decisions with `propose_memory` and hands work over with `record_handoff`.
 3. **Switch assistants.** The next one starts from the same brief and the handoff, and sees which decisions went stale since.
-4. **Review in the web app** at http://localhost:7480: the review inbox, the workspace console with each assistant's chats and transcripts, and the Map.
+4. **Review in the web app** (port 3000 from source, 7480 in a package): the review inbox, the workspace console with each assistant's chats and transcripts, and the Map.
 
 <details>
 <summary><b>MCP tools (selection)</b></summary>
@@ -112,31 +118,47 @@ The full list and their rules are in [docs/REFERENCE.md](docs/REFERENCE.md).
 
 ## What it looks like
 
-<table>
-  <tr>
-    <td width="50%" valign="top"><img src="docs/media/project-gallery.webp" alt="Choose a project by its visual identity and real workspace metadata."><br><sub>Choose a project by its visual identity and real workspace metadata.</sub></td>
-    <td width="50%" valign="top"><img src="docs/media/messages-thread.webp" alt="A stored assistant reply links back to its cited source."><br><sub>A stored assistant reply links back to its cited source.</sub></td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top"><img src="docs/media/handoff-review.webp" alt="Continue from a handoff with source evidence and explicit next steps."><br><sub>Continue from a handoff with source evidence and explicit next steps.</sub></td>
-    <td width="50%" valign="top"><img src="docs/media/review-inbox.webp" alt="Keep or undo a proposal accepted by exception."><br><sub>Keep or undo a proposal accepted by exception.</sub></td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top"><img src="docs/media/knowledge-map.webp" alt="Explore the links between files, decisions, handoffs and messages."><br><sub>Explore the links between files, decisions, handoffs and messages.</sub></td>
-    <td width="50%" valign="top"><img src="docs/media/brain-map.webp" alt="See each assistant and the items it touched in a 3D map."><br><sub>See each assistant and the items it touched in a 3D map.</sub></td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top"><img src="docs/media/session-search.webp" alt="Search captured conversation history in English and Armenian."><br><sub>Search captured conversation history in English and Armenian.</sub></td>
-  </tr>
-</table>
+**Choose the assistant, then the project and exact chat.**
 
-<sub>Screenshots use synthetic projects on a local test install.</sub>
+<p align="center">
+  <img src="docs/media/workspace-console.webp" width="100%" alt="Workspace console with assistant, project and exact-session selection">
+</p>
 
-A terminal walk-through of a decision going stale when another assistant changes its source:
+| Continue the work | Review the evidence |
+| :--- | :--- |
+| ![Handoff with source versions and next steps](docs/media/handoff-review.webp) | ![Review inbox with keep and undo actions](docs/media/review-inbox.webp) |
+
+<details>
+<summary><b>Explore messages, maps and captured-session search</b></summary>
+
+**Messages** — a stored reply with its cited source. This image does not prove an idle assistant was awakened.
+
+![Assistant message thread](docs/media/messages-thread.webp)
+
+**Knowledge map** — relationships between files, decisions and handoffs.
+
+![Knowledge relationships](docs/media/knowledge-map.webp)
+
+**3D map** — assistants and the items they touched.
+
+![Assistant activity in the 3D map](docs/media/brain-map.webp)
+
+**Session search** — captured conversation history in English and Armenian.
+
+![Captured-session search](docs/media/session-search.webp)
+
+</details>
+
+<sub>All screenshots use synthetic projects on a local test install.</sub>
+
+<details>
+<summary><b>Watch a decision become stale when its source changes</b></summary>
 
 ![A decision goes stale when Codex changes its source file](docs/demo/demo.gif)
 
-`bash scripts/demo.sh` replays it on a throwaway install.
+`bash scripts/demo.sh` replays the terminal demonstration on a throwaway install.
+
+</details>
 
 ## How it works
 
