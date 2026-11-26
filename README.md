@@ -29,7 +29,7 @@
 </p>
 
 > [!WARNING]
-> **Experimental source preview.** Pilot acceptance is still open. This source publication is not a verified pilot package. [ROADMAP.md](ROADMAP.md) records what is verified and what is not. Read [Limits](#limits) before you rely on it.
+> **Experimental source preview.** Initial pilot testing has been completed. Final clean-machine package acceptance remains open. [ROADMAP.md](ROADMAP.md) records what is verified and what is not. Read [Limits](#limits) before you rely on it.
 
 <p align="center">
   <img src="docs/media/project-gallery.webp" width="100%" alt="AIDrive project gallery: distinct visual identities for synthetic projects in a dark local workspace">
@@ -185,7 +185,8 @@ Architecture, database and threat model: [docs/ARCHITECTURE.md](docs/ARCHITECTUR
 - [x] Automatic capture of Claude Code and Codex sessions in bound folders (redacted locally)
 - [x] Messages to exact chats, assistant roles, file index with review dates
 - [x] One-folder install for Windows and Linux with bundled PostgreSQL
-- [ ] Pilot acceptance with real users
+- [x] Initial pilot testing completed
+- [ ] Final clean-machine package acceptance
 - [ ] Semantic search (measured, not enabled)
 - [ ] Waking an idle Codex thread (not supported by the current integration)
 - [ ] macOS release, hosted or multi-user deployment
