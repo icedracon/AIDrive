@@ -20,15 +20,7 @@ pub struct Embedded {
 }
 
 pub fn data_root() -> PathBuf {
-    if let Some(dir) = env::var_os("AIDRIVE_DATA_DIR") {
-        return PathBuf::from(dir);
-    }
-    let base = env::var_os("LOCALAPPDATA")
-        .map(PathBuf::from)
-        .or_else(|| env::var_os("XDG_DATA_HOME").map(PathBuf::from))
-        .or_else(|| env::var_os("HOME").map(|h| PathBuf::from(h).join(".local").join("share")))
-        .unwrap_or_else(|| PathBuf::from("."));
-    base.join("AIDrive")
+    crate::local::data_root()
 }
 
 fn secret() -> String {

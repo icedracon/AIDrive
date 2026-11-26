@@ -14,7 +14,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-pub const COMMANDS: &[&str] = &["up", "down", "status", "uninstall"];
+pub const COMMANDS: &[&str] = &["up", "down", "status", "open", "uninstall"];
 const DEFAULT_API_PORT: u16 = 7480;
 const DEFAULT_PG_PORT: u16 = 7481;
 const CLIENTS: &[&str] = &["claude", "codex", "opencode"];
@@ -27,6 +27,9 @@ const USAGE: &str = "usage:
       start AIDrive (database, API, web app) and connect Claude Code, Codex
       and OpenCode to a space for DIR (default: this folder) the first time
   aidrive status     show what runs where
+  aidrive open [--no-browser]
+                     open the web app signed in as you (a one-time link
+                     straight to your browser; --no-browser prints it)
   aidrive down       stop AIDrive (data is kept)
   aidrive uninstall  stop AIDrive and disconnect Claude Code, Codex and
                      OpenCode; the data folder and programs stay for you to delete";
@@ -182,6 +185,7 @@ pub fn run(command: &str, args: &[String]) -> Result<(), Box<dyn std::error::Err
     match command {
         "up" => up(args),
         "down" => down(),
+        "open" => open(args),
         "uninstall" => uninstall(),
         _ => status(),
     }
@@ -277,10 +281,29 @@ fn up(args: &[String]) -> Result<(), Box<dyn std::error::Error>> {
         connect(&mut config, &options)?;
     }
     println!(
-        "\nWeb app: {}  (opens signed in on this computer)",
+        "\nWeb app: {}  (sign in on this computer with: aidrive open)",
         web_url(&config)
     );
     println!("Stop: aidrive down    Status: aidrive status");
+    Ok(())
+}
+
+// The owner's way into the web app: aidrive-mcp-server mints a one-time
+// link with this computer's device key and hands it to the browser.
+fn open(args: &[String]) -> Result<(), Box<dyn std::error::Error>> {
+    let config = load().ok_or("AIDrive is not set up yet; run: aidrive up")?;
+    if !ours(config.api_port) {
+        return Err("AIDrive is not running; run: aidrive up".into());
+    }
+    let mcp =
+        mcp_server().ok_or("aidrive-mcp-server was not found next to this program or on PATH")?;
+    let api = format!("http://127.0.0.1:{}", config.api_port);
+    let mut forwarded = vec!["open".to_owned(), "--api".to_owned(), api];
+    forwarded.extend(args.iter().filter(|a| *a == "--no-browser").cloned());
+    let status = std::process::Command::new(mcp).args(&forwarded).status()?;
+    if !status.success() {
+        return Err("AIDrive could not open the web app; see the message above.".into());
+    }
     Ok(())
 }
 

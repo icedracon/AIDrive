@@ -324,6 +324,10 @@ async fn serve() -> Result<(), Box<dyn std::error::Error>> {
         env::var("AIDRIVE_WEB_ORIGIN").unwrap_or_else(|_| "http://localhost:3000".to_owned());
     let allow_signup = env::var("AIDRIVE_ALLOW_SIGNUP").is_ok_and(|v| v == "1");
     let listener = TcpListener::bind(address).await?;
+    if local::local_trust_enabled() {
+        let path = local::init_local_key()?;
+        tracing::info!(path = %path.display(), "local trust on; devices are claimed with this key");
+    }
     tracing::info!(%address, database = db.is_some(), %web_origin, allow_signup, "AIDrive API listening");
     let state = AppState {
         db,

@@ -86,3 +86,6 @@ try {
 & (Join-Path $bin 'aidrive.exe') up
 # throw, not exit: under `irm | iex` exit would close the person's window.
 if ($LASTEXITCODE -ne 0) { throw "aidrive up failed (exit $LASTEXITCODE); see the messages above." }
+# Signs you into the web app with a one-time link; nothing to do if it fails.
+& (Join-Path $bin 'aidrive.exe') open
+if ($LASTEXITCODE -ne 0) { Write-Host "Open the web app later with: aidrive open" }

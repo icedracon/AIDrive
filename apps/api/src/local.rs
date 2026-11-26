@@ -1,6 +1,12 @@
 // Local trust (migration 0014): on a single-person install bound to loopback,
 // the computer's account is the owner, so a local assistant connects itself.
 // Off unless AIDRIVE_LOCAL_TRUST=1; every route answers 404 otherwise.
+//
+// Headers cannot tell a browser from a local program (anything can send
+// Origin or Sec-Fetch-Site), so owner rights rest on secrets in the user's
+// AIDrive folders: claiming a device needs local.key, which only the API
+// writes, and the web app gets an owner session only through the one-time
+// link a device mints (`aidrive open`). Pilot review 2026-11.
 
 use crate::{
     AppState,
@@ -16,9 +22,70 @@ use axum::{
     routing::{get, post},
 };
 use serde::{Deserialize, Serialize};
-use std::net::SocketAddr;
+use std::{
+    fs, io,
+    net::SocketAddr,
+    path::{Path as FsPath, PathBuf},
+    sync::OnceLock,
+};
 
 pub const DEVICE_PREFIX: &str = "aidrive_device_";
+pub const LOCAL_KEY_HEADER: &str = "x-aidrive-local-key";
+static LOCAL_KEY_HASH: OnceLock<Vec<u8>> = OnceLock::new();
+
+pub fn data_root() -> PathBuf {
+    if let Some(dir) = std::env::var_os("AIDRIVE_DATA_DIR") {
+        return PathBuf::from(dir);
+    }
+    let base = std::env::var_os("LOCALAPPDATA")
+        .map(PathBuf::from)
+        .or_else(|| std::env::var_os("XDG_DATA_HOME").map(PathBuf::from))
+        .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".local").join("share")))
+        .unwrap_or_else(|| PathBuf::from("."));
+    base.join("AIDrive")
+}
+
+// A fresh key on every start, readable by this user only; a program that
+// wants to claim an owner device must read it from disk.
+pub fn init_local_key() -> io::Result<PathBuf> {
+    let dir = data_root();
+    fs::create_dir_all(&dir)?;
+    let path = dir.join("local.key");
+    let (key, hash) = new_token();
+    write_private(&path, &key)?;
+    let _ = LOCAL_KEY_HASH.set(hash);
+    Ok(path)
+}
+
+#[cfg(test)]
+pub fn set_local_key_for_tests(key: &str) {
+    let _ = LOCAL_KEY_HASH.set(token_hash(key));
+}
+
+fn write_private(path: &FsPath, value: &str) -> io::Result<()> {
+    let tmp = path.with_extension("key.tmp");
+    let _ = fs::remove_file(&tmp);
+    let mut options = fs::OpenOptions::new();
+    options.write(true).create_new(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        options.mode(0o600);
+    }
+    io::Write::write_all(&mut options.open(&tmp)?, value.as_bytes())?;
+    fs::rename(&tmp, path)
+}
+
+fn require_local_key(headers: &HeaderMap) -> Result<(), ApiError> {
+    let presented = headers
+        .get(LOCAL_KEY_HEADER)
+        .and_then(|v| v.to_str().ok())
+        .map(token_hash);
+    match (LOCAL_KEY_HASH.get(), presented) {
+        (Some(expected), Some(presented)) if *expected == presented => Ok(()),
+        _ => Err(ApiError(StatusCode::FORBIDDEN, "local_key_required")),
+    }
+}
 
 #[cfg(test)]
 pub static FORCE_LOCAL_TRUST: std::sync::atomic::AtomicBool =
@@ -145,6 +212,7 @@ async fn claim(
     Json(body): Json<Claim>,
 ) -> Result<(StatusCode, Json<Claimed>), ApiError> {
     require_local_caller(&headers)?;
+    require_local_key(&headers)?;
     let label = body.label.trim();
     let hash = hex32(&body.token_sha256).ok_or_else(invalid)?;
     if label.is_empty() || label.chars().count() > 80 || label.chars().any(char::is_control) {
@@ -317,50 +385,6 @@ async fn redeem(State(state): State<AppState>, Path(code): Path<String>) -> Resp
     }
 }
 
-// The browser-facing host: the web app's proxy passes the browser's Host as
-// X-Forwarded-Host. Every host the request names must be loopback, so a
-// DNS-rebound page (Host: evil.test) cannot open the owner's session.
-fn browser_hosts_are_loopback(headers: &HeaderMap) -> bool {
-    let hosts: Vec<&str> = headers
-        .get_all(header::HOST)
-        .iter()
-        .chain(headers.get_all("x-forwarded-host").iter())
-        .filter_map(|v| v.to_str().ok())
-        .flat_map(|v| v.split(','))
-        .map(str::trim)
-        .collect();
-    !hosts.is_empty() && hosts.iter().all(|h| loopback_host(h))
-}
-
-fn loopback_origin(origin: &str) -> bool {
-    origin
-        .strip_prefix("http://")
-        .or_else(|| origin.strip_prefix("https://"))
-        .is_some_and(|rest| !rest.contains('/') && loopback_host(rest))
-}
-
-// Only the web app's own page on this computer: loopback hosts, and a
-// same-origin browser request (Fetch Metadata), or at least a loopback Origin.
-fn require_local_browser(headers: &HeaderMap) -> Result<(), ApiError> {
-    if !local_trust_enabled() {
-        return Err(not_found());
-    }
-    let refused = || ApiError(StatusCode::FORBIDDEN, "not_local_browser");
-    if !browser_hosts_are_loopback(headers) {
-        return Err(refused());
-    }
-    let site = headers.get("sec-fetch-site").and_then(|v| v.to_str().ok());
-    let origin = headers.get(header::ORIGIN).and_then(|v| v.to_str().ok());
-    let same_site = match site {
-        Some(site) => site == "same-origin",
-        None => origin.is_some_and(loopback_origin),
-    };
-    if !same_site || origin.is_some_and(|o| !loopback_origin(o)) {
-        return Err(refused());
-    }
-    Ok(())
-}
-
 #[derive(Serialize)]
 struct Mode {
     local: bool,
@@ -373,46 +397,9 @@ async fn mode() -> Json<Mode> {
     })
 }
 
-#[derive(Serialize)]
-struct LocalUser {
-    id: String,
-    email: String,
-}
-
-#[derive(Serialize)]
-struct LocalSession {
-    user: LocalUser,
-    local: bool,
-}
-
-// Local install: opening the web app signs the owner in, with no form.
-async fn open_session(
-    State(state): State<AppState>,
-    headers: HeaderMap,
-) -> Result<Response, ApiError> {
-    require_local_browser(&headers)?;
-    let (session, session_hash) = new_token();
-    let (id, email): (String, String) =
-        sqlx::query_as("SELECT user_id::text, email FROM app.open_local_session($1)")
-            .bind(session_hash)
-            .fetch_one(pool(&state)?)
-            .await
-            .map_err(map_error)?;
-    let mut response = Json(LocalSession {
-        user: LocalUser { id, email },
-        local: true,
-    })
-    .into_response();
-    response
-        .headers_mut()
-        .insert(header::SET_COOKIE, session_cookie(&session));
-    Ok(response)
-}
-
 pub fn routes() -> Router<AppState> {
     Router::new()
         .route("/local/mode", get(mode))
-        .route("/local/session", post(open_session))
         .route("/agent/local/claim", post(claim))
         .route("/agent/local/connect", post(connect))
         .route("/agent/local/login", post(login_link))
@@ -483,58 +470,14 @@ mod tests {
     }
 
     #[test]
-    fn browser_session_needs_loopback_hosts_and_a_same_origin_request() {
-        FORCE_LOCAL_TRUST.store(true, std::sync::atomic::Ordering::SeqCst);
-        let request = |pairs: &[(&'static str, &'static str)]| {
-            let mut h = HeaderMap::new();
-            for (k, v) in pairs {
-                h.append(*k, HeaderValue::from_static(v));
-            }
-            require_local_browser(&h).map_err(|e| e.1)
-        };
-        let proxied = [
-            ("host", "127.0.0.1:8080"),
-            ("x-forwarded-host", "localhost:3000"),
-            ("sec-fetch-site", "same-origin"),
-        ];
-        assert_eq!(request(&proxied), Ok(()));
-        assert_eq!(
-            request(&[
-                ("host", "localhost:3000"),
-                ("origin", "http://localhost:3000")
-            ]),
-            Ok(())
-        );
-        assert_eq!(
-            request(&[
-                ("host", "127.0.0.1:8080"),
-                ("x-forwarded-host", "evil.test:3000"),
-                ("sec-fetch-site", "same-origin")
-            ]),
-            Err("not_local_browser"),
-            "DNS rebinding: the page's own host is not loopback"
-        );
-        assert_eq!(
-            request(&[("host", "localhost:3000"), ("sec-fetch-site", "cross-site")]),
-            Err("not_local_browser")
-        );
-        assert_eq!(
-            request(&[
-                ("host", "localhost:3000"),
-                ("sec-fetch-site", "same-origin"),
-                ("origin", "https://evil.test")
-            ]),
-            Err("not_local_browser")
-        );
-        assert_eq!(
-            request(&[("host", "localhost:3000")]),
-            Err("not_local_browser"),
-            "a plain request is not the web page"
-        );
-        assert!(
-            loopback_origin("http://[::1]:3000")
-                && !loopback_origin("http://localhost:3000.evil.test")
-        );
+    fn claiming_needs_the_local_key() {
+        set_local_key_for_tests("test-local-key");
+        let mut headers = HeaderMap::new();
+        assert!(require_local_key(&headers).is_err());
+        headers.insert(LOCAL_KEY_HEADER, HeaderValue::from_static("guess"));
+        assert!(require_local_key(&headers).is_err());
+        headers.insert(LOCAL_KEY_HEADER, HeaderValue::from_static("test-local-key"));
+        assert!(require_local_key(&headers).is_ok());
     }
 
     #[test]

@@ -20,9 +20,26 @@ Every finding below was reproduced before it was fixed, and each fix has a test 
 | L1 | Low | First-party actions pinned by tag, not commit SHA; PostgreSQL binaries fetched at build time | Open |
 | L2 | Low | Local trust trusts every OS account on the computer | Accepted (single-person install) |
 | L3 | Low | Windows: embedded PostgreSQL secrets rely on inherited folder ACLs | Open |
-| L4 | Low | `/local/session` accepts any loopback Origin when Sec-Fetch-Site is absent | Open |
+| L4 | **High** (raised by pilot review) | Any local program becomes the owner: `/local/session` trusts forgeable headers and `/agent/local/claim` needs no secret | Fixed (P1) |
 | L5 | Low | Inbox hooks also run in folders with no binding, using the client's default profile | Open |
 | L6 | Info | Codex call notes are keyed by tool and arguments | Open (informational) |
+| P2 | Medium | An assistant's `constraint` is auto-accepted and shown to every assistant under "Rules (must follow)" | Fixed |
+| P3 | Medium | `bind_folder` consent is a field the assistant fills in itself | Open |
+
+### P1 / L4 (High): any local program becomes the owner
+
+Found by the second pilot review (2026-11), which raised L4.
+
+- **Repro.** With the packaged install (`AIDRIVE_LOCAL_TRUST=1`), `curl -X POST http://127.0.0.1:7480/local/session -H "Origin: http://localhost:7480"` returned an owner session cookie: without `Sec-Fetch-Site` a loopback `Origin` was enough. A request to `/agent/local/claim` with no `Origin` registered an owner device key with no secret at all. An assistant that runs shell commands could make itself owner and so defeat the roles and the rule that no one approves their own work.
+- **Fix.** Headers cannot tell a browser from a local program, so owner rights now rest on secrets in the user's AIDrive folders. The API writes a fresh `local.key` (this user only) on every start, and `/agent/local/claim` requires it in `X-AIDrive-Local-Key`. `/local/session` is removed: the web app gets an owner session only through the one-time link a device key mints (`aidrive open`), which goes straight to the browser and is printed only with `--no-browser`.
+- **Residual.** A program running as the same OS user that deliberately reads `local.key` or `device.json`, or runs `aidrive open --no-browser`, can still act as the owner; an assistant with unrestricted shell access as you can do what you can. Keep each assistant's sandbox or approval prompts on. This narrows L2 but does not remove it.
+- **Test.** `local_trust_flow_against_live_database` (claim without the key is refused; forged web-page headers get no session), `claiming_needs_the_local_key`.
+
+### P2 (Medium): assistant rules skip review
+
+- **Repro.** In a space that reviews by exception, `propose_item(kind => 'constraint')` with current evidence was auto-accepted and appeared in every brief under "Rules (must follow)".
+- **Fix.** Migration 0030: `auto_accept_item` treats `constraint` like `keystone`; it waits for the owner. Constraints accepted before 0030 stay; the owner can undo them under Review.
+- **Test.** `db/tests/knowledge_review.sql` E07.
 
 ### F1 (High): a LAN client gets the owner's session through the web proxy
 

@@ -18,6 +18,9 @@ async fn local_request(
     if let Some(origin) = origin {
         builder = builder.header("origin", origin);
     }
+    if uri == "/agent/local/claim" {
+        builder = builder.header(crate::local::LOCAL_KEY_HEADER, "live-test-local-key");
+    }
     let response = app(state.clone())
         .oneshot(builder.body(body.map(Body::from).unwrap_or_else(Body::empty)).unwrap())
         .await
@@ -50,6 +53,7 @@ async fn local_trust_flow_against_live_database() {
         allow_signup: true,
     };
     let local = "127.0.0.1:8080";
+    crate::local::set_local_key_for_tests("live-test-local-key");
     let (device, device_hash) = secret(crate::local::DEVICE_PREFIX);
     let claim = |hash: &str| format!(r#"{{"token_sha256":"{hash}","label":"Test computer"}}"#);
 
@@ -63,6 +67,10 @@ async fn local_trust_flow_against_live_database() {
     let (status, _, _) = local_request(&state, "POST", "/agent/local/claim", Some(claim(&device_hash)), None, "rebound.evil.test:8080", None).await;
     assert_eq!(status, StatusCode::FORBIDDEN, "DNS rebinding is refused");
 
+    let no_key = Request::builder().method("POST").uri("/agent/local/claim").header("host", local)
+        .header("content-type", "application/json").body(Body::from(claim(&device_hash))).unwrap();
+    let response = app(state.clone()).oneshot(no_key).await.unwrap();
+    assert_eq!(response.status(), StatusCode::FORBIDDEN, "a local program without local.key cannot claim the owner");
     let (status, body, _) = local_request(&state, "POST", "/agent/local/claim", Some(claim(&device_hash)), None, local, None).await;
     assert_eq!(status, StatusCode::CREATED, "{body}");
     assert_eq!((body["owner_email"].as_str(), body["created_owner"].as_bool()), (Some("owner@local.invalid"), Some(true)));
@@ -106,34 +114,16 @@ async fn local_trust_flow_against_live_database() {
     assert_eq!((status, headers["location"].to_str().unwrap()), (StatusCode::SEE_OTHER, "http://localhost:3000/?signin=expired"), "single use");
     assert!(!headers.contains_key("set-cookie"));
 
-    // A5: opening the web app on this computer signs the owner in, no form.
-    let browser = |headers: &'static [(&'static str, &'static str)]| {
-        let state = state.clone();
-        async move {
-            let mut builder = Request::builder().method("POST").uri("/local/session");
-            for (k, v) in headers {
-                builder = builder.header(*k, *v);
-            }
-            let response = app(state).oneshot(builder.body(Body::empty()).unwrap()).await.unwrap();
-            let status = response.status();
-            let cookie = response.headers().get("set-cookie").and_then(|v| v.to_str().ok()).map(|v| v.split(';').next().unwrap().to_owned());
-            let bytes = axum::body::to_bytes(response.into_body(), 1 << 20).await.unwrap();
-            (status, serde_json::from_slice::<serde_json::Value>(&bytes).unwrap_or_default(), cookie)
-        }
-    };
-    let page: &'static [(&'static str, &'static str)] = &[("host", "127.0.0.1:8080"), ("x-forwarded-host", "localhost:3000"), ("sec-fetch-site", "same-origin")];
-    let (status, body, cookie) = browser(page).await;
-    assert_eq!((status, body["local"].as_bool()), (StatusCode::OK, Some(true)), "{body}");
-    let cookie = cookie.expect("session cookie");
-    let (status, body, _) = call(&state, "GET", "/auth/session", Some(&cookie), None).await;
-    assert!(status == StatusCode::OK && body.contains("owner@local.invalid"), "the owner is signed in: {body}");
-    let (status, body, _) = browser(&[("host", "127.0.0.1:8080"), ("x-forwarded-host", "evil.test:3000"), ("sec-fetch-site", "same-origin")]).await;
-    assert_eq!((status, body["error"].as_str()), (StatusCode::FORBIDDEN, Some("not_local_browser")), "DNS-rebound page");
-    let (status, _, cookie) = browser(&[("host", "localhost:3000"), ("sec-fetch-site", "cross-site"), ("origin", "https://evil.test")]).await;
-    assert!(status == StatusCode::FORBIDDEN && cookie.is_none(), "cross-site request");
+    // Pilot review 2026-11: no owner session for a request that only looks
+    // like the web page; the one-time link above is the way in.
+    let forged = Request::builder().method("POST").uri("/local/session")
+        .header("host", "localhost:7480").header("origin", "http://localhost:7480").header("sec-fetch-site", "same-origin")
+        .body(Body::empty()).unwrap();
+    let response = app(state.clone()).oneshot(forged).await.unwrap();
+    assert!(response.status() == StatusCode::NOT_FOUND && !response.headers().contains_key("set-cookie"), "no automatic owner session");
     let (status, body, _) = call(&state, "GET", "/local/mode", None, None).await;
     assert_eq!((status, body.as_str()), (StatusCode::OK, r#"{"local":true}"#));
-    println!("PASS local session: the web app on this computer opens signed in as the owner; DNS-rebound and cross-site requests refused");
+    println!("PASS local session: forged web-page headers get no owner session; claiming needs local.key");
 
     let creds = r#"{"email":"second@live.test","password":"correct horse battery staple"}"#;
     let (status, _, _) = call(&state, "POST", "/auth/register", None, Some(creds)).await;
@@ -141,14 +131,10 @@ async fn local_trust_flow_against_live_database() {
     let (_, third_hash) = secret(crate::local::DEVICE_PREFIX);
     let (status, body, _) = local_request(&state, "POST", "/agent/local/claim", Some(claim(&third_hash)), None, local, None).await;
     assert_eq!((status, body["error"].as_str()), (StatusCode::CONFLICT, Some("not_single_person_install")), "{body}");
-    let (status, body, _) = browser(page).await;
-    assert_eq!((status, body["error"].as_str()), (StatusCode::CONFLICT, Some("not_single_person_install")), "two accounts: no automatic sign-in");
 
     crate::local::FORCE_LOCAL_TRUST.store(false, std::sync::atomic::Ordering::SeqCst);
     let (status, _, _) = local_request(&state, "POST", "/agent/local/connect", Some(connect(&agent_hash)), Some(&device), local, None).await;
     assert_eq!(status, StatusCode::NOT_FOUND);
-    let (status, _, _) = browser(page).await;
-    assert_eq!(status, StatusCode::NOT_FOUND, "hosted or non-loopback install: no automatic sign-in");
     let (_, body, _) = call(&state, "GET", "/local/mode", None, None).await;
     assert_eq!(body, r#"{"local":false}"#, "the web app keeps the password form");
     println!("PASS local trust: claim, connect, reuse, sign-in link, refusals");

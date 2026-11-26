@@ -85,3 +85,5 @@ if [ -t 1 ] && { : </dev/tty; } 2>/dev/null; then
 else
     "$bin/aidrive" up
 fi
+# Signs you into the web app with a one-time link; headless computers skip it.
+"$bin/aidrive" open 2>/dev/null || echo "Open the web app later with: aidrive open (or aidrive open --no-browser)"

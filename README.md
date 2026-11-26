@@ -49,7 +49,7 @@ Claude Code and Codex can capture sessions in bound folders, with local redactio
 
 **Experimental packages:** [Windows x64 ZIP](https://github.com/icedracon/AIDrive/releases/download/v0.0.1-alpha.2/AIDrive-setup-windows-x86_64.zip) · [Linux x64 tar.gz](https://github.com/icedracon/AIDrive/releases/download/v0.0.1-alpha.2/AIDrive-setup-linux-x86_64.tar.gz) · [release notes and checksums](https://github.com/icedracon/AIDrive/releases/tag/v0.0.1-alpha.2).
 
-Extract the setup archive, open a terminal in **your project folder**, then run `C:\path\to\AIDrive\install.cmd` on Windows or `sh /path/to/AIDrive/install.sh` on Linux. The setup contains the programs, web UI, PostgreSQL and local installers. The packaged web app opens at **http://localhost:7480**. Clean-machine pilot acceptance remains open; review [Limits](#limits) before use.
+Extract the setup archive, open a terminal in **your project folder**, then run `C:\path\to\AIDrive\install.cmd` on Windows or `sh /path/to/AIDrive/install.sh` on Linux. The setup contains the programs, web UI, PostgreSQL and local installers. The installer opens the web app at **http://localhost:7480**, signed in; later, run `aidrive open`. Clean-machine pilot acceptance remains open; review [Limits](#limits) before use.
 
 **Build from source:** you need Rust 1.92+ and Node.js for the web app; PostgreSQL 17 is bundled by the API build.
 
@@ -81,12 +81,13 @@ C:\path\to\AIDrive\install.cmd        # Windows
 sh /path/to/AIDrive/install.sh        # Linux
 ```
 
-It checks the archive against `SHA256SUMS`, installs `aidrive` and `aidrive-mcp-server`, starts AIDrive in the background (API, web app and PostgreSQL 17 on loopback), installs the session hooks for Claude Code and Codex, and connects Claude Code, Codex and OpenCode to a space named after the folder. Then open **http://localhost:7480**.
+It checks the archive against `SHA256SUMS`, installs `aidrive` and `aidrive-mcp-server`, starts AIDrive in the background (API, web app and PostgreSQL 17 on loopback), installs the session hooks for Claude Code and Codex, connects Claude Code, Codex and OpenCode to a space named after the folder, and opens the web app signed in. Later, `aidrive open` signs you in again with a one-time link (the web app never signs anyone in from a page request alone).
 
 **Commands after install**
 
 ```text
 aidrive up [--project DIR] [--capture|--no-capture] [--no-connect]   # safe to re-run
+aidrive open                                                            # web app, signed in (one-time link)
 aidrive status                                                          # what runs where
 aidrive down                                                            # stop; data stays
 aidrive uninstall                                                       # stop, remove hooks and MCP entries
@@ -214,7 +215,7 @@ Find AIDrive in the [Glama MCP directory](https://glama.ai/mcp/servers/icedracon
 
 - MCP Registry name: `mcp-name: io.github.icedracon/aidrive`
 - Published: [Official MCP Registry, version 0.0.1](https://registry.modelcontextprotocol.io/v0/servers/io.github.icedracon%2Faidrive/versions/0.0.1) and [aidrive-mcp-server on crates.io](https://crates.io/crates/aidrive-mcp-server/0.0.1). [server.json](server.json) records the package and stdio launch command.
-- Install the MCP client with `cargo install --locked aidrive-mcp-server --version 0.0.1` (requires Rust 1.92+). The Windows/Linux setup archives above provide the full application without a Rust toolchain.
+- Install the MCP client with `cargo install --locked aidrive-mcp-server --version 0.0.2` (requires Rust 1.92+). The Windows/Linux setup archives above provide the full application without a Rust toolchain.
 - Registry installation supplies the MCP client only. Start the local API separately and provide its URL, workspace ID and a scoped agent key. The regular `connect` workflow above manages profiles for supported assistants.
 
 ## License

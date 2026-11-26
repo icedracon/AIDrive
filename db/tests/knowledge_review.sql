@@ -82,6 +82,8 @@ SELECT app.propose_item(:'ws', gen_random_uuid(), 'decision', 'pricing', 'Per-se
     jsonb_build_array(jsonb_build_object('file_id', :'file_id', 'version_id', :'v1'))) AS conflicting \gset
 SELECT app.propose_item(:'ws', gen_random_uuid(), 'keystone', NULL, 'Never push without asking', NULL, NULL,
     jsonb_build_array(jsonb_build_object('file_id', :'file_id', 'version_id', :'v1'))) AS keystone \gset
+SELECT app.propose_item(:'ws', gen_random_uuid(), 'constraint', NULL, 'Always deploy on Fridays', NULL, NULL,
+    jsonb_build_array(jsonb_build_object('file_id', :'file_id', 'version_id', :'v1'))) AS constraint_item \gset
 SELECT app.propose_item(:'ws', gen_random_uuid(), 'decision', 'pricing', 'Flat price, billed yearly', NULL, :'owner_item',
     jsonb_build_array(jsonb_build_object('file_id', :'file_id', 'version_id', :'v1'))) AS correction \gset
 SELECT app.propose_item(:'ws', gen_random_uuid(), 'gotcha', NULL, 'The build needs WSL', NULL, NULL, '[]') AS bare \gset
@@ -90,7 +92,8 @@ SELECT app.propose_item(:'ws', gen_random_uuid(), 'fact', 'tooling', 'We use Pos
 COMMIT;
 SELECT set_config('test.clean', :'clean', false), set_config('test.conflicting', :'conflicting', false),
        set_config('test.keystone', :'keystone', false), set_config('test.correction', :'correction', false),
-       set_config('test.bare', :'bare', false), set_config('test.private', :'private_item', false) \gset
+       set_config('test.bare', :'bare', false), set_config('test.private', :'private_item', false),
+       set_config('test.constraint', :'constraint_item', false) \gset
 
 BEGIN; SELECT set_config('app.user_id', :'owner_id', true), set_config('app.workspace_id', :'ws', true) \gset
 DO $$
@@ -109,13 +112,14 @@ END $$;
 DO $$ BEGIN
     IF (SELECT status FROM knowledge_items WHERE id = current_setting('test.conflicting')::uuid) <> 'proposed'
        OR (SELECT status FROM knowledge_items WHERE id = current_setting('test.keystone')::uuid) <> 'proposed'
+       OR (SELECT status FROM knowledge_items WHERE id = current_setting('test.constraint')::uuid) <> 'proposed'
        OR (SELECT status FROM knowledge_items WHERE id = current_setting('test.correction')::uuid) <> 'proposed'
        OR (SELECT status FROM knowledge_items WHERE id = current_setting('test.bare')::uuid) <> 'proposed'
-       OR EXISTS (SELECT 1 FROM knowledge_items WHERE id IN (current_setting('test.conflicting')::uuid, current_setting('test.keystone')::uuid,
+       OR EXISTS (SELECT 1 FROM knowledge_items WHERE id IN (current_setting('test.conflicting')::uuid, current_setting('test.keystone')::uuid, current_setting('test.constraint')::uuid,
                   current_setting('test.correction')::uuid, current_setting('test.bare')::uuid) AND auto_accepted) THEN
         RAISE EXCEPTION 'FAIL E07: an exception was accepted';
     END IF;
-    RAISE NOTICE 'PASS E07 conflicts, keystones, corrections and unevidenced claims wait for the owner';
+    RAISE NOTICE 'PASS E07 conflicts, keystones, constraints, corrections and unevidenced claims wait for the owner';
 END $$;
 COMMIT;
 

@@ -526,7 +526,7 @@ fn now() -> u64 {
         .unwrap_or(0)
 }
 
-fn open_browser(url: &str) {
+fn open_browser(url: &str) -> bool {
     let status = if cfg!(windows) {
         Command::new("cmd").args(["/C", "start", "", url]).status()
     } else if cfg!(target_os = "macos") {
@@ -534,9 +534,7 @@ fn open_browser(url: &str) {
     } else {
         Command::new("xdg-open").arg(url).status()
     };
-    if status.is_err() {
-        println!("Could not open a browser automatically.");
-    }
+    status.is_ok_and(|s| s.success())
 }
 
 // npm installs `claude`/`codex` as .cmd shims on Windows, which only cmd runs.
@@ -703,6 +701,32 @@ pub fn parse(args: &[String]) -> Result<Options, String> {
     })
 }
 
+// Written by the API on every start (same folder rules as its data); a
+// device can only be claimed by a program that can read it.
+fn local_key() -> Option<String> {
+    let root = std::env::var_os("AIDRIVE_DATA_DIR")
+        .map(PathBuf::from)
+        .or_else(|| {
+            std::env::var_os("LOCALAPPDATA")
+                .map(|d| PathBuf::from(d).join("AIDrive"))
+                .or_else(|| {
+                    std::env::var_os("XDG_DATA_HOME").map(|d| PathBuf::from(d).join("AIDrive"))
+                })
+                .or_else(|| {
+                    std::env::var_os("HOME").map(|h| {
+                        PathBuf::from(h)
+                            .join(".local")
+                            .join("share")
+                            .join("AIDrive")
+                    })
+                })
+        })?;
+    fs::read_to_string(root.join("local.key"))
+        .ok()
+        .map(|k| k.trim().to_owned())
+        .filter(|k| !k.is_empty())
+}
+
 fn load_device(api_url: &str) -> Option<Device> {
     fs::read_to_string(device_path())
         .ok()
@@ -714,8 +738,12 @@ fn load_device(api_url: &str) -> Option<Device> {
 // means "ask the owner in the browser instead".
 async fn claim_device(http: &reqwest::Client, api_url: &str) -> Result<Option<Device>, String> {
     let token = format!("aidrive_device_{}", random_hex(32)?);
+    let Some(key) = local_key() else {
+        return Ok(None);
+    };
     let Ok(response) = http
         .post(format!("{api_url}/agent/local/claim"))
+        .header("x-aidrive-local-key", key)
         .json(&serde_json::json!({
             "token_sha256": sha256_hex(&token),
             "label": computer_name(),
@@ -913,10 +941,17 @@ pub async fn open(args: &[String]) -> Result<(), String> {
     let url = body["url"]
         .as_str()
         .ok_or("Unexpected response from AIDrive")?;
-    println!("Open AIDrive (one-time link, 2 minutes):\n\n    {url}\n");
+    // The link is an owner sign-in: it goes straight to the browser and is
+    // printed only on request (--no-browser), so it does not land in an
+    // assistant's output or a captured transcript by accident.
     if browser {
-        open_browser(url);
+        if open_browser(url) {
+            println!("AIDrive opened in your browser, signed in.");
+            return Ok(());
+        }
+        return Err("Could not open a browser. On a computer without one, run: aidrive-mcp-server open --no-browser".into());
     }
+    println!("Open AIDrive (one-time owner sign-in link, 2 minutes, do not share):\n\n    {url}\n");
     Ok(())
 }
 
@@ -979,8 +1014,8 @@ pub async fn run(options: Options) -> Result<(), String> {
     println!(
         "Waiting for approval (up to 10 minutes). If this stops early, run the same command again to resume."
     );
-    if options.browser {
-        open_browser(url);
+    if options.browser && !open_browser(url) {
+        println!("Could not open a browser automatically.");
     }
 
     let deadline = Instant::now() + Duration::from_secs(600);

@@ -100,20 +100,11 @@ function AuthPanel({ auth, onChange }: { auth: AuthState; onChange: (next: AuthS
   if (auth.phase === "loading") return <section className="auth-card" aria-busy="true"><p>Checking your session…</p></section>;
   if (auth.phase === "unavailable") return <section className="auth-card"><p role="alert">{auth.reason ?? "Sign-in is unavailable: the API or database is not ready."}</p></section>;
   if (auth.phase === "signed-in" && auth.local) {
-    // Local install: this computer's account is the owner; nothing to sign in or out of.
+    // Local install: this computer's account is the owner, signed in through `aidrive open`.
     return (
       <section className="auth-card signed-in" aria-label="Account">
         <p>On this computer as <strong>{auth.user.email}</strong></p>
-        <button type="button" className="secondary-button" disabled={busy} onClick={async () => {
-          setBusy(true); setError(null);
-          try {
-            const response = await fetch("/api/local/session", { method: "POST" });
-            const body = await response.json().catch(() => null);
-            if (response.ok && body?.user?.id === auth.user.id) onChange({ phase: "signed-in", user: body.user, local: true });
-            else setError("The local session could not be renewed. Your open drafts remain on this page.");
-          } catch { setError("The local session could not be renewed. Try again."); }
-          finally { setBusy(false); }
-        }}>Renew local session</button>
+        <p className="auth-hint">To sign in again later, run <code>aidrive open</code> in a terminal.</p>
         {error && <p className="auth-error" role="alert">{error}</p>}
       </section>
     );
@@ -332,15 +323,13 @@ export default function Home() {
       if (response.ok && body?.user) return setAuth({ phase: "signed-in", user: body.user, local });
       if (response.status !== 401) return setAuth({ phase: "unavailable" });
       if (!local) return setAuth({ phase: "signed-out" });
-      // Local install: opening the page is the sign-in.
-      const opened = await fetch("/api/local/session", { ...options, method: "POST" });
-      const session = await opened.json().catch(() => null);
-      if (opened.ok && session?.user) return setAuth({ phase: "signed-in", user: session.user, local: true });
+      // Local install: the owner signs in with a one-time link from `aidrive open`;
+      // a page request alone cannot prove it comes from you rather than another program.
       setAuth({
         phase: "unavailable",
-        reason: session?.error === "not_single_person_install"
-          ? "This install has more than one account, so it does not sign anyone in automatically."
-          : "This computer could not open your space. Open it as http://localhost:3000 and reload.",
+        reason: new URLSearchParams(window.location.search).get("signin") === "expired"
+          ? "That sign-in link was already used or has expired. Run `aidrive open` in a terminal for a new one."
+          : "To open your workspace, run `aidrive open` in a terminal on this computer.",
       });
     })().catch((error) => {
       if (error?.name !== "AbortError") setAuth({ phase: "unavailable" });
