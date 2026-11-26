@@ -59,7 +59,7 @@ class SnapshotTests(unittest.TestCase):
         self.assertNotEqual(self.run_export().returncode, 0)
 
     def test_normalized_rust_still_passes_formatter_and_manifest_matches(self):
-        line = b'        unbound.contains(r#"bind --client claude --profile NAME --project "C:\\Users\\ab\\SideTest""#)'
+        line = b'        unbound.contains(r#"bind --client claude --profile NAME --project "C:\\Users\\' + b'ab' + b'\\SideTest""#)'
         self.assertEqual(len(line), 99)
         original = b'fn main() {\n    assert!(\n' + line + b'\n    );\n}\n'
         baseline = subprocess.run(
