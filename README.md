@@ -47,7 +47,11 @@ Claude Code and Codex can capture sessions in bound folders, with local redactio
 
 ## Install
 
-**Start from source for this preview.** No downloadable release has been published yet. You need Rust 1.92+ and Node.js for the web app; PostgreSQL 17 is bundled by the API build.
+**Experimental packages:** [Windows x64 ZIP](https://github.com/icedracon/AIDrive/releases/download/v0.0.1-alpha.2/AIDrive-setup-windows-x86_64.zip) · [Linux x64 tar.gz](https://github.com/icedracon/AIDrive/releases/download/v0.0.1-alpha.2/AIDrive-setup-linux-x86_64.tar.gz) · [release notes and checksums](https://github.com/icedracon/AIDrive/releases/tag/v0.0.1-alpha.2).
+
+Extract the setup archive, open a terminal in **your project folder**, then run `C:\path\to\AIDrive\install.cmd` on Windows or `sh /path/to/AIDrive/install.sh` on Linux. The setup contains the programs, web UI, PostgreSQL and local installers. The packaged web app opens at **http://localhost:7480**. Clean-machine pilot acceptance remains open; review [Limits](#limits) before use.
+
+**Build from source:** you need Rust 1.92+ and Node.js for the web app; PostgreSQL 17 is bundled by the API build.
 
 ```bash
 git clone https://github.com/icedracon/AIDrive.git
