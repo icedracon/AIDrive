@@ -1,0 +1,10 @@
+.connection { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:visible; z-index:2; color:#d0ffe1; }
+.connection path { fill:none; vector-effect:non-scaling-stroke; }.wire { stroke:#c4f8d6; stroke-width:1.5; opacity:.9; }.glow { stroke:#6bebaa; stroke-width:7; opacity:.22; filter:blur(4px); }.sheen { stroke:#effff5; stroke-width:.65; opacity:.65; }.connection circle { fill:currentColor; filter:drop-shadow(0 0 5px #8effb6); }
+/* A short light travelling from the assistant to the panel (pathLength = 100). */
+.pulse { stroke:#f4fff8; stroke-width:2.2; stroke-linecap:round; opacity:0; stroke-dasharray:7 93; filter:drop-shadow(0 0 4px #9dffc4); }
+@media(prefers-reduced-motion:no-preference) {
+  .connection { animation:connect 220ms ease-out; }
+  @keyframes connect { from { opacity:0; } to { opacity:1; } }
+  .pulse { opacity:.85; animation:travel 2800ms linear infinite; }
+  @keyframes travel { from { stroke-dashoffset:100; } to { stroke-dashoffset:0; } }
+}

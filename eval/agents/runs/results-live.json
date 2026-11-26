@@ -1,0 +1,164 @@
+{
+ "s4": {
+  "agents": [
+   {
+    "label": "agent-A-2nd",
+    "backend": "ollama",
+    "model": "qwen3.5:9b",
+    "served_by": [
+     "qwen3.5:9b"
+    ],
+    "steps": 2,
+    "error": null,
+    "llm_seconds": [
+     16.31,
+     0.99
+    ],
+    "final": "Done. I've asked the other assistant in this space about which cup size sells better on hot days.",
+    "calls": [
+     {
+      "tool": "send_message",
+      "is_error": false,
+      "seconds": 0.046,
+      "args": "{\"to\": \"assistants\", \"body\": \"Which cup size sells better on hot days, small or large?\"}",
+      "result": "Sent (message id 09f7e81a-5e30-48fd-bc97-95f919f58675, thread 09f7e81a-5e30-48fd-bc97-95f919f58675)."
+     }
+    ]
+   },
+   {
+    "label": "agent-B-free",
+    "backend": "freellm",
+    "model": "auto",
+    "served_by": [
+     "kilo/openrouter/free"
+    ],
+    "steps": 3,
+    "error": null,
+    "llm_seconds": [
+     3.53,
+     6.86,
+     5.06
+    ],
+    "final": "I checked my messages and found a question from Claude Code asking which cup size sells better on hot days. I replied in that thread: large cups sell better on hot days (synthetic test answer).",
+    "calls": [
+     {
+      "tool": "get_messages",
+      "is_error": false,
+      "seconds": 0.016,
+      "args": "{}",
+      "result": "- 2026-11-24 21:12:50Z · from assistant \"Claude Code\" to all assistants: Which cup size sells better on hot days, small or large? (id 09f7e81a-5e30-48fd-bc97-95f919f58675, thread 09f7e81a-5e30-48fd-bc97-95f919f58675)\n- 2026-11-24 17:58:32Z · from assistant \"Codex\" to all assistants · \"Cup size answe"
+     },
+     {
+      "tool": "send_message",
+      "is_error": false,
+      "seconds": 0.016,
+      "args": "{\"body\": \"Large cups sell better on hot days.\", \"reply_to\": \"09f7e81a-5e30-48fd-bc97-95f919f58675\", \"to\": \"assistants\"}",
+      "result": "Sent (message id a94be25c-139a-41c7-ad30-4edd64c742e2, thread 09f7e81a-5e30-48fd-bc97-95f919f58675)."
+     }
+    ]
+   },
+   {
+    "label": "agent-A-2nd",
+    "backend": "ollama",
+    "model": "qwen3.5:9b",
+    "served_by": [
+     "qwen3.5:9b"
+    ],
+    "steps": 2,
+    "error": null,
+    "llm_seconds": [
+     1.41,
+     1.7
+    ],
+    "final": "Yes, the other assistant (Codex) answered my question about cup sizes. The answer is: **large cups sell better on hot days**. This was stated in multiple messages from Codex to all assistants.",
+    "calls": [
+     {
+      "tool": "get_messages",
+      "is_error": false,
+      "seconds": 0.016,
+      "args": "{\"all\": true}",
+      "result": "- 2026-11-24 21:13:02Z · from assistant \"Codex\" to all assistants: Large cups sell better on hot days. (id a94be25c-139a-41c7-ad30-4edd64c742e2, thread 09f7e81a-5e30-48fd-bc97-95f919f58675)\n- 2026-11-24 21:12:50Z · from assistant \"Claude Code\" to all assistants: Which cup size sells better on hot da"
+     }
+    ]
+   }
+  ],
+  "checks": [
+   [
+    "A sent a message",
+    true
+   ],
+   [
+    "A addressed it to assistants, not the owner",
+    true
+   ],
+   [
+    "B read messages",
+    true
+   ],
+   [
+    "B replied",
+    true
+   ],
+   [
+    "B's reply is threaded (reply_to)",
+    true
+   ],
+   [
+    "A got the answer",
+    true
+   ]
+  ],
+  "send_args": [
+   {
+    "to": "assistants",
+    "body": "Which cup size sells better on hot days, small or large?"
+   }
+  ],
+  "reply_args": [
+   {
+    "body": "Large cups sell better on hot days.",
+    "reply_to": "09f7e81a-5e30-48fd-bc97-95f919f58675",
+    "to": "assistants"
+   }
+  ],
+  "seconds": 36.6,
+  "passed": 6,
+  "total": 6
+ },
+ "s7": {
+  "agents": [],
+  "checks": [
+   [
+    "agent process was killed after two successful file writes",
+    true
+   ],
+   [
+    "files written before the kill are kept",
+    true
+   ],
+   [
+    "no handoff was written by the killed agent",
+    true
+   ],
+   [
+    "AIDrive tells the next assistant the session was cut off (any trace in brief/sessions)",
+    false
+   ]
+  ],
+  "files_after_kill": [
+   "lab-s7-1795555027-1-overview.md",
+   "lab-s7-1795555027-2-data.md"
+  ],
+  "captured_automatically": false,
+  "agent_process_killed": true,
+  "agent_process_exit_code": 1,
+  "successful_files_before_kill": 2,
+  "latest_handoff": "CURRENT HANDOFF, AUTO-ACCEPTED (its sources were current; the owner has not checked it, treat its decisions as unconfirmed by the owner):\nCurrent (auto-accepted):\n- Oriented to project: read brief, confirmed current state. Deliverable lab-menu.md exists and is complete with pricing. No pending proposals, handoffs, or overdue registered files. No new work requested.\n  decisions: none\n  next step: Owner reviews lab-menu.md; otherwise deliverables are complete. No other work pending.\n  sources: session-orientation-2026-11-24b.md (file_id b272c2a3-cc62-4107-9a78-dfcce942260c, version_id 64f1832c-f",
+  "search_sessions": "No captured session mentions that.",
+  "brief_sessions_section": "## Where each recent session left off (captured automatically)\nNone captured yet. Sessions in a folder bound to this space are captured after every turn once the hook is installed (aidrive-mcp-server install-hooks).",
+  "activity": [],
+  "seconds": 28.8,
+  "passed": 3,
+  "total": 4
+ }
+}

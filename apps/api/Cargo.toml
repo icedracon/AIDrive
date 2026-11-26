@@ -1,0 +1,33 @@
+[package]
+name = "aidrive-api"
+version = "0.0.1"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+description = "AIDrive API: governed shared project state for AI assistants (files, handoffs, owner-approved knowledge), with an optional embedded PostgreSQL."
+readme = "../../README.md"
+keywords = ["ai", "mcp", "agents", "memory", "postgresql"]
+categories = ["development-tools"]
+
+[features]
+default = ["embedded-db"]
+embedded-db = ["dep:postgresql_embedded"]
+
+[dependencies]
+argon2 = "=0.5.3"
+axum.workspace = true
+postgresql_embedded = { version = "=0.20.2", default-features = false, features = ["bundled", "rustls", "theseus", "tokio"], optional = true }
+password-hash = { version = "=0.5.0", features = ["getrandom"] }
+serde.workspace = true
+serde_json = "=1.0.154"
+sha2 = "=0.10.9"
+sqlx = { workspace = true, features = ["macros"] }
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+[dev-dependencies]
+tower.workspace = true

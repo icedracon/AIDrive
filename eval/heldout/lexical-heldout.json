@@ -1,0 +1,2441 @@
+{
+  "cases": [
+    {
+      "id": "H001",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s1#1",
+        "s1#0",
+        "s5#15",
+        "s1#9",
+        "s1#8",
+        "s1#5",
+        "s1#2",
+        "s6#16",
+        "s6#15",
+        "s6#5"
+      ],
+      "sessions_ms": 19.64677
+    },
+    {
+      "id": "H002",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s4#17",
+        "s2#4"
+      ],
+      "sessions_ms": 16.237226
+    },
+    {
+      "id": "H003",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s1#16",
+        "s1#15",
+        "s6#17",
+        "s6#16",
+        "s6#5",
+        "s5#2",
+        "s5#1",
+        "s5#0",
+        "s3#16",
+        "s1#11"
+      ],
+      "sessions_ms": 22.183230000000002
+    },
+    {
+      "id": "H004",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [],
+      "sessions_ms": 21.523105
+    },
+    {
+      "id": "H005",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s2#10",
+        "s2#9",
+        "s6#11",
+        "s5#15",
+        "s5#7",
+        "s5#4",
+        "s5#3",
+        "s5#2",
+        "s3#9",
+        "s3#2"
+      ],
+      "sessions_ms": 18.561182
+    },
+    {
+      "id": "H006",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s2#12",
+        "s2#13",
+        "s4#10",
+        "s4#5",
+        "s2#5",
+        "s4#6",
+        "s2#6"
+      ],
+      "sessions_ms": 19.459456
+    },
+    {
+      "id": "H007",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s6#11",
+        "s3#7",
+        "s6#10",
+        "s3#1",
+        "s3#0",
+        "s3#4",
+        "s6#17",
+        "s6#13",
+        "s6#12",
+        "s5#10"
+      ],
+      "sessions_ms": 17.960785
+    },
+    {
+      "id": "H008",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s3#3",
+        "s3#4",
+        "s6#18",
+        "s3#8",
+        "s2#10",
+        "s6#19",
+        "s3#9"
+      ],
+      "sessions_ms": 17.048374000000003
+    },
+    {
+      "id": "H009",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s3#12",
+        "s3#11",
+        "s6#17",
+        "s6#11",
+        "s5#9",
+        "s3#10",
+        "s3#9",
+        "s3#4",
+        "s1#11"
+      ],
+      "sessions_ms": 16.665941
+    },
+    {
+      "id": "H010",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s3#16",
+        "s3#17",
+        "s5#16",
+        "s1#7",
+        "s5#17",
+        "s6#17",
+        "s5#18",
+        "s4#13",
+        "s3#18",
+        "s2#16"
+      ],
+      "sessions_ms": 20.291363999999998
+    },
+    {
+      "id": "H011",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s4#11",
+        "s4#13",
+        "s2#10",
+        "s2#9"
+      ],
+      "sessions_ms": 17.528463000000002
+    },
+    {
+      "id": "H012",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s4#17",
+        "s4#16",
+        "s4#15",
+        "s4#14"
+      ],
+      "sessions_ms": 15.887345
+    },
+    {
+      "id": "H013",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s4#13",
+        "s4#14",
+        "s4#15",
+        "s3#15",
+        "s6#5",
+        "s5#17",
+        "s5#15",
+        "s5#8",
+        "s5#3",
+        "s4#6"
+      ],
+      "sessions_ms": 18.85814
+    },
+    {
+      "id": "H014",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s5#9",
+        "s5#12",
+        "s5#10",
+        "s4#13",
+        "s3#15",
+        "s5#17",
+        "s5#15",
+        "s5#13",
+        "s5#11",
+        "s5#8"
+      ],
+      "sessions_ms": 17.174167
+    },
+    {
+      "id": "H015",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s2#8",
+        "s2#13",
+        "s6#6",
+        "s6#4",
+        "s6#1",
+        "s2#15",
+        "s2#14",
+        "s2#7",
+        "s2#6",
+        "s2#5"
+      ],
+      "sessions_ms": 19.646364
+    },
+    {
+      "id": "H016",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s5#16",
+        "s5#17",
+        "s1#0",
+        "s1#1",
+        "s5#18",
+        "s2#16",
+        "s3#15",
+        "s6#11",
+        "s5#15",
+        "s5#8"
+      ],
+      "sessions_ms": 19.869498
+    },
+    {
+      "id": "H017",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s6#4",
+        "s6#6",
+        "s4#8",
+        "s4#7"
+      ],
+      "sessions_ms": 15.730496
+    },
+    {
+      "id": "H018",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s6#10",
+        "s6#11",
+        "s3#7",
+        "s3#6",
+        "s3#9",
+        "s3#1",
+        "s3#0"
+      ],
+      "sessions_ms": 15.759306
+    },
+    {
+      "id": "H019",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s4#0",
+        "s6#6",
+        "s6#4",
+        "s6#1",
+        "s4#5",
+        "s4#2",
+        "s2#7",
+        "s2#6",
+        "s2#5",
+        "s2#3"
+      ],
+      "sessions_ms": 18.424817
+    },
+    {
+      "id": "H020",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s6#17",
+        "s6#16",
+        "s1#4",
+        "s1#16",
+        "s1#15",
+        "s1#14",
+        "s5#15",
+        "s1#5",
+        "s1#3",
+        "s1#1"
+      ],
+      "sessions_ms": 16.076165
+    },
+    {
+      "id": "H021",
+      "memory": [
+        "k_maps_attempt",
+        "k_windows",
+        "k_free_threshold_2",
+        "k_courier",
+        "k_no_outside",
+        "k_pay_3",
+        "k_hours_2",
+        "k_ny_gata",
+        "k_zone_c",
+        "k_capacity"
+      ],
+      "memory_ms": 8.684936,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H022",
+      "memory": [],
+      "memory_ms": 5.410571,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H023",
+      "memory": [
+        "k_int_prices",
+        "k_maps_attempt",
+        "k_pay_3",
+        "k_price_matnakash_3",
+        "k_price_pakhlava_2"
+      ],
+      "memory_ms": 6.511216,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H024",
+      "memory": [
+        "k_maps_attempt"
+      ],
+      "memory_ms": 5.333022,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H025",
+      "memory": [
+        "k_capacity",
+        "k_windows",
+        "k_ny_gata",
+        "k_pack_2",
+        "k_zone_c",
+        "k_free_threshold_2",
+        "k_no_outside",
+        "k_pay_3",
+        "k_courier",
+        "k_maps_attempt"
+      ],
+      "memory_ms": 8.723952,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H026",
+      "memory": [
+        "k_idram_gotcha",
+        "k_pay_3",
+        "k_phone_gotcha",
+        "k_int_prices"
+      ],
+      "memory_ms": 6.757926,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H027",
+      "memory": [
+        "k_vpos_attempt",
+        "k_pay_3"
+      ],
+      "memory_ms": 5.508849,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H028",
+      "memory": [
+        "k_cash_limit",
+        "k_confirm_pref",
+        "k_sms_attempt",
+        "k_pack_2",
+        "k_free_threshold_2",
+        "k_ny_gata",
+        "k_cutoff_2",
+        "k_tz_gotcha",
+        "k_phone_gotcha",
+        "k_staff"
+      ],
+      "memory_ms": 7.787558,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H029",
+      "memory": [
+        "k_sms_attempt"
+      ],
+      "memory_ms": 5.288132,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H030",
+      "memory": [
+        "k_phone_gotcha",
+        "k_sms_attempt",
+        "k_cash_limit"
+      ],
+      "memory_ms": 6.147583,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H031",
+      "memory": [
+        "k_zhingyalov",
+        "k_confirm_pref"
+      ],
+      "memory_ms": 5.937615,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H032",
+      "memory": [
+        "k_zone_c",
+        "k_zone_a",
+        "k_zone_b",
+        "k_pay_3",
+        "k_price_matnakash_3",
+        "k_free_threshold_2",
+        "k_price_pakhlava_2",
+        "k_maps_attempt",
+        "k_int_prices"
+      ],
+      "memory_ms": 8.032106,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H033",
+      "memory": [
+        "k_zhingyalov"
+      ],
+      "memory_ms": 6.052677,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H034",
+      "memory": [
+        "k_ny_gata",
+        "k_allergen_walnuts",
+        "k_menu_launch"
+      ],
+      "memory_ms": 9.305931999999999,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H035",
+      "memory": [
+        "k_no_outside",
+        "k_zone_b",
+        "k_confirm_pref"
+      ],
+      "memory_ms": 8.806419,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H036",
+      "memory": [
+        "k_badge_gotcha",
+        "k_pay_3",
+        "k_int_prices"
+      ],
+      "memory_ms": 9.859356,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H037",
+      "memory": [
+        "k_price_matnakash_3",
+        "k_pay_3",
+        "k_price_pakhlava_2",
+        "k_int_prices",
+        "k_menu_launch"
+      ],
+      "memory_ms": 7.5206930000000005,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H038",
+      "memory": [
+        "k_flour_3"
+      ],
+      "memory_ms": 8.823542,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H039",
+      "memory": [
+        "k_price_pakhlava_2",
+        "k_pay_3",
+        "k_price_matnakash_3",
+        "k_int_prices",
+        "k_allergen_walnuts",
+        "k_menu_launch"
+      ],
+      "memory_ms": 7.007524999999999,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H040",
+      "memory": [
+        "k_zone_b",
+        "k_no_outside"
+      ],
+      "memory_ms": 5.78752,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H041",
+      "memory": [
+        "k_cutoff_2",
+        "k_tz_gotcha",
+        "k_ny_gata",
+        "k_free_threshold_2",
+        "k_sms_attempt",
+        "k_windows",
+        "k_pack_2",
+        "k_cash_limit",
+        "k_no_outside",
+        "k_pay_3"
+      ],
+      "memory_ms": 9.225669,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H042",
+      "memory": [],
+      "memory_ms": 5.958691,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H043",
+      "memory": [
+        "k_pay_3",
+        "k_cutoff_2",
+        "k_tz_gotcha",
+        "k_phone_gotcha"
+      ],
+      "memory_ms": 8.919056999999999,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H044",
+      "memory": [
+        "k_flour_3"
+      ],
+      "memory_ms": 5.359337,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H045",
+      "memory": [
+        "k_pack_2",
+        "k_sms_attempt",
+        "k_free_threshold_2",
+        "k_cash_limit",
+        "k_ny_gata",
+        "k_cutoff_2",
+        "k_tz_gotcha",
+        "k_staff",
+        "k_menu_launch"
+      ],
+      "memory_ms": 10.273007,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H046",
+      "memory": [
+        "k_flour_3"
+      ],
+      "memory_ms": 4.782701,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H047",
+      "memory": [
+        "k_price_matnakash_1",
+        "k_menu_launch"
+      ],
+      "memory_ms": 5.016871,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H048",
+      "memory": [],
+      "memory_ms": 4.7444820000000005,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H049",
+      "memory": [
+        "k_free_threshold_1",
+        "k_zone_a",
+        "k_zone_b"
+      ],
+      "memory_ms": 8.414446000000002,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H050",
+      "memory": [],
+      "memory_ms": 5.2320020000000005,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H051",
+      "memory": [
+        "k_hours_1"
+      ],
+      "memory_ms": 5.818936,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H052",
+      "memory": [
+        "k_pay_1"
+      ],
+      "memory_ms": 5.067445,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H053",
+      "memory": [],
+      "memory_ms": 4.221206,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H054",
+      "memory": [
+        "k_flour_2",
+        "k_price_matnakash_2",
+        "k_price_pakhlava_2",
+        "k_pack_1",
+        "k_int_prices"
+      ],
+      "memory_ms": 10.228171,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H055",
+      "memory": [],
+      "memory_ms": 4.739037,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H056",
+      "memory": [
+        "k_price_pakhlava_1",
+        "k_menu_launch",
+        "k_int_prices",
+        "k_allergen_walnuts",
+        "k_price_matnakash_1"
+      ],
+      "memory_ms": 6.088765,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H057",
+      "memory": [
+        "k_menu_launch",
+        "k_menu_cap"
+      ],
+      "memory_ms": 8.573642,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H058",
+      "memory": [],
+      "memory_ms": 5.212212,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H059",
+      "memory": [
+        "k_zone_a",
+        "k_zone_c",
+        "k_free_threshold_2",
+        "k_zone_b",
+        "k_pay_3",
+        "k_maps_attempt",
+        "k_windows",
+        "k_no_outside",
+        "k_ny_gata",
+        "k_courier"
+      ],
+      "memory_ms": 9.967694,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H060",
+      "memory": [
+        "k_flour_3",
+        "k_zhingyalov"
+      ],
+      "memory_ms": 7.705271,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H061",
+      "memory": [
+        "k_hours_2",
+        "k_staff",
+        "k_cutoff_2",
+        "k_tz_gotcha",
+        "k_maps_attempt"
+      ],
+      "memory_ms": 8.268237,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H062",
+      "memory": [
+        "k_flour_3"
+      ],
+      "memory_ms": 6.223863,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H063",
+      "memory": [
+        "k_lang"
+      ],
+      "memory_ms": 6.419695,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H064",
+      "memory": [
+        "k_flour_3",
+        "k_zhingyalov"
+      ],
+      "memory_ms": 7.083797000000001,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H065",
+      "memory": [
+        "k_cash_limit",
+        "k_free_threshold_2",
+        "k_staff",
+        "k_phone_gotcha",
+        "k_sms_attempt",
+        "k_pack_2",
+        "k_pay_3",
+        "k_ny_gata",
+        "k_cutoff_2",
+        "k_tz_gotcha"
+      ],
+      "memory_ms": 11.98864,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H066",
+      "memory": [
+        "k_no_outside",
+        "k_zone_b",
+        "k_flour_3",
+        "k_zhingyalov"
+      ],
+      "memory_ms": 7.4039600000000005,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H067",
+      "memory": [
+        "k_price_matnakash_3",
+        "k_price_pakhlava_2"
+      ],
+      "memory_ms": 9.320679,
+      "sessions": [
+        "s4#13"
+      ],
+      "sessions_ms": 17.951231
+    },
+    {
+      "id": "H068",
+      "memory": [],
+      "memory_ms": 6.421157,
+      "sessions": [],
+      "sessions_ms": 20.275185
+    },
+    {
+      "id": "H069",
+      "memory": [],
+      "memory_ms": 7.723369,
+      "sessions": [],
+      "sessions_ms": 19.009942
+    },
+    {
+      "id": "H070",
+      "memory": [],
+      "memory_ms": 6.143808,
+      "sessions": [],
+      "sessions_ms": 18.934729
+    },
+    {
+      "id": "H071",
+      "memory": [],
+      "memory_ms": 7.027292,
+      "sessions": [
+        "s3#18",
+        "s3#17",
+        "s3#16"
+      ],
+      "sessions_ms": 20.317997000000002
+    },
+    {
+      "id": "H072",
+      "memory": [],
+      "memory_ms": 6.290426,
+      "sessions": [],
+      "sessions_ms": 19.034094000000003
+    },
+    {
+      "id": "H073",
+      "memory": [
+        "k_pay_3",
+        "k_badge_gotcha"
+      ],
+      "memory_ms": 9.435937000000001,
+      "sessions": [
+        "s6#11",
+        "s3#4",
+        "s6#17",
+        "s6#13",
+        "s6#10",
+        "s3#9",
+        "s3#2",
+        "s3#1",
+        "s3#0",
+        "s1#4"
+      ],
+      "sessions_ms": 19.073243
+    },
+    {
+      "id": "H074",
+      "memory": [],
+      "memory_ms": 5.777563000000001,
+      "sessions": [],
+      "sessions_ms": 19.528765
+    },
+    {
+      "id": "H075",
+      "memory": [
+        "k_sms_attempt",
+        "k_lang",
+        "k_pack_2",
+        "k_free_threshold_2",
+        "k_cash_limit",
+        "k_ny_gata",
+        "k_cutoff_2",
+        "k_tz_gotcha",
+        "k_staff"
+      ],
+      "memory_ms": 12.45541,
+      "sessions": [
+        "s5#8",
+        "s4#13",
+        "s1#15",
+        "s1#0",
+        "s5#9",
+        "s1#16",
+        "s1#1",
+        "s3#15",
+        "s6#19",
+        "s5#17"
+      ],
+      "sessions_ms": 31.395231000000003
+    },
+    {
+      "id": "H076",
+      "memory": [
+        "k_no_outside"
+      ],
+      "memory_ms": 8.2104,
+      "sessions": [
+        "s2#6",
+        "s2#0",
+        "s2#1",
+        "s6#0",
+        "s4#7",
+        "s4#5",
+        "s2#3",
+        "s6#1",
+        "s4#8",
+        "s4#6"
+      ],
+      "sessions_ms": 24.9621
+    },
+    {
+      "id": "H077",
+      "memory": [
+        "k_price_matnakash_3",
+        "k_free_threshold_2",
+        "k_menu_launch"
+      ],
+      "memory_ms": 8.964971,
+      "sessions": [
+        "s1#15",
+        "s1#16",
+        "s6#5",
+        "s5#2",
+        "s5#1",
+        "s5#0",
+        "s1#4",
+        "s1#0",
+        "s1#1"
+      ],
+      "sessions_ms": 24.610769
+    },
+    {
+      "id": "H078",
+      "memory": [],
+      "memory_ms": 7.136979,
+      "sessions": [
+        "s6#4",
+        "s6#2",
+        "s4#6",
+        "s4#5",
+        "s2#7",
+        "s6#3",
+        "s2#8"
+      ],
+      "sessions_ms": 25.677229999999998
+    },
+    {
+      "id": "H079",
+      "memory": [
+        "k_windows",
+        "k_free_threshold_2",
+        "k_no_outside",
+        "k_pay_3",
+        "k_ny_gata",
+        "k_pack_2",
+        "k_zone_c",
+        "k_courier",
+        "k_capacity",
+        "k_maps_attempt"
+      ],
+      "memory_ms": 13.180743999999999,
+      "sessions": [
+        "s6#11",
+        "s5#16",
+        "s5#15",
+        "s5#11",
+        "s5#7",
+        "s5#4",
+        "s5#3",
+        "s3#9",
+        "s3#2",
+        "s3#1"
+      ],
+      "sessions_ms": 23.313158
+    },
+    {
+      "id": "H080",
+      "memory": [
+        "k_zone_b"
+      ],
+      "memory_ms": 7.259164999999999,
+      "sessions": [
+        "s6#0",
+        "s2#3",
+        "s6#1",
+        "s2#4",
+        "s6#15",
+        "s6#14"
+      ],
+      "sessions_ms": 24.494299
+    },
+    {
+      "id": "H081",
+      "memory": [
+        "k_staff"
+      ],
+      "memory_ms": 7.368929,
+      "sessions": [],
+      "sessions_ms": 19.0786
+    },
+    {
+      "id": "H082",
+      "memory": [],
+      "memory_ms": 6.419081,
+      "sessions": [],
+      "sessions_ms": 19.451441
+    },
+    {
+      "id": "H083",
+      "memory": [
+        "k_staff",
+        "k_courier",
+        "k_capacity"
+      ],
+      "memory_ms": 10.436709,
+      "sessions": [
+        "s6#20",
+        "s5#3",
+        "s3#15",
+        "s6#21",
+        "s5#4"
+      ],
+      "sessions_ms": 27.234251
+    },
+    {
+      "id": "H084",
+      "memory": [],
+      "memory_ms": 8.631721,
+      "sessions": [
+        "s6#15",
+        "s4#5",
+        "s3#14",
+        "s2#14",
+        "s2#12",
+        "s2#5",
+        "s4#6",
+        "s3#15",
+        "s2#15",
+        "s2#13"
+      ],
+      "sessions_ms": 26.925715999999998
+    },
+    {
+      "id": "H085",
+      "memory": [
+        "k_idram_gotcha",
+        "k_free_threshold_2"
+      ],
+      "memory_ms": 7.265814,
+      "sessions": [
+        "s5#3",
+        "s3#12",
+        "s5#4"
+      ],
+      "sessions_ms": 19.915238
+    },
+    {
+      "id": "H086",
+      "memory": [
+        "k_zone_a",
+        "k_pay_3",
+        "k_zone_c",
+        "k_windows",
+        "k_free_threshold_2",
+        "k_no_outside",
+        "k_ny_gata",
+        "k_courier",
+        "k_capacity",
+        "k_maps_attempt"
+      ],
+      "memory_ms": 10.979213,
+      "sessions": [
+        "s3#4",
+        "s6#11",
+        "s5#15",
+        "s5#7",
+        "s5#4",
+        "s5#3",
+        "s3#9",
+        "s3#2",
+        "s3#1",
+        "s2#16"
+      ],
+      "sessions_ms": 22.850638
+    },
+    {
+      "id": "H087",
+      "memory": [
+        "k_no_outside"
+      ],
+      "memory_ms": 9.168983,
+      "sessions": [
+        "s3#8",
+        "s2#7",
+        "s2#6",
+        "s3#9",
+        "s2#8"
+      ],
+      "sessions_ms": 20.152769
+    },
+    {
+      "id": "H088",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s6#10",
+        "s6#11",
+        "s3#7",
+        "s3#4",
+        "s6#13",
+        "s3#9",
+        "s3#2",
+        "s3#1",
+        "s3#0",
+        "s6#17"
+      ],
+      "sessions_ms": 20.612172
+    },
+    {
+      "id": "H089",
+      "memory": [],
+      "memory_ms": 6.025082,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H090",
+      "memory": [
+        "k_windows",
+        "k_free_threshold_2",
+        "k_no_outside",
+        "k_pay_3",
+        "k_ny_gata",
+        "k_zone_c",
+        "k_courier",
+        "k_capacity",
+        "k_maps_attempt",
+        "k_zone_a"
+      ],
+      "memory_ms": 10.893353,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H091",
+      "memory": [
+        "k_price_pakhlava_2",
+        "k_menu_launch",
+        "k_pack_2",
+        "k_capacity",
+        "k_lang",
+        "k_allergen_walnuts"
+      ],
+      "memory_ms": 8.267411000000001,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H092",
+      "memory": [
+        "k_windows",
+        "k_free_threshold_2",
+        "k_no_outside",
+        "k_pay_3",
+        "k_ny_gata",
+        "k_price_matnakash_3",
+        "k_zone_c",
+        "k_price_pakhlava_2",
+        "k_courier",
+        "k_capacity"
+      ],
+      "memory_ms": 12.480527,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H093",
+      "memory": [],
+      "memory_ms": 5.605419,
+      "sessions": [],
+      "sessions_ms": 0.0
+    },
+    {
+      "id": "H094",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s2#14",
+        "s2#15",
+        "s6#18",
+        "s6#3",
+        "s6#2",
+        "s4#5",
+        "s2#13",
+        "s2#5",
+        "s6#19",
+        "s4#6"
+      ],
+      "sessions_ms": 23.156556
+    },
+    {
+      "id": "H095",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s6#8",
+        "s5#15",
+        "s5#7",
+        "s5#4",
+        "s5#3",
+        "s3#9",
+        "s3#7",
+        "s3#4",
+        "s3#2",
+        "s3#1"
+      ],
+      "sessions_ms": 16.263392000000003
+    },
+    {
+      "id": "H096",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s5#0",
+        "s6#11",
+        "s6#9",
+        "s6#6",
+        "s6#4",
+        "s5#17",
+        "s4#8",
+        "s4#7",
+        "s2#11"
+      ],
+      "sessions_ms": 18.707722
+    },
+    {
+      "id": "H097",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s2#5",
+        "s2#6",
+        "s6#18",
+        "s4#11",
+        "s4#5",
+        "s4#4",
+        "s4#3",
+        "s4#2",
+        "s3#14",
+        "s3#3"
+      ],
+      "sessions_ms": 22.653111
+    },
+    {
+      "id": "H098",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s4#10",
+        "s2#9",
+        "s2#10"
+      ],
+      "sessions_ms": 18.22814
+    },
+    {
+      "id": "H099",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [
+        "s3#16",
+        "s3#5",
+        "s3#0",
+        "s3#17",
+        "s3#1"
+      ],
+      "sessions_ms": 36.925316
+    },
+    {
+      "id": "H100",
+      "memory": [],
+      "memory_ms": 0.0,
+      "sessions": [],
+      "sessions_ms": 14.100456000000001
+    }
+  ],
+  "knowledge_pools": {
+    "current": [
+      {
+        "disputed": false,
+        "key": "k_int_prices",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_cash_limit",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_capacity",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_no_outside",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_cap",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_allergen_walnuts",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_pay_3",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_pack_2",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_cutoff_2",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_free_threshold_2",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_courier",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_badge_gotcha",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_hours_2",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_ny_gata",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_flour_3",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_matnakash_3",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_zhingyalov",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_tz_gotcha",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_c",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_pakhlava_2",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_phone_gotcha",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_confirm_pref",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_sms_attempt",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_staff",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_idram_gotcha",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_vpos_attempt",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_maps_attempt",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_windows",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_b",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_a",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_lang",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_launch",
+        "stale": true
+      }
+    ],
+    "k_cash_limit": [
+      {
+        "disputed": false,
+        "key": "k_int_prices",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_cash_limit",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_capacity",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_no_outside",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_cap",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_allergen_walnuts",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_pay_2",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_courier",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_free_threshold_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_idram_gotcha",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_vpos_attempt",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_maps_attempt",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_windows",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_b",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_a",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_lang",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_pakhlava_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_matnakash_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_launch",
+        "stale": true
+      }
+    ],
+    "k_flour_2": [
+      {
+        "disputed": false,
+        "key": "k_int_prices",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_cash_limit",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_capacity",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_no_outside",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_cap",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_allergen_walnuts",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_free_threshold_2",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_pack_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_cutoff_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_pay_2",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_courier",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_flour_2",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_pakhlava_2",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_matnakash_2",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_phone_gotcha",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_confirm_pref",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_sms_attempt",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_staff",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_hours_1",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_idram_gotcha",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_vpos_attempt",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_maps_attempt",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_windows",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_b",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_a",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_lang",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_launch",
+        "stale": true
+      }
+    ],
+    "k_free_threshold_2": [
+      {
+        "disputed": false,
+        "key": "k_int_prices",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_cash_limit",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_capacity",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_no_outside",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_cap",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_allergen_walnuts",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_free_threshold_2",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_pack_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_cutoff_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_pay_2",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_courier",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_pakhlava_2",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_matnakash_2",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_phone_gotcha",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_confirm_pref",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_sms_attempt",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_flour_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_staff",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_hours_1",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_idram_gotcha",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_vpos_attempt",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_maps_attempt",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_windows",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_b",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_a",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_lang",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_launch",
+        "stale": true
+      }
+    ],
+    "k_int_prices": [
+      {
+        "disputed": false,
+        "key": "k_int_prices",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_cap",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_allergen_walnuts",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_lang",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_pakhlava_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_matnakash_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_launch",
+        "stale": true
+      }
+    ],
+    "k_pack_1": [
+      {
+        "disputed": false,
+        "key": "k_int_prices",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_cash_limit",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_capacity",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_no_outside",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_cap",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_allergen_walnuts",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_pack_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_cutoff_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_pay_2",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_courier",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_free_threshold_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_flour_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_staff",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_hours_1",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_idram_gotcha",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_vpos_attempt",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_maps_attempt",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_windows",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_b",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_a",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_lang",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_pakhlava_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_matnakash_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_launch",
+        "stale": true
+      }
+    ],
+    "k_phone_gotcha": [
+      {
+        "disputed": false,
+        "key": "k_int_prices",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_cash_limit",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_capacity",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_no_outside",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_cap",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_allergen_walnuts",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_pack_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_cutoff_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_pay_2",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_courier",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_free_threshold_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_phone_gotcha",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_confirm_pref",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_sms_attempt",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_flour_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_staff",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_hours_1",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_idram_gotcha",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_vpos_attempt",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_maps_attempt",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_windows",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_b",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_a",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_lang",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_pakhlava_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_matnakash_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_launch",
+        "stale": true
+      }
+    ],
+    "k_price_matnakash_1": [
+      {
+        "disputed": false,
+        "key": "k_price_matnakash_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_launch",
+        "stale": true
+      }
+    ],
+    "k_staff": [
+      {
+        "disputed": false,
+        "key": "k_int_prices",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_cash_limit",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_capacity",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_no_outside",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_cap",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_allergen_walnuts",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_cutoff_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_pay_2",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_courier",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_free_threshold_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_staff",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_hours_1",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_idram_gotcha",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_vpos_attempt",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_maps_attempt",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_windows",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_b",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_a",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_lang",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_pakhlava_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_matnakash_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_launch",
+        "stale": true
+      }
+    ],
+    "k_vpos_attempt": [
+      {
+        "disputed": false,
+        "key": "k_int_prices",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_capacity",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_no_outside",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_cap",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_allergen_walnuts",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_pay_1",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_courier",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_free_threshold_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_vpos_attempt",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_maps_attempt",
+        "stale": false
+      },
+      {
+        "disputed": true,
+        "key": "k_windows",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_b",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_a",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_lang",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_pakhlava_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_matnakash_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_launch",
+        "stale": true
+      }
+    ],
+    "k_zone_b": [
+      {
+        "disputed": false,
+        "key": "k_int_prices",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_cap",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_allergen_walnuts",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_free_threshold_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_b",
+        "stale": true
+      },
+      {
+        "disputed": false,
+        "key": "k_zone_a",
+        "stale": true
+      },
+      {
+        "disputed": true,
+        "key": "k_lang",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_pakhlava_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_price_matnakash_1",
+        "stale": false
+      },
+      {
+        "disputed": false,
+        "key": "k_menu_launch",
+        "stale": true
+      }
+    ]
+  },
+  "visible_sessions": [
+    "s4",
+    "s6",
+    "s1",
+    "s5",
+    "s2",
+    "s3"
+  ]
+}

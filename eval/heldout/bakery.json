@@ -1,0 +1,2410 @@
+{
+ "about": "Held-out set: synthetic history of 'Nush', a small Yerevan bakery's online ordering and delivery site (Sep–Nov 2026), English and Eastern Armenian. Owner Ani, partner Aram, baker Gayane, courier Narek, cashier Lilit.",
+ "steps": [
+  {
+   "op": "session",
+   "key": "s1",
+   "actor": "agent",
+   "client": "claude-code",
+   "label": "Nush: launch menu and allergens",
+   "start": "2026-09-02T11",
+   "events": [
+    [
+     "user",
+     "Starting the online ordering site for Nush. First thing: menu.md with the launch items and prices in AMD. Matnakash 450, lavash pack of 5 sheets 600, Garni gata 1800, nazook box of 6 for 2400, pakhlava 500 g box 3500. That's the full list for launch."
+    ],
+    [
+     "assistant",
+     "Created menu.md with the 5 launch items. Prices are stored as whole AMD amounts. Do you want allergen info per item?"
+    ],
+    [
+     "tool",
+     "tool: create_file menu.md (5 items, prices in AMD)"
+    ],
+    [
+     "user",
+     "Yes, allergens are non-negotiable. My nephew has a walnut allergy, so the Garni gata and the pakhlava must say nuts very clearly. Every item shows gluten / milk / egg / nuts flags."
+    ],
+    [
+     "assistant",
+     "Added an allergen line per item: matnakash: gluten; lavash: gluten; Garni gata: gluten, milk, egg, walnuts; nazook: gluten, milk, egg; pakhlava: gluten, milk, walnuts, honey. The product card renders them as red badges under the photo."
+    ],
+    [
+     "tool",
+     "tool: update_file menu.md (allergen lines per item)"
+    ],
+    [
+     "user",
+     "Լեզուն՝ կայքը հիմնականում հայերեն լինի, անգլերենը՝ երկրորդ։ Ռուսերեն հիմա պետք չի, հետո կտեսնենք։"
+    ],
+    [
+     "assistant",
+     "Set Armenian (hy) as the default locale and English under /en. No Russian locale for now. Item names stay in Armenian, with an English transliteration on /en."
+    ],
+    [
+     "user",
+     "Also keep the menu short. Gayane can't bake more than 12 different things in one morning, so never more than 12 items on the site."
+    ],
+    [
+     "assistant",
+     "Noted: the menu is capped at 12 items. We are at 5."
+    ],
+    [
+     "user",
+     "How do we store prices? Aram wants to see them in the admin with decimals, like 450.00."
+    ],
+    [
+     "assistant",
+     "I'd keep integer AMD everywhere: nobody uses luma in practice, and decimals are exactly what breaks payment signatures and rounding later. The admin would show '450 ֏'."
+    ],
+    [
+     "user",
+     "Fine, integers. Tell Aram it's final."
+    ],
+    [
+     "assistant",
+     "Recorded as a project rule: prices are integer AMD, displayed with the ֏ sign."
+    ],
+    [
+     "tool",
+     "tool: run_tests: 6 passed (menu parser, allergen badges)"
+    ],
+    [
+     "user",
+     "One more thing: matnakash is baked in batches of 60, the oven can't take more. If orders pass 60 for a morning, the site should show sold out for matnakash."
+    ],
+    [
+     "assistant",
+     "Added a daily stock limit of 60 for matnakash. Once 60 are ordered for a date the item shows 'Սպառված է / Sold out' for that date."
+    ]
+   ]
+  },
+  {
+   "op": "file",
+   "key": "menu",
+   "name": "menu.md",
+   "content": "# Nush menu (launch, 2 Sep 2026)\n\n| Item | Price | Allergens |\n|---|---|---|\n| Մատնաքաշ / Matnakash | 450 ֏ | gluten |\n| Լավաշ, 5 թերթ / Lavash, 5 sheets | 600 ֏ | gluten |\n| Գառնիի գաթա / Garni gata | 1800 ֏ | gluten, milk, egg, WALNUTS |\n| Նազուկ, 6 հատ / Nazook, box of 6 | 2400 ֏ | gluten, milk, egg |\n| Փախլավա 500 գ / Pakhlava 500 g | 3500 ֏ | gluten, milk, WALNUTS, honey |\n\nMatnakash: max 60 per morning (one oven batch).\n"
+  },
+  {
+   "op": "propose",
+   "key": "k_menu_launch",
+   "kind": "fact",
+   "topic": "launch-menu",
+   "statement": "Launch menu (2 Sep 2026) has five items: matnakash, lavash (pack of 5 sheets), Garni gata, nazook (box of 6) and pakhlava (500 g box).",
+   "evidence": [
+    "s1#0",
+    "file:menu"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_price_matnakash_1",
+   "kind": "fact",
+   "topic": "matnakash-price",
+   "statement": "Matnakash costs 450 AMD.",
+   "evidence": [
+    "s1#0"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_price_pakhlava_1",
+   "kind": "fact",
+   "topic": "pakhlava-price",
+   "statement": "A 500 g box of pakhlava costs 3500 AMD.",
+   "evidence": [
+    "s1#0"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_allergen_walnuts",
+   "kind": "constraint",
+   "topic": "walnut-label",
+   "statement": "Garni gata and pakhlava contain walnuts and must carry a very visible nuts label; the owner's nephew has a walnut allergy.",
+   "evidence": [
+    "s1#3",
+    "s1#4",
+    "file:menu"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_lang",
+   "kind": "preference",
+   "topic": "site-language",
+   "statement": "Armenian is the default site language and English is second (/en); no Russian version for now.",
+   "evidence": [
+    "s1#6",
+    "s1#7"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_menu_cap",
+   "kind": "constraint",
+   "topic": "menu-size",
+   "statement": "Never more than 12 items on the menu: Gayane cannot bake more varieties in one morning.",
+   "evidence": [
+    "s1#8",
+    "s1#9"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_int_prices",
+   "kind": "keystone",
+   "topic": "integer-amd",
+   "statement": "All prices are whole AMD amounts shown with the ֏ sign, never with decimals (Aram's request for 450.00 in the admin was declined).",
+   "evidence": [
+    "s1#10",
+    "s1#11",
+    "s1#13"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "session",
+   "key": "s2",
+   "actor": "agent",
+   "client": "codex",
+   "label": "Առաքման գոտիներ",
+   "start": "2026-09-10T15",
+   "events": [
+    [
+     "user",
+     "Բարև։ Այսօր առաքման գոտիներն անենք։ Կենտրոնն ու Արաբկիրը՝ գոտի A, առաքումը 700 դրամ, իսկ 5000 դրամից ավելի պատվերի դեպքում՝ անվճար։"
+    ],
+    [
+     "assistant",
+     "Ստեղծեցի delivery.md-ն։ Գոտի A՝ Կենտրոն, Արաբկիր, 700 ֏, անվճար՝ 5000 ֏-ից բարձր պատվերների համար։"
+    ],
+    [
+     "tool",
+     "tool: create_file delivery.md (zone A)"
+    ],
+    [
+     "user",
+     "Գոտի B՝ Մալաթիա-Սեբաստիա, Դավթաշեն, Նոր Նորք, 1200 դրամ։ Այնտեղ անվճար առաքում չկա, ինչքան էլ մեծ լինի պատվերը։"
+    ],
+    [
+     "assistant",
+     "Ավելացրի գոտի B-ն՝ 1200 ֏, առանց անվճար շեմի։"
+    ],
+    [
+     "user",
+     "Աբովյան, Էջմիածին ու ընդհանրապես Երևանից դուրս չենք առաքում։ Նարեկը մենակ է, մեքենայով Աբովյան գնալ-գալը մոտ մեկ ժամ է, մնացած պատվերները կուշանան։"
+    ],
+    [
+     "assistant",
+     "Պարզ է։ Երևանից դուրս հասցեների համար checkout-ը ցույց կտա «Այս հասցեով առաքում չենք իրականացնում» և կառաջարկի պատվերը վերցնել խանութից՝ Կոմիտաս 27։"
+    ],
+    [
+     "user",
+     "Առաքման համար երկու պատուհան դնենք՝ 10:00–13:00 և 15:00–19:00։ Ավելի շուտ չի ստացվի, Գայանեի առաջին խմբաքանակը ժամը 9-ին է պատրաստ լինում։"
+    ],
+    [
+     "assistant",
+     "Ավելացրի երկու ժամային պատուհանները։ Checkout-ում պատուհան ընտրելը պարտադիր է։"
+    ],
+    [
+     "user",
+     "Ի՞նչ ես կարծում, գինը Google Maps-ով հեռավորությունից կախված հաշվենք, ոչ թե գոտիներով?"
+    ],
+    [
+     "assistant",
+     "Փորձեցի Distance Matrix API-ն։ Աշխատում է, բայց Երևանի հասցեների մոտ 20%-ի համար (հատկապես «թաղամաս, շենք 12/3» ձևի) սխալ կոորդինատ է տալիս, ու գինը թռչում է։ Առաջարկում եմ մնալ գոտիների վրա, իսկ Maps-ը թողնել միայն քարտեզի վրա հասցեն ցույց տալու համար։"
+    ],
+    [
+     "tool",
+     "tool: run_script geocode_sample.py: 50 addresses, 11 resolved to the wrong district"
+    ],
+    [
+     "user",
+     "Լավ, գոտիներով ենք մնում։ Նարեկի մեքենայի մեջ առավելագույնը 40 տուփ է տեղավորվում, դա էլ հաշվի առ։"
+    ],
+    [
+     "assistant",
+     "Ավելացրի սահմանափակում՝ մեկ պատուհանում առավելագույնը 40 տուփ։ Երբ լրանում է, այդ պատուհանն այլևս հնարավոր չէ ընտրել։"
+    ],
+    [
+     "user",
+     "Նարեկի մեկ ամբողջական շրջանը՝ բոլոր հասցեներն ու հետ, մոտ երկուսուկես ժամ է տևում։ Դրա համար ենք պատուհանները երեք ժամանոց դրել։"
+    ],
+    [
+     "assistant",
+     "Գրեցի delivery.md-ում որպես հիմնավորում՝ մեկ շրջանը մոտ 2,5 ժամ է, պատուհանը՝ 3 ժամ, պահուստով։"
+    ],
+    [
+     "tool",
+     "tool: update_file delivery.md (windows, 40 boxes per window, round about 2.5 h)"
+    ]
+   ]
+  },
+  {
+   "op": "file",
+   "key": "delivery",
+   "name": "delivery.md",
+   "content": "# Առաքում / Delivery (10 Sep 2026)\n\n- Գոտի A (Կենտրոն, Արաբկիր): 700 ֏, անվճար 5000 ֏-ից բարձր\n- Գոտի B (Մալաթիա-Սեբաստիա, Դավթաշեն, Նոր Նորք): 1200 ֏, անվճար շեմ չկա\n- Երևանից դուրս առաքում չկա (Աբովյան, Էջմիածին): pickup at Komitas 27\n- Windows: 10:00–13:00, 15:00–19:00\n- Max 40 boxes per window (Narek's car); one round ≈ 2.5 h\n"
+  },
+  {
+   "op": "propose",
+   "key": "k_zone_a",
+   "kind": "fact",
+   "topic": "zone-a-fee",
+   "statement": "Zone A (Kentron, Arabkir): delivery fee 700 AMD.",
+   "evidence": [
+    "s2#0",
+    "s2#1",
+    "file:delivery"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_free_threshold_1",
+   "kind": "decision",
+   "topic": "free-delivery-threshold",
+   "statement": "Zone A delivery is free for orders above 5000 AMD.",
+   "evidence": [
+    "s2#0",
+    "s2#1"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_zone_b",
+   "kind": "fact",
+   "topic": "zone-b-fee",
+   "statement": "Գոտի B՝ Մալաթիա-Սեբաստիա, Դավթաշեն, Նոր Նորք․ առաքումը 1200 ֏ է, անվճար առաքում չկա ոչ մի գումարի դեպքում։",
+   "evidence": [
+    "s2#3",
+    "s2#4",
+    "file:delivery"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_no_outside",
+   "kind": "constraint",
+   "topic": "delivery-area",
+   "statement": "Երևանից դուրս (Աբովյան, Էջմիածին) չենք առաքում․ առաքիչը մեկն է, Աբովյան գնալ-գալը մոտ մեկ ժամ է։ Այդ հասցեների համար առաջարկվում է վերցնել խանութից՝ Կոմիտաս 27։",
+   "evidence": [
+    "s2#5",
+    "s2#6"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_windows",
+   "kind": "fact",
+   "topic": "delivery-windows",
+   "statement": "Two delivery windows: 10:00–13:00 and 15:00–19:00; nothing earlier because the first batch is ready at 09:00.",
+   "evidence": [
+    "s2#7",
+    "s2#8"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_maps_attempt",
+   "kind": "attempt",
+   "topic": "distance-pricing",
+   "statement": "Distance-based delivery pricing with the Google Distance Matrix API: it works, but about 20% of Yerevan addresses geocode to the wrong place (11 of 50 in the sample), so zone pricing was kept and Maps is used only to display the address.",
+   "evidence": [
+    "s2#10",
+    "s2#11"
+   ],
+   "decide": "approved",
+   "outcome": "partial"
+  },
+  {
+   "op": "propose",
+   "key": "k_capacity",
+   "kind": "constraint",
+   "topic": "courier-capacity",
+   "statement": "Narek's car holds at most 40 boxes, so a delivery window closes once 40 boxes are booked in it.",
+   "evidence": [
+    "s2#12",
+    "s2#13"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_courier",
+   "kind": "decision",
+   "topic": "courier",
+   "statement": "Deliveries are made by our own courier, Narek, in his car; no third-party delivery service.",
+   "evidence": [
+    "s2#5",
+    "s2#12"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "session",
+   "key": "s3",
+   "actor": "agent",
+   "client": "claude-code",
+   "label": "Payments: vPOS vs Idram",
+   "start": "2026-09-19T12",
+   "events": [
+    [
+     "user",
+     "Payments today. I want cards online. Ameriabank gave us a vPOS offer, let's integrate that."
+    ],
+    [
+     "assistant",
+     "Plan: Ameriabank vPOS for card payments, cash on delivery as a fallback. Drafting payments.md."
+    ],
+    [
+     "tool",
+     "tool: create_file payments.md (vPOS cards + cash on delivery)"
+    ],
+    [
+     "user",
+     "Արամը դեմ է․ ասում է՝ միայն կանխիկ, քարտի միջնորդավճարը 2.2% է, իսկ մեր մարժան փոքր է։"
+    ],
+    [
+     "assistant",
+     "So two positions: cards online (vPOS, 2.2% fee) or cash only. A middle option is Idram: a lot of Yerevan customers already use it, the fee is 1%, and we don't need a card form on our site."
+    ],
+    [
+     "user",
+     "Let's try vPOS first anyway, in test mode."
+    ],
+    [
+     "tool",
+     "tool: run_tests payments/vpos: 3 failed, HTTP 401 merchant not activated"
+    ],
+    [
+     "assistant",
+     "The vPOS test calls fail with 401 because the merchant account isn't activated. Ameriabank support says activation needs a signed merchant contract and takes about three weeks; they don't issue test credentials before that."
+    ],
+    [
+     "user",
+     "Երեք շաբաթ չենք կարող սպասել, հոկտեմբերի 1-ին բացվում ենք։ Իդրամ + կանխիկ, վերջ։ Արամն էլ համաձայն է։"
+    ],
+    [
+     "assistant",
+     "Switched: Idram for online payment, cash on delivery for everyone. Cards via vPOS are parked until the merchant contract is signed."
+    ],
+    [
+     "tool",
+     "tool: update_file payments.md (Idram + cash; vPOS parked)"
+    ],
+    [
+     "user",
+     "Idram callback keeps failing in my test, the signature doesn't match."
+    ],
+    [
+     "assistant",
+     "Found it: Idram posts EDP_AMOUNT as '1800.00' in the callback, while we hash our integer '1800'. The checksum has to be computed over the exact string Idram sent. Fixed by hashing the raw form field."
+    ],
+    [
+     "tool",
+     "tool: run_tests payments/idram: 5 passed"
+    ],
+    [
+     "user",
+     "Կանխիկի դեպքում Նարեկը մանր փող պե՞տք է ունենա։ Ասենք՝ 20000-անոցով վճարեն։"
+    ],
+    [
+     "assistant",
+     "Added a checkout field 'Ինչ թղթադրամով եք վճարելու' for cash orders, so Narek knows what change to bring. Cash orders above 20000 ֏ also require a phone confirmation from Ani before they are accepted."
+    ],
+    [
+     "user",
+     "Receipts should be PDF in Armenian. Right now the PDF shows empty squares instead of letters."
+    ],
+    [
+     "assistant",
+     "The default PDF font has no Armenian glyphs. I embedded Noto Sans Armenian; receipts render correctly now."
+    ],
+    [
+     "tool",
+     "tool: run_tests receipts: 2 passed"
+    ]
+   ]
+  },
+  {
+   "op": "file",
+   "key": "payments",
+   "name": "payments.md",
+   "content": "# Payments (19 Sep 2026, draft)\n\n- Cards online: Ameriabank vPOS (fee 2.2%)\n- Cash on delivery as fallback\n"
+  },
+  {
+   "op": "propose",
+   "key": "k_pay_1",
+   "kind": "decision",
+   "topic": "online-payment",
+   "statement": "Online card payments go through Ameriabank vPOS, with cash on delivery as the fallback.",
+   "evidence": [
+    "s3#0",
+    "s3#1",
+    "file:payments"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_vpos_attempt",
+   "kind": "attempt",
+   "topic": "vpos-integration",
+   "statement": "Ameriabank vPOS integration in September 2026 failed: test calls returned 401 (merchant not activated); activation needs a signed merchant contract and about three weeks.",
+   "evidence": [
+    "s3#6",
+    "s3#7"
+   ],
+   "decide": "approved",
+   "outcome": "failed"
+  },
+  {
+   "op": "file",
+   "key": "payments",
+   "content": "# Payments (19 Sep 2026)\n\n- Online: Idram (fee 1%)\n- Cash on delivery for all zones; ask which banknote; > 20000 ֏ needs phone confirmation\n- vPOS cards: parked until merchant contract is signed\n"
+  },
+  {
+   "op": "propose",
+   "key": "k_pay_2",
+   "kind": "decision",
+   "topic": "online-payment",
+   "statement": "Online payment is Idram, plus cash on delivery; vPOS cards are parked until the merchant contract is signed. Aram, who wanted cash only because of the 2.2% card fee, agreed.",
+   "evidence": [
+    "s3#3",
+    "s3#8",
+    "s3#9",
+    "file:payments"
+   ],
+   "decide": "approved",
+   "supersedes": "k_pay_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_idram_gotcha",
+   "kind": "gotcha",
+   "topic": "idram-signature",
+   "statement": "Idram's callback sends EDP_AMOUNT as '1800.00'; compute the checksum over the raw string Idram sent, not over our integer amount, or the signature never matches.",
+   "evidence": [
+    "s3#11",
+    "s3#12"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_cash_limit",
+   "kind": "constraint",
+   "topic": "cash-orders",
+   "statement": "Cash orders above 20000 AMD need a phone confirmation from Ani; checkout asks which banknote the customer will pay with so the courier brings change.",
+   "evidence": [
+    "s3#14",
+    "s3#15"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "session",
+   "key": "d1",
+   "actor": "agent",
+   "client": "claude-code",
+   "label": "staff promo code",
+   "start": "2026-09-25T18",
+   "events": [
+    [
+     "user",
+     "Make a hidden staff discount code NUSH-STAFF-30 for 30% off, only for Gayane, Narek and Lilit."
+    ],
+    [
+     "assistant",
+     "Created code NUSH-STAFF-30 (30% off), restricted to the three staff phone numbers."
+    ],
+    [
+     "user",
+     "And it should also waive the zone B delivery fee."
+    ],
+    [
+     "assistant",
+     "NUSH-STAFF-30 now also makes zone B delivery free."
+    ],
+    [
+     "tool",
+     "tool: update_file promo_codes.json (staff code)"
+    ]
+   ]
+  },
+  {
+   "op": "propose",
+   "key": "k_staff_code",
+   "kind": "fact",
+   "topic": "staff-discount",
+   "statement": "Staff discount code NUSH-STAFF-30 gives 30% off and free zone B delivery, limited to Gayane, Narek and Lilit.",
+   "evidence": [
+    "d1#0",
+    "d1#3"
+   ],
+   "decide": null
+  },
+  {
+   "op": "session",
+   "key": "s4",
+   "actor": "agent",
+   "client": "codex",
+   "label": "Աշխատաժամեր, անձնակազմ, մատակարարներ",
+   "start": "2026-10-03T09",
+   "events": [
+    [
+     "user",
+     "Ժամերը գրենք ops.md-ում՝ երկուշաբթիից շաբաթ 08:00–20:00, կիրակի փակ ենք։"
+    ],
+    [
+     "tool",
+     "tool: create_file ops.md (Mon–Sat 08:00–20:00, Sunday closed)"
+    ],
+    [
+     "assistant",
+     "Ստեղծեցի ops.md-ն։ Կիրակի օրը կայքը պատվերներ կընդունի միայն երկուշաբթիի համար։"
+    ],
+    [
+     "user",
+     "Նույն օրվա առաքման պատվերներն ընդունենք մինչև 14:00։ Դրանից հետո՝ միայն վաղվա համար։"
+    ],
+    [
+     "assistant",
+     "Սահմանեցի նույն օրվա պատվերների վերջնաժամկետը՝ 14:00։"
+    ],
+    [
+     "user",
+     "Անձնակազմը՝ Գայանեն գլխավոր հացթուխն է, գալիս է առավոտյան 5-ին։ Նարեկը առաքիչն է, Լիլիթը շաբաթ օրերին դրամարկղում է։"
+    ],
+    [
+     "assistant",
+     "ops.md-ում ավելացրի անձնակազմի բաժինը։ Telegram ծանուցումները կգան Անիին և Գայանեին։"
+    ],
+    [
+     "user",
+     "Ալյուրը վերցնում ենք «Մասիս Միլ»-ից, 50 կիլոյանոց պարկը 16500 դրամ է։ Շաբաթական 6 պարկ ենք ծախսում։"
+    ],
+    [
+     "assistant",
+     "Գրեցի մատակարարների բաժինը՝ Մասիս Միլ, 50 կգ՝ 16500 ֏, շաբաթական 6 պարկ։"
+    ],
+    [
+     "user",
+     "Փաթեթավորումն առայժմ սովորական պոլիէթիլենային տոպրակներ թող լինի, էժան է։"
+    ],
+    [
+     "assistant",
+     "Նշեցի՝ պոլիէթիլենային տոպրակներ։ Միայն նկատեմ, որ նազուկը տոպրակի մեջ կարող է ճզմվել, հետո տուփ պետք կգա։"
+    ],
+    [
+     "user",
+     "Պատվերների մասին ծանուցումը SMS-ով ուղարկենք ինձ, Twilio-ով։"
+    ],
+    [
+     "tool",
+     "tool: run_script send_test_sms.py: error 21612, message cannot be sent to +374 with an alphanumeric sender"
+    ],
+    [
+     "assistant",
+     "Twilio SMS to Armenian numbers failed: an alphanumeric sender ID for Armenia must be pre-registered, and that takes weeks. A Telegram bot works right away and costs nothing, so notifications now go through @nush_orders_bot."
+    ],
+    [
+     "user",
+     "Լավ, Telegram։ Հաճախորդներին էլ հաստատումը Telegram-ով կամ WhatsApp-ով ուղարկենք, ոչ թե էլ-փոստով, մարդիկ մեյլ չեն կարդում։"
+    ],
+    [
+     "assistant",
+     "Հաճախորդի հաստատումը՝ Telegram կամ WhatsApp հղում պատվերի համարով։ Էլ-փոստը լռելյայն անջատված է։"
+    ],
+    [
+     "user",
+     "Հեռախոսահամարները խառն են գրում՝ 091..., +37491..., 91...։"
+    ],
+    [
+     "assistant",
+     "Բոլոր համարները բերում եմ +374 և 8 թիվ ձևաչափի՝ սկզբի 0-ն հանում եմ, 374-ն առանց +-ի էլ ընդունում եմ, 8 թվից կարճ համարները մերժվում են։"
+    ],
+    [
+     "tool",
+     "tool: run_tests phone_normalize: 9 passed"
+    ]
+   ]
+  },
+  {
+   "op": "file",
+   "key": "ops",
+   "name": "ops.md",
+   "content": "# Operations (3 Oct 2026)\n\nHours: Mon–Sat 08:00–20:00, Sunday closed\nSame-day order cutoff: 14:00\nStaff: Gayane (head baker, from 05:00), Narek (courier), Lilit (cashier, Saturdays)\nFlour: Masis Mill, 50 kg = 16500 ֏, 6 bags/week\nPackaging: polyethylene bags\nNotifications: Telegram @nush_orders_bot (Ani, Gayane)\n"
+  },
+  {
+   "op": "propose",
+   "key": "k_hours_1",
+   "kind": "fact",
+   "topic": "opening-hours",
+   "statement": "Բաց ենք երկուշաբթիից շաբաթ՝ 08:00–20:00, կիրակի փակ է։",
+   "evidence": [
+    "s4#0",
+    "file:ops"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_cutoff_1",
+   "kind": "decision",
+   "topic": "same-day-cutoff",
+   "statement": "Same-day delivery orders are accepted until 14:00; later orders are for the next day.",
+   "evidence": [
+    "s4#3",
+    "s4#4"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_staff",
+   "kind": "fact",
+   "topic": "staff",
+   "statement": "Staff: Gayane is head baker and starts at 05:00; Narek is the courier; Lilit is the Saturday cashier. Order notifications go to Ani and Gayane on Telegram.",
+   "evidence": [
+    "s4#5",
+    "s4#6",
+    "file:ops"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_flour_1",
+   "kind": "fact",
+   "topic": "flour-supplier",
+   "statement": "Ալյուրը «Մասիս Միլ»-ից է․ 50 կգ պարկը՝ 16500 ֏, շաբաթական 6 պարկ։",
+   "evidence": [
+    "s4#7",
+    "s4#8"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_pack_1",
+   "kind": "decision",
+   "topic": "packaging",
+   "statement": "Orders are packed in plain polyethylene bags because they are cheap.",
+   "evidence": [
+    "s4#9",
+    "s4#10"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_sms_attempt",
+   "kind": "attempt",
+   "topic": "order-notifications-sms",
+   "statement": "Twilio SMS to +374 numbers failed (error 21612: an alphanumeric sender for Armenia needs pre-registration); notifications moved to the Telegram bot @nush_orders_bot.",
+   "evidence": [
+    "s4#12",
+    "s4#13"
+   ],
+   "decide": "approved",
+   "outcome": "failed"
+  },
+  {
+   "op": "propose",
+   "key": "k_confirm_pref",
+   "kind": "preference",
+   "topic": "customer-confirmations",
+   "statement": "Հաճախորդին պատվերի հաստատումն ուղարկում ենք Telegram-ով կամ WhatsApp-ով, ոչ թե էլ-փոստով։",
+   "evidence": [
+    "s4#14",
+    "s4#15"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_phone_gotcha",
+   "kind": "gotcha",
+   "topic": "phone-format",
+   "statement": "Customers type phones as 091..., +37491... or 91...; normalize to +374 plus 8 digits (drop a leading 0, accept 374 without +) and reject anything shorter than 8 digits.",
+   "evidence": [
+    "s4#16",
+    "s4#17"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "delete_session",
+   "key": "d1"
+  },
+  {
+   "op": "session",
+   "key": "e1",
+   "actor": "editor",
+   "client": "codex",
+   "label": "Narek private notes",
+   "start": "2026-10-12T20",
+   "events": [
+    [
+     "user",
+     "Narek here. Ani doesn't know yet: I'm planning to leave in January and drive for Yandex full time."
+    ],
+    [
+     "assistant",
+     "Understood, this stays in your private notes."
+    ],
+    [
+     "user",
+     "Իմ աշխատավարձը առաքման վճարի 15%-ն է, գումարած օրական 8000 դրամ։ Հաշվիր՝ Yandex-ում ավելի՞ շատ կստանամ։"
+    ],
+    [
+     "assistant",
+     "At about 25 deliveries a day with an average fee of 900 ֏ you earn about 8000 + 3375 = 11375 ֏ a day here."
+    ],
+    [
+     "user",
+     "Also my shortcut: from Arabkir to Kentron I go over the Kievyan bridge, saves 10 minutes."
+    ]
+   ]
+  },
+  {
+   "op": "propose",
+   "key": "k_narek_leave",
+   "kind": "fact",
+   "topic": "courier-staffing",
+   "statement": "Narek plans to leave in January 2027 to drive for Yandex full time.",
+   "evidence": [],
+   "decide": null
+  },
+  {
+   "op": "session",
+   "key": "o1",
+   "actor": "other",
+   "client": "claude-code",
+   "label": "Vardaguyn flowers setup",
+   "start": "2026-10-15T11",
+   "events": [
+    [
+     "user",
+     "Vardaguyn flower shop, Gyumri. Delivery fee is 800 AMD in the city center, free above 15000."
+    ],
+    [
+     "assistant",
+     "Set delivery: 800 ֏ in the center, free over 15000 ֏."
+    ],
+    [
+     "user",
+     "Մենք բաց ենք ամեն օր՝ 09:00–21:00, կիրակի էլ։"
+    ],
+    [
+     "assistant",
+     "Hours set: every day 09:00–21:00."
+    ],
+    [
+     "user",
+     "Card payments through Ameriabank vPOS started instantly for us, no waiting."
+    ],
+    [
+     "assistant",
+     "vPOS enabled for Vardaguyn."
+    ]
+   ]
+  },
+  {
+   "op": "session",
+   "key": "s5",
+   "actor": "agent",
+   "client": "claude-code",
+   "label": "Post-launch: prices, zones, cutoff bug",
+   "start": "2026-10-20T16",
+   "events": [
+    [
+     "user",
+     "Two weeks since launch. Masis Mill raised flour to 19000 per 50 kg bag. We need to raise matnakash to 500 and pakhlava to 3900."
+    ],
+    [
+     "tool",
+     "tool: update_file menu.md (matnakash 500, pakhlava 3900, zhingyalov hats)"
+    ],
+    [
+     "assistant",
+     "Updated menu.md: matnakash 450 → 500 ֏, pakhlava 500 g 3500 → 3900 ֏. Other prices unchanged."
+    ],
+    [
+     "user",
+     "Also, lots of small zone A orders just over 5000 are killing Narek's route. Raise the free delivery threshold to 7000."
+    ],
+    [
+     "assistant",
+     "Free delivery in zone A now starts at 7000 ֏ instead of 5000."
+    ],
+    [
+     "user",
+     "And add zone C: Avan and Shengavit, 1500 drams. People keep asking."
+    ],
+    [
+     "assistant",
+     "Added zone C (Avan, Shengavit) at 1500 ֏, with no free threshold, and only in the 15:00–19:00 window because the morning route doesn't reach there."
+    ],
+    [
+     "tool",
+     "tool: update_file delivery.md (free from 7000, zone C)"
+    ],
+    [
+     "user",
+     "Bug: yesterday someone ordered same-day at 15:10 and the site accepted it."
+    ],
+    [
+     "assistant",
+     "Cause: the server runs in UTC, so it compared 11:10 UTC against the 14:00 cutoff. Fixed by evaluating the cutoff in Asia/Yerevan (UTC+4), with tests at 13:59 and 14:01 Yerevan time."
+    ],
+    [
+     "tool",
+     "tool: run_tests cutoff_timezone: 4 passed"
+    ],
+    [
+     "user",
+     "Gayane says 14:00 is too late anyway, she can't plan the afternoon bake. Move the cutoff to 12:00."
+    ],
+    [
+     "assistant",
+     "Same-day cutoff moved to 12:00 Yerevan time. After noon only next-day dates are offered."
+    ],
+    [
+     "tool",
+     "tool: update_file ops.md (cutoff 12:00)"
+    ],
+    [
+     "user",
+     "Saturday zhingyalov hats, 700 drams, Saturday only. Add it."
+    ],
+    [
+     "assistant",
+     "Added zhingyalov hats at 700 ֏, orderable only for Saturday delivery dates. Allergens: gluten. The menu has 6 items now."
+    ],
+    [
+     "user",
+     "Packaging complaints: nazook arrives crushed. Switch to kraft boxes. Papyrus LLC quoted 120 drams per box, minimum 1000 boxes."
+    ],
+    [
+     "assistant",
+     "Packaging is now kraft boxes from Papyrus LLC, 120 ֏ each, minimum order of 1000. Bags stay only for lavash."
+    ],
+    [
+     "tool",
+     "tool: update_file ops.md (packaging: Papyrus kraft boxes)"
+    ]
+   ]
+  },
+  {
+   "op": "file",
+   "key": "menu",
+   "content": "# Nush menu (20 Oct 2026)\n\n| Item | Price | Allergens |\n|---|---|---|\n| Մատնաքաշ / Matnakash | 500 ֏ | gluten |\n| Լավաշ, 5 թերթ / Lavash, 5 sheets | 600 ֏ | gluten |\n| Գառնիի գաթա / Garni gata | 1800 ֏ | gluten, milk, egg, WALNUTS |\n| Նազուկ, 6 հատ / Nazook, box of 6 | 2400 ֏ | gluten, milk, egg |\n| Փախլավա 500 գ / Pakhlava 500 g | 3900 ֏ | gluten, milk, WALNUTS, honey |\n| Ժինգյալով հաց / Zhingyalov hats (Saturday only) | 700 ֏ | gluten |\n"
+  },
+  {
+   "op": "file",
+   "key": "delivery",
+   "content": "# Առաքում / Delivery (20 Oct 2026)\n\n- Գոտի A (Կենտրոն, Արաբկիր): 700 ֏, անվճար 7000 ֏-ից բարձր\n- Գոտի B (Մալաթիա-Սեբաստիա, Դավթաշեն, Նոր Նորք): 1200 ֏\n- Գոտի C (Ավան, Շենգավիթ): 1500 ֏, only 15:00–19:00\n- No delivery outside Yerevan\n- Windows: 10:00–13:00, 15:00–19:00; max 40 boxes per window\n"
+  },
+  {
+   "op": "file",
+   "key": "ops",
+   "content": "# Operations (20 Oct 2026)\n\nHours: Mon–Sat 08:00–20:00, Sunday closed\nSame-day order cutoff: 12:00 (Asia/Yerevan)\nStaff: Gayane (head baker, from 05:00), Narek (courier), Lilit (cashier, Saturdays)\nFlour: Masis Mill, 50 kg = 19000 ֏\nPackaging: kraft boxes, Papyrus LLC, 120 ֏/box, min 1000; bags for lavash only\n"
+  },
+  {
+   "op": "propose",
+   "key": "k_price_matnakash_2",
+   "kind": "fact",
+   "topic": "matnakash-price",
+   "statement": "Matnakash costs 500 AMD from 20 Oct 2026 (raised after Masis Mill's flour price increase).",
+   "evidence": [
+    "s5#0",
+    "s5#2"
+   ],
+   "decide": "approved",
+   "supersedes": "k_price_matnakash_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_price_pakhlava_2",
+   "kind": "fact",
+   "topic": "pakhlava-price",
+   "statement": "A 500 g box of pakhlava costs 3900 AMD from 20 Oct 2026.",
+   "evidence": [
+    "s5#0",
+    "s5#2"
+   ],
+   "decide": "approved",
+   "supersedes": "k_price_pakhlava_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_free_threshold_2",
+   "kind": "decision",
+   "topic": "free-delivery-threshold",
+   "statement": "Zone A delivery is free only for orders above 7000 AMD (raised from 5000 on 20 Oct 2026 because many small orders overloaded the courier's route).",
+   "evidence": [
+    "s5#3",
+    "s5#4"
+   ],
+   "decide": "approved",
+   "supersedes": "k_free_threshold_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_flour_2",
+   "kind": "fact",
+   "topic": "flour-supplier",
+   "statement": "Masis Mill raised the flour price to 19000 AMD per 50 kg bag (Oct 2026).",
+   "evidence": [
+    "s5#0"
+   ],
+   "decide": "approved",
+   "supersedes": "k_flour_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_zone_c",
+   "kind": "fact",
+   "topic": "zone-c-fee",
+   "statement": "Zone C (Avan, Shengavit): delivery 1500 AMD, no free threshold, afternoon window 15:00–19:00 only.",
+   "evidence": [
+    "s5#5",
+    "s5#6",
+    "file:delivery"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_tz_gotcha",
+   "kind": "gotcha",
+   "topic": "cutoff-timezone",
+   "statement": "The server runs in UTC; the same-day cutoff must be evaluated in Asia/Yerevan (UTC+4). Before the fix a 15:10 order was accepted.",
+   "evidence": [
+    "s5#8",
+    "s5#9"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_cutoff_2",
+   "kind": "decision",
+   "topic": "same-day-cutoff",
+   "statement": "Same-day orders are accepted until 12:00 Yerevan time; after that only next-day dates (Gayane needs to plan the afternoon bake).",
+   "evidence": [
+    "s5#11",
+    "s5#12"
+   ],
+   "decide": "approved",
+   "supersedes": "k_cutoff_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_zhingyalov",
+   "kind": "fact",
+   "topic": "zhingyalov-hats",
+   "statement": "Ժինգյալով հաց՝ 700 ֏, պատվիրվում է միայն շաբաթ օրվա առաքման համար, ալերգեն՝ սնձան (gluten)։",
+   "evidence": [
+    "s5#14",
+    "s5#15"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_pack_2",
+   "kind": "decision",
+   "topic": "packaging",
+   "statement": "Orders are packed in kraft boxes from Papyrus LLC (120 AMD per box, minimum order 1000) because nazook arrived crushed in bags; bags remain only for lavash.",
+   "evidence": [
+    "s5#16",
+    "s5#17",
+    "file:ops"
+   ],
+   "decide": "approved",
+   "supersedes": "k_pack_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_courier_pending",
+   "kind": "decision",
+   "topic": "courier",
+   "statement": "Hand zone C deliveries to Yandex Delivery instead of our own courier.",
+   "evidence": [
+    "s5#6"
+   ],
+   "decide": null
+  },
+  {
+   "op": "session",
+   "key": "s6",
+   "actor": "agent",
+   "client": "codex",
+   "label": "Նոր տարի, մատակարար, կիրակի, քարտեր",
+   "start": "2026-11-05T10",
+   "events": [
+    [
+     "user",
+     "Նոր տարվա համար գաթայի նախապատվեր ենք բացում՝ Նոր տարվա մեծ գաթա, 2500 դրամ, պատվերը մինչև դեկտեմբերի 28-ը։"
+    ],
+    [
+     "assistant",
+     "Ավելացրի «Նոր տարվա գաթա»՝ 2500 ֏, նախապատվեր մինչև դեկտեմբերի 28-ը, առաքումը՝ դեկտեմբերի 29–31-ը։"
+    ],
+    [
+     "user",
+     "Մեկ պատվերում առավելագույնը 3 գաթա, թե չէ Գայանեն չի հասցնի։ Ընդհանուր 300 հատ կարող ենք թխել։"
+    ],
+    [
+     "assistant",
+     "Սահմանափակում դրեցի՝ մեկ պատվերում 3 հատ, ընդհանուր 300 հատ։"
+    ],
+    [
+     "user",
+     "Ու մատնաքաշը 550 դարձրու։ Մասիսից անցնում ենք Գյումրիի «Շիրակ Ալյուր»-ին, իրենց ալյուրն էլ է թանկ՝ 50 կգ-ն 20500։ Մասիսը երկու անգամ ուշացրեց առաքումը, Գայանեն առավոտը ալյուր չուներ։"
+    ],
+    [
+     "tool",
+     "tool: update_file menu.md (matnakash 550, New Year gata 2500)"
+    ],
+    [
+     "assistant",
+     "Մատնաքաշ՝ 500 → 550 ֏։ Մատակարարը՝ Շիրակ Ալյուր (Գյումրի), 50 կգ՝ 20500 ֏։ Պատճառը՝ Մասիս Միլի երկու ուշացած առաքումը։"
+    ],
+    [
+     "user",
+     "From November we open on Sundays 09:00–15:00, Lilit will work Sundays too."
+    ],
+    [
+     "assistant",
+     "Sunday hours 09:00–15:00 added. Sunday deliveries only in the 10:00–13:00 window."
+    ],
+    [
+     "tool",
+     "tool: update_file ops.md (Sunday 09:00–15:00, flour Shirak Alyur)"
+    ],
+    [
+     "user",
+     "Ameriabank finally activated the vPOS merchant account on November 3. Can we turn on cards?"
+    ],
+    [
+     "assistant",
+     "Live vPOS test passed with a 100 ֏ charge and refund. Cards are enabled next to Idram and cash. The 2.2% card fee is absorbed, not added to prices."
+    ],
+    [
+     "tool",
+     "tool: run_tests payments/vpos: 4 passed"
+    ],
+    [
+     "tool",
+     "tool: update_file payments.md (cards via vPOS live)"
+    ],
+    [
+     "user",
+     "Իսկ Նոր տարվա գաթայի մեջ ընկույզ կա՞։ Պետք է նշել։"
+    ],
+    [
+     "assistant",
+     "Այո, Նոր տարվա գաթան ընկույզով է, ինչպես Գառնիի գաթան։ Ալերգենները՝ gluten, milk, egg, walnuts, ավելացրի menu.md-ում։"
+    ],
+    [
+     "user",
+     "Found a bug: when an item is sold out, the allergen badges disappear together with the add button."
+    ],
+    [
+     "assistant",
+     "Fixed: allergen badges now render independently of stock state, so sold-out cards still show them."
+    ],
+    [
+     "user",
+     "Արամն ասում է՝ ռուսերենն էլ ավելացնենք, շատ պատվերներ ռուսերեն մեկնաբանությամբ են գալիս։ Ես դեռ համաձայն չեմ։"
+    ],
+    [
+     "assistant",
+     "I'll leave it as an open proposal for you to decide. The site stays hy + en for now."
+    ],
+    [
+     "user",
+     "And Gayane wants an early 08:00–10:00 window for office breakfasts. Not sure Narek can do it."
+    ],
+    [
+     "assistant",
+     "Logged as a pending proposal; the current windows stay 10:00–13:00 and 15:00–19:00."
+    ]
+   ]
+  },
+  {
+   "op": "file",
+   "key": "menu",
+   "content": "# Nush menu (5 Nov 2026)\n\n| Item | Price | Allergens |\n|---|---|---|\n| Մատնաքաշ / Matnakash | 550 ֏ | gluten |\n| Լավաշ, 5 թերթ / Lavash, 5 sheets | 600 ֏ | gluten |\n| Գառնիի գաթա / Garni gata | 1800 ֏ | gluten, milk, egg, WALNUTS |\n| Նազուկ, 6 հատ / Nazook, box of 6 | 2400 ֏ | gluten, milk, egg |\n| Փախլավա 500 գ / Pakhlava 500 g | 3900 ֏ | gluten, milk, WALNUTS, honey |\n| Ժինգյալով հաց / Zhingyalov hats (Saturday only) | 700 ֏ | gluten |\n| Նոր տարվա գաթա / New Year gata (preorder until 28 Dec) | 2500 ֏ | gluten, milk, egg, WALNUTS |\n"
+  },
+  {
+   "op": "file",
+   "key": "ops",
+   "content": "# Operations (5 Nov 2026)\n\nHours: Mon–Sat 08:00–20:00, Sunday 09:00–15:00\nSame-day order cutoff: 12:00 (Asia/Yerevan)\nStaff: Gayane (head baker, from 05:00), Narek (courier), Lilit (cashier, Saturdays and Sundays)\nFlour: Shirak Alyur (Gyumri), 50 kg = 20500 ֏\nPackaging: kraft boxes, Papyrus LLC, 120 ֏/box, min 1000; bags for lavash only\n"
+  },
+  {
+   "op": "file",
+   "key": "payments",
+   "content": "# Payments (5 Nov 2026)\n\n- Idram, cash on delivery, cards via Ameriabank vPOS (live since 3 Nov 2026)\n- Card fee 2.2% absorbed, not added to prices\n"
+  },
+  {
+   "op": "propose",
+   "key": "k_price_matnakash_3",
+   "kind": "fact",
+   "topic": "matnakash-price",
+   "statement": "Matnakash costs 550 AMD from 5 Nov 2026, after the switch to the more expensive Shirak Alyur flour.",
+   "evidence": [
+    "s6#4",
+    "s6#6"
+   ],
+   "decide": "approved",
+   "supersedes": "k_price_matnakash_2"
+  },
+  {
+   "op": "propose",
+   "key": "k_flour_3",
+   "kind": "fact",
+   "topic": "flour-supplier",
+   "statement": "Ալյուրի մատակարարն այժմ Գյումրիի «Շիրակ Ալյուր»-ն է՝ 50 կգ-ը 20500 ֏։ Մասիս Միլից հրաժարվեցինք երկու ուշացած առաքման պատճառով։",
+   "evidence": [
+    "s6#4",
+    "s6#6"
+   ],
+   "decide": "approved",
+   "supersedes": "k_flour_2"
+  },
+  {
+   "op": "propose",
+   "key": "k_ny_gata",
+   "kind": "fact",
+   "topic": "new-year-gata",
+   "statement": "New Year gata: 2500 AMD, preorder until 28 December, delivery 29–31 December; at most 3 per order and 300 in total; contains walnuts.",
+   "evidence": [
+    "s6#0",
+    "s6#1",
+    "s6#2",
+    "s6#3",
+    "s6#15"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_hours_2",
+   "kind": "fact",
+   "topic": "opening-hours",
+   "statement": "From November 2026 the bakery is open Mon–Sat 08:00–20:00 and Sunday 09:00–15:00 (Lilit works Sundays); Sunday deliveries only 10:00–13:00.",
+   "evidence": [
+    "s6#7",
+    "s6#8"
+   ],
+   "decide": "approved",
+   "supersedes": "k_hours_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_pay_3",
+   "kind": "decision",
+   "topic": "online-payment",
+   "statement": "Payments: Idram, cash on delivery, and cards through Ameriabank vPOS (merchant account activated 3 Nov 2026). The 2.2% card fee is absorbed, not added to prices.",
+   "evidence": [
+    "s6#10",
+    "s6#11",
+    "file:payments"
+   ],
+   "decide": "approved",
+   "supersedes": "k_pay_2"
+  },
+  {
+   "op": "propose",
+   "key": "k_badge_gotcha",
+   "kind": "gotcha",
+   "topic": "soldout-allergens",
+   "statement": "Sold-out product cards used to hide the allergen badges together with the add button; badges must render independently of stock state.",
+   "evidence": [
+    "s6#16",
+    "s6#17"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_ru_pending",
+   "kind": "preference",
+   "topic": "site-language",
+   "statement": "Add a Russian version of the site; many orders arrive with comments in Russian (Aram's suggestion).",
+   "evidence": [
+    "s6#18"
+   ],
+   "decide": null
+  },
+  {
+   "op": "propose",
+   "key": "k_early_pending",
+   "kind": "fact",
+   "topic": "delivery-windows",
+   "statement": "Add an early 08:00–10:00 delivery window for office breakfasts.",
+   "evidence": [
+    "s6#20"
+   ],
+   "decide": null
+  },
+  {
+   "op": "propose",
+   "key": "k_cash_pending",
+   "kind": "constraint",
+   "topic": "cash-orders",
+   "statement": "Raise the phone-confirmation limit for cash orders from 20000 to 30000 AMD.",
+   "evidence": [
+    "s3#15"
+   ],
+   "decide": null
+  }
+ ],
+ "cases": [
+  {
+   "id": "H001",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "what was on the menu at launch and how much was each item",
+   "expect": [
+    "s1#0"
+   ]
+  },
+  {
+   "id": "H002",
+   "lang": "hy",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Ինչո՞ւ որոշեցինք գները պահել առանց տասնորդականների",
+   "expect": [
+    "s1#11"
+   ]
+  },
+  {
+   "id": "H003",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "daily limit on matnakash before it shows sold out",
+   "expect": [
+    "s1#15",
+    "s1#16"
+   ]
+  },
+  {
+   "id": "H004",
+   "lang": "hy",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Ո՞ր թաղամասերն են մտնում B գոտու մեջ",
+   "expect": [
+    "s2#3"
+   ]
+  },
+  {
+   "id": "H005",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Why didn't we price delivery by distance using Google Maps?",
+   "expect": [
+    "s2#10",
+    "s2#11"
+   ]
+  },
+  {
+   "id": "H006",
+   "lang": "hy",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Քանի՞ տուփ է տեղավորվում առաքիչի մեքենայում",
+   "expect": [
+    "s2#12",
+    "s2#13"
+   ]
+  },
+  {
+   "id": "H007",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "what error did the Ameriabank card test give back in September",
+   "expect": [
+    "s3#6",
+    "s3#7"
+   ]
+  },
+  {
+   "id": "H008",
+   "lang": "hy",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Ինչո՞ւ էր Արամը դեմ քարտով վճարմանը",
+   "expect": [
+    "s3#3"
+   ]
+  },
+  {
+   "id": "H009",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "idram callback signature mismatch fix",
+   "expect": [
+    "s3#12"
+   ]
+  },
+  {
+   "id": "H010",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Armenian letters showed up as empty boxes on the receipts, what did we do?",
+   "expect": [
+    "s3#16",
+    "s3#17"
+   ]
+  },
+  {
+   "id": "H011",
+   "lang": "hy",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Ի՞նչ սխալ տվեց Twilio-ն, երբ փորձում էինք SMS ուղարկել",
+   "expect": [
+    "s4#12",
+    "s4#13"
+   ]
+  },
+  {
+   "id": "H012",
+   "lang": "hy",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "ինչ ձևաչափի ենք բերում հաճախորդների հեռախոսահամարները",
+   "expect": [
+    "s4#17"
+   ]
+  },
+  {
+   "id": "H013",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Who receives the Telegram notifications about new orders?",
+   "expect": [
+    "s4#6"
+   ]
+  },
+  {
+   "id": "H014",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Which order got through after the cutoff, and at what time?",
+   "expect": [
+    "s5#8",
+    "s5#9"
+   ]
+  },
+  {
+   "id": "H015",
+   "lang": "hy",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "C գոտու առաքումը ո՞ր ժամային պատուհանում է",
+   "expect": [
+    "s5#6"
+   ]
+  },
+  {
+   "id": "H016",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "how much did Papyrus charge per box and what was the minimum order",
+   "expect": [
+    "s5#16",
+    "s5#17"
+   ]
+  },
+  {
+   "id": "H017",
+   "lang": "hy",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Մասիս Միլից ինչո՞ւ հրաժարվեցինք",
+   "expect": [
+    "s6#4",
+    "s6#6"
+   ]
+  },
+  {
+   "id": "H018",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "When did Ameriabank finally activate our merchant account?",
+   "expect": [
+    "s6#10"
+   ]
+  },
+  {
+   "id": "H019",
+   "lang": "hy",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "կիրակի օրերին առաքումը որ ժամերին է լինում",
+   "expect": [
+    "s6#8"
+   ]
+  },
+  {
+   "id": "H020",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "what was the problem with allergen badges on sold-out products",
+   "expect": [
+    "s6#16",
+    "s6#17"
+   ]
+  },
+  {
+   "id": "H021",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "Which places don't we deliver to?",
+   "expect": [
+    "k_no_outside"
+   ]
+  },
+  {
+   "id": "H022",
+   "lang": "hy",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "Առավելագույնը քանի՞ ապրանք կարող է լինել ճաշացանկում",
+   "expect": [
+    "k_menu_cap"
+   ]
+  },
+  {
+   "id": "H023",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "rule about decimals in prices",
+   "expect": [
+    "k_int_prices"
+   ]
+  },
+  {
+   "id": "H024",
+   "lang": "hy",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "Google Maps-ով հեռավորությամբ գին հաշվելու փորձն ինչո՞վ ավարտվեց",
+   "expect": [
+    "k_maps_attempt"
+   ]
+  },
+  {
+   "id": "H025",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "max boxes per delivery window",
+   "expect": [
+    "k_capacity"
+   ]
+  },
+  {
+   "id": "H026",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "Idram callback amount format gotcha",
+   "expect": [
+    "k_idram_gotcha"
+   ]
+  },
+  {
+   "id": "H027",
+   "lang": "hy",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "Ինչո՞ւ սեպտեմբերին չստացվեց Ամերիաբանկի vPOS-ի միացումը",
+   "expect": [
+    "k_vpos_attempt"
+   ]
+  },
+  {
+   "id": "H028",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "How do customers get their order confirmation?",
+   "expect": [
+    "k_confirm_pref"
+   ]
+  },
+  {
+   "id": "H029",
+   "lang": "hy",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "SMS ծանուցումների փորձը",
+   "expect": [
+    "k_sms_attempt"
+   ]
+  },
+  {
+   "id": "H030",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "phone number normalization rule",
+   "expect": [
+    "k_phone_gotcha"
+   ]
+  },
+  {
+   "id": "H031",
+   "lang": "hy",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "Ժամային գոտու խնդիրը նույն օրվա պատվերի վերջնաժամկետի հետ",
+   "expect": [
+    "k_tz_gotcha"
+   ]
+  },
+  {
+   "id": "H032",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "zone C price and which districts",
+   "expect": [
+    "k_zone_c"
+   ]
+  },
+  {
+   "id": "H033",
+   "lang": "hy",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "Ժինգյալով հացը ո՞ր օրերին կարելի է պատվիրել",
+   "expect": [
+    "k_zhingyalov"
+   ]
+  },
+  {
+   "id": "H034",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "New Year gata preorder deadline",
+   "expect": [
+    "k_ny_gata"
+   ]
+  },
+  {
+   "id": "H035",
+   "lang": "hy",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "Նոր տարվա քանի՞ գաթա կարող է պատվիրել մեկ հաճախորդը",
+   "expect": [
+    "k_ny_gata"
+   ]
+  },
+  {
+   "id": "H036",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "do sold out cards still show allergens",
+   "expect": [
+    "k_badge_gotcha"
+   ]
+  },
+  {
+   "id": "H037",
+   "lang": "en",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "current price of matnakash",
+   "expect": [
+    "k_price_matnakash_3"
+   ],
+   "forbid": [
+    "k_price_matnakash_1",
+    "k_price_matnakash_2"
+   ]
+  },
+  {
+   "id": "H038",
+   "lang": "hy",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "Մատնաքաշն այժմ քանի՞ դրամ արժե",
+   "expect": [
+    "k_price_matnakash_3"
+   ],
+   "forbid": [
+    "k_price_matnakash_1",
+    "k_price_matnakash_2"
+   ]
+  },
+  {
+   "id": "H039",
+   "lang": "en",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "pakhlava price",
+   "expect": [
+    "k_price_pakhlava_2"
+   ],
+   "forbid": [
+    "k_price_pakhlava_1"
+   ]
+  },
+  {
+   "id": "H040",
+   "lang": "hy",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "Կենտրոնում ինչ գումարից է առաքումն անվճար",
+   "expect": [
+    "k_free_threshold_2"
+   ],
+   "forbid": [
+    "k_free_threshold_1"
+   ]
+  },
+  {
+   "id": "H041",
+   "lang": "en",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "until what time can people order for same-day delivery",
+   "expect": [
+    "k_cutoff_2"
+   ],
+   "forbid": [
+    "k_cutoff_1"
+   ]
+  },
+  {
+   "id": "H042",
+   "lang": "hy",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "Կիրակի օրերին բաց ե՞նք",
+   "expect": [
+    "k_hours_2"
+   ],
+   "forbid": [
+    "k_hours_1"
+   ]
+  },
+  {
+   "id": "H043",
+   "lang": "en",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "what payment methods do we accept",
+   "expect": [
+    "k_pay_3"
+   ],
+   "forbid": [
+    "k_pay_1",
+    "k_pay_2"
+   ]
+  },
+  {
+   "id": "H044",
+   "lang": "hy",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "Ո՞վ է մեր ալյուրի մատակարարը",
+   "expect": [
+    "k_flour_3"
+   ],
+   "forbid": [
+    "k_flour_1",
+    "k_flour_2"
+   ]
+  },
+  {
+   "id": "H045",
+   "lang": "en",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "what do we pack orders in",
+   "expect": [
+    "k_pack_2"
+   ],
+   "forbid": [
+    "k_pack_1"
+   ]
+  },
+  {
+   "id": "H046",
+   "lang": "hy",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "ալյուրի պարկի գինը",
+   "expect": [
+    "k_flour_3"
+   ],
+   "forbid": [
+    "k_flour_1",
+    "k_flour_2"
+   ]
+  },
+  {
+   "id": "H047",
+   "lang": "en",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "matnakash price",
+   "expect": [
+    "k_price_matnakash_1"
+   ],
+   "forbid": [
+    "k_price_matnakash_2",
+    "k_price_matnakash_3"
+   ],
+   "as_of": "k_price_matnakash_1"
+  },
+  {
+   "id": "H048",
+   "lang": "hy",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "Մատնաքաշի գինը",
+   "expect": [
+    "k_price_matnakash_2"
+   ],
+   "forbid": [
+    "k_price_matnakash_1",
+    "k_price_matnakash_3"
+   ],
+   "as_of": "k_free_threshold_2"
+  },
+  {
+   "id": "H049",
+   "lang": "en",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "free delivery threshold in zone A",
+   "expect": [
+    "k_free_threshold_1"
+   ],
+   "forbid": [
+    "k_free_threshold_2"
+   ],
+   "as_of": "k_zone_b"
+  },
+  {
+   "id": "H050",
+   "lang": "hy",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "Նույն օրվա պատվերների վերջնաժամկետը",
+   "expect": [
+    "k_cutoff_1"
+   ],
+   "forbid": [
+    "k_cutoff_2"
+   ],
+   "as_of": "k_staff"
+  },
+  {
+   "id": "H051",
+   "lang": "en",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "opening hours",
+   "expect": [
+    "k_hours_1"
+   ],
+   "forbid": [
+    "k_hours_2"
+   ],
+   "as_of": "k_pack_1"
+  },
+  {
+   "id": "H052",
+   "lang": "en",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "how do customers pay online",
+   "expect": [
+    "k_pay_1"
+   ],
+   "forbid": [
+    "k_pay_2",
+    "k_pay_3"
+   ],
+   "as_of": "k_vpos_attempt"
+  },
+  {
+   "id": "H053",
+   "lang": "hy",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "Ինչպե՞ս են հաճախորդները վճարում",
+   "expect": [
+    "k_pay_2"
+   ],
+   "forbid": [
+    "k_pay_1",
+    "k_pay_3"
+   ],
+   "as_of": "k_cash_limit"
+  },
+  {
+   "id": "H054",
+   "lang": "en",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "flour supplier and bag price",
+   "expect": [
+    "k_flour_2"
+   ],
+   "forbid": [
+    "k_flour_1",
+    "k_flour_3"
+   ],
+   "as_of": "k_flour_2"
+  },
+  {
+   "id": "H055",
+   "lang": "hy",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "Փաթեթավորումն ինչո՞վ է",
+   "expect": [
+    "k_pack_1"
+   ],
+   "forbid": [
+    "k_pack_2"
+   ],
+   "as_of": "k_phone_gotcha"
+  },
+  {
+   "id": "H056",
+   "lang": "en",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "pakhlava box price",
+   "expect": [
+    "k_price_pakhlava_1"
+   ],
+   "forbid": [
+    "k_price_pakhlava_2"
+   ],
+   "as_of": "k_int_prices"
+  },
+  {
+   "id": "H057",
+   "lang": "en",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "which items were on the launch menu",
+   "expect": [
+    "k_menu_launch"
+   ],
+   "flag": "stale"
+  },
+  {
+   "id": "H058",
+   "lang": "hy",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "Ինչո՞ւ է ընկույզի նշումն այդքան կարևոր",
+   "expect": [
+    "k_allergen_walnuts"
+   ],
+   "flag": "stale"
+  },
+  {
+   "id": "H059",
+   "lang": "en",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "zone A delivery fee",
+   "expect": [
+    "k_zone_a"
+   ],
+   "flag": "stale"
+  },
+  {
+   "id": "H060",
+   "lang": "hy",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "Բ գոտու առաքման գինը",
+   "expect": [
+    "k_zone_b"
+   ],
+   "flag": "stale"
+  },
+  {
+   "id": "H061",
+   "lang": "en",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "who works at the bakery and what time does the baker start",
+   "expect": [
+    "k_staff"
+   ],
+   "flag": "stale"
+  },
+  {
+   "id": "H062",
+   "lang": "hy",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "Կրաֆտ տուփերի մատակարարը",
+   "expect": [
+    "k_pack_2"
+   ],
+   "flag": "stale"
+  },
+  {
+   "id": "H063",
+   "lang": "en",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "do we have a Russian version of the site",
+   "expect": [
+    "k_lang"
+   ],
+   "forbid": [
+    "k_ru_pending"
+   ],
+   "flag": "disputed"
+  },
+  {
+   "id": "H064",
+   "lang": "hy",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "Առաքման ժամային պատուհանները",
+   "expect": [
+    "k_windows"
+   ],
+   "forbid": [
+    "k_early_pending"
+   ],
+   "flag": "disputed"
+  },
+  {
+   "id": "H065",
+   "lang": "en",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "cash order phone confirmation threshold",
+   "expect": [
+    "k_cash_limit"
+   ],
+   "forbid": [
+    "k_cash_pending"
+   ],
+   "flag": "disputed"
+  },
+  {
+   "id": "H066",
+   "lang": "hy",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "Ո՞վ է առաքումներն անում՝ մեր առաքի՞չը, թե՞ արտաքին ծառայություն",
+   "expect": [
+    "k_courier"
+   ],
+   "forbid": [
+    "k_courier_pending"
+   ],
+   "flag": "disputed"
+  },
+  {
+   "id": "H067",
+   "lang": "en",
+   "category": "abstention",
+   "tool": "both",
+   "query": "How much does a croissant cost?",
+   "expect": []
+  },
+  {
+   "id": "H068",
+   "lang": "hy",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Հարսանյաց տորթեր պատրաստո՞ւմ ենք",
+   "expect": []
+  },
+  {
+   "id": "H069",
+   "lang": "en",
+   "category": "abstention",
+   "tool": "both",
+   "query": "What wholesale discount do we give restaurants?",
+   "expect": []
+  },
+  {
+   "id": "H070",
+   "lang": "hy",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Ո՞վ է մեր հաշվապահը",
+   "expect": []
+  },
+  {
+   "id": "H071",
+   "lang": "en",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Which receipt printer model did we buy for the shop counter?",
+   "expect": []
+  },
+  {
+   "id": "H072",
+   "lang": "hy",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Instagram-ի գովազդի ամսական բյուջեն որքա՞ն է",
+   "expect": []
+  },
+  {
+   "id": "H073",
+   "lang": "en",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Do we have a loyalty card or points program?",
+   "expect": []
+  },
+  {
+   "id": "H074",
+   "lang": "hy",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Քանի՞ աստիճանում է թխվում լավաշը",
+   "expect": []
+  },
+  {
+   "id": "H075",
+   "lang": "en",
+   "category": "abstention",
+   "tool": "both",
+   "query": "which domain name did we register for the ordering site",
+   "expect": []
+  },
+  {
+   "id": "H076",
+   "lang": "hy",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Կոմիտաս 27-ի տարածքի վարձը ամսական քանի՞ դրամ է",
+   "expect": []
+  },
+  {
+   "id": "H077",
+   "lang": "en",
+   "category": "abstention",
+   "tool": "both",
+   "query": "How many matnakash did we sell in October?",
+   "expect": []
+  },
+  {
+   "id": "H078",
+   "lang": "hy",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Գայանեի աշխատավարձը որքա՞ն է",
+   "expect": []
+  },
+  {
+   "id": "H079",
+   "lang": "en",
+   "category": "abstention",
+   "tool": "both",
+   "query": "What's our refund policy when a delivery arrives late?",
+   "expect": []
+  },
+  {
+   "id": "H080",
+   "lang": "hy",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Ո՞ր բանկից ենք վարկ վերցրել նոր վառարանի համար",
+   "expect": []
+  },
+  {
+   "id": "H081",
+   "lang": "en",
+   "category": "permission",
+   "tool": "both",
+   "query": "staff discount code",
+   "expect": [],
+   "forbid": [
+    "d1#0",
+    "d1#1",
+    "d1#2",
+    "d1#3",
+    "d1#4",
+    "k_staff_code"
+   ]
+  },
+  {
+   "id": "H082",
+   "lang": "hy",
+   "category": "permission",
+   "tool": "both",
+   "query": "Աշխատակիցների զեղչի կոդը քանի՞ տոկոս է",
+   "expect": [],
+   "forbid": [
+    "d1#0",
+    "d1#1",
+    "d1#2",
+    "d1#3",
+    "d1#4",
+    "k_staff_code"
+   ]
+  },
+  {
+   "id": "H083",
+   "lang": "en",
+   "category": "permission",
+   "tool": "both",
+   "query": "Is Narek planning to quit?",
+   "expect": [],
+   "forbid": [
+    "e1#0",
+    "e1#1",
+    "k_narek_leave"
+   ]
+  },
+  {
+   "id": "H084",
+   "lang": "hy",
+   "category": "permission",
+   "tool": "both",
+   "query": "Նարեկի աշխատավարձն ինչպե՞ս է հաշվարկվում",
+   "expect": [],
+   "forbid": [
+    "e1#2",
+    "e1#3"
+   ]
+  },
+  {
+   "id": "H085",
+   "lang": "en",
+   "category": "permission",
+   "tool": "both",
+   "query": "shortcut over the Kievyan bridge",
+   "expect": [],
+   "forbid": [
+    "e1#4"
+   ]
+  },
+  {
+   "id": "H086",
+   "lang": "en",
+   "category": "permission",
+   "tool": "both",
+   "query": "Vardaguyn flower delivery fee",
+   "expect": [],
+   "forbid": [
+    "o1#0",
+    "o1#1"
+   ]
+  },
+  {
+   "id": "H087",
+   "lang": "hy",
+   "category": "permission",
+   "tool": "both",
+   "query": "Ծաղկի խանութը ժամը քանիսի՞ն է բացվում",
+   "expect": [],
+   "forbid": [
+    "o1#2",
+    "o1#3"
+   ]
+  },
+  {
+   "id": "H088",
+   "lang": "en",
+   "category": "permission",
+   "tool": "sessions",
+   "query": "Did the vPOS card account get activated instantly without any wait?",
+   "expect": [
+    "s3#7"
+   ],
+   "forbid": [
+    "o1#4",
+    "o1#5"
+   ]
+  },
+  {
+   "id": "H089",
+   "lang": "hy",
+   "category": "permission",
+   "tool": "memory",
+   "query": "Ռուսերեն տարբերակ ավելացնո՞ւմ ենք կայքում",
+   "expect": [
+    "k_lang"
+   ],
+   "forbid": [
+    "k_ru_pending"
+   ]
+  },
+  {
+   "id": "H090",
+   "lang": "en",
+   "category": "permission",
+   "tool": "memory",
+   "query": "Is there an early morning breakfast delivery slot for offices?",
+   "expect": [
+    "k_windows"
+   ],
+   "forbid": [
+    "k_early_pending"
+   ]
+  },
+  {
+   "id": "H091",
+   "lang": "en",
+   "category": "semantic",
+   "tool": "memory",
+   "query": "How much is a half-kilo box of pakhlava now?",
+   "expect": [
+    "k_price_pakhlava_2"
+   ],
+   "forbid": [
+    "k_price_pakhlava_1"
+   ]
+  },
+  {
+   "id": "H092",
+   "lang": "en",
+   "category": "semantic",
+   "tool": "memory",
+   "query": "Which districts cost one and a half thousand drams for delivery?",
+   "expect": [
+    "k_zone_c"
+   ]
+  },
+  {
+   "id": "H093",
+   "lang": "hy",
+   "category": "semantic",
+   "tool": "memory",
+   "query": "Մինչև կեսօ՞ր պետք է պատվիրել, որ նույն օրը բերեն",
+   "expect": [
+    "k_cutoff_2"
+   ],
+   "forbid": [
+    "k_cutoff_1"
+   ]
+  },
+  {
+   "id": "H094",
+   "lang": "hy",
+   "category": "semantic",
+   "tool": "sessions",
+   "query": "Քանի՞ րոպե է տևում առաքիչի մեկ ամբողջական շրջանը",
+   "expect": [
+    "s2#14",
+    "s2#15"
+   ]
+  },
+  {
+   "id": "H095",
+   "lang": "en",
+   "category": "semantic",
+   "tool": "sessions",
+   "query": "Why don't we deliver to Abovyan?",
+   "expect": [
+    "s2#5"
+   ]
+  },
+  {
+   "id": "H096",
+   "lang": "en",
+   "category": "semantic",
+   "tool": "sessions",
+   "query": "What did Masis Mill originally charge for a 50 kg bag of flour?",
+   "expect": [
+    "s4#7",
+    "s4#8"
+   ]
+  },
+  {
+   "id": "H097",
+   "lang": "hy",
+   "category": "semantic",
+   "tool": "sessions",
+   "query": "Ինչո՞ւ էին փոքր պատվերները խնդիր Նարեկի համար, և ի՞նչ փոխեցինք",
+   "expect": [
+    "s5#3",
+    "s5#4"
+   ]
+  },
+  {
+   "id": "H098",
+   "lang": "hy",
+   "category": "semantic",
+   "tool": "sessions",
+   "query": "Ի՞նչ արեցինք, երբ նազուկը ճզմված էր հասնում",
+   "expect": [
+    "s5#16",
+    "s5#17"
+   ]
+  },
+  {
+   "id": "H099",
+   "lang": "en",
+   "category": "semantic",
+   "tool": "sessions",
+   "query": "What clock mix-up let a tardy purchase slip past the deadline?",
+   "expect": [
+    "s5#8",
+    "s5#9"
+   ]
+  },
+  {
+   "id": "H100",
+   "lang": "en",
+   "category": "semantic",
+   "tool": "sessions",
+   "query": "Which company makes our cardboard containers?",
+   "expect": [
+    "s5#16",
+    "s5#17"
+   ]
+  }
+ ]
+}

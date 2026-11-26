@@ -1,0 +1,25 @@
+.views { display:flex; flex-wrap:wrap; gap:8px; padding:12px 0; }
+.views button,.transcript button { border:1px solid #759582; border-radius:8px; padding:8px 11px; color:#173b26; background:#eef3ea; font:inherit; font-size:12px; cursor:pointer; }
+.views button[aria-pressed=true] { background:#184e33; color:#f1f8f1; border-color:#184e33; }
+.transcript button:disabled { opacity:.55; cursor:wait; }
+.transcript { display:flex; flex-direction:column; flex:1; min-height:180px; min-width:0; }
+.toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; padding:4px 0 10px; font-size:13px; }
+.messages { display:flex; flex-direction:column; gap:16px; overflow-y:auto; overscroll-behavior:contain; min-height:0; padding:4px 6px 18px; scrollbar-width:thin; }
+.scope { margin:0; font-size:12px; line-height:1.6; color:#405747; }
+.scope summary { cursor:pointer; padding:4px 0; }.scope p { margin:6px 0; }
+.metadata { padding:12px; border:1px solid #75958266; border-radius:10px; background:#edf2e8aa; overflow-wrap:anywhere; }
+.metadata h4,.empty h4 { margin:0 0 8px; font-size:15px; }
+.metadata p,.empty p,.error p { margin:0 0 8px; font-size:13px; line-height:1.6; }
+.metadata details,.tool { font-size:12px; }
+.metadata summary,.tool summary { cursor:pointer; padding:6px 0; }
+.metadata dl { margin:8px 0; }.metadata dt { font-weight:600; }.metadata dd { margin:3px 0 10px; }
+.user,.assistant { max-width:94%; min-width:0; padding:12px 14px; border:1px solid #a4b8a9; border-radius:13px; background:#edf2e8d9; align-self:flex-start; }
+.user { background:#d6e7da; align-self:flex-end; border-color:#87aa93; }
+.user header,.assistant header { display:flex; flex-wrap:wrap; align-items:baseline; gap:10px; margin-bottom:8px; font-size:13px; }
+.user time,.assistant time { font-size:11px; color:#405747; }
+.user p,.assistant p,.tool pre { margin:0; white-space:pre-wrap; overflow-wrap:anywhere; font-size:14px; line-height:1.6; }
+.tool { border:1px solid #75958266; border-radius:8px; padding:8px 12px; background:#e3e9df99; overflow-wrap:anywhere; }
+.tool pre { font-family:monospace; font-size:12px; padding-top:8px; }
+.empty { padding:16px 0; }.error { color:#7b2718; }.next { align-self:center; }
+.views button:focus-visible,.transcript :is(button,summary):focus-visible { outline:3px solid #46825b; outline-offset:3px; }
+@media(max-width:700px) { .user,.assistant { max-width:100%; padding:10px; }.user p,.assistant p { font-size:13px; } }

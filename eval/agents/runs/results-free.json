@@ -1,0 +1,778 @@
+{
+ "s2": {
+  "agents": [
+   {
+    "label": "agent-B-free",
+    "backend": "freellm",
+    "model": "auto",
+    "served_by": [
+     "kilo/nvidia/nemotron-3-ultra-550b-a55b:free"
+    ],
+    "steps": 4,
+    "error": null,
+    "llm_seconds": [
+     2.77,
+     3.28,
+     4.24,
+     2.56
+    ],
+    "final": "Done. Added \"- Track ice\" to the milestone list while preserving the existing items (including the \"Track cups\" line added by agent A). The file is now at revision 3.",
+    "calls": [
+     {
+      "tool": "precheck_file",
+      "is_error": false,
+      "seconds": 0.031,
+      "args": "{\"file_id\": \"b213ce8a-28fd-4c53-b091-994c94ae27ef\"}",
+      "result": "Before editing lab-plan-s2-1795498850.md: current rev 2 (version_id dbec6e99-6bd2-4cf8-95f0-b5b5d93a691a), last changed 2026-11-24 05:40:49 UTC by assistant 415f532a.\n\nNo knowledge cites this file."
+     },
+     {
+      "tool": "read_file",
+      "is_error": false,
+      "seconds": 0.0,
+      "args": "{\"file_id\": \"b213ce8a-28fd-4c53-b091-994c94ae27ef\", \"version_id\": \"dbec6e99-6bd2-4cf8-95f0-b5b5d93a691a\"}",
+      "result": "{\"file_id\":\"b213ce8a-28fd-4c53-b091-994c94ae27ef\",\"name\":\"lab-plan-s2-1795498850.md\",\"version_id\":\"dbec6e99-6bd2-4cf8-95f0-b5b5d93a691a\",\"revision\":2,\"parent_version_id\":\"ce9989b8-f79e-4efb-8afa-3a947397c6aa\",\"restored_from\":null,\"content\":\"# Milestone 1\\n- Track lemons\\n- Track sugar\\n- Track cups "
+     },
+     {
+      "tool": "update_file",
+      "is_error": false,
+      "seconds": 0.047,
+      "args": "{\"file_id\": \"b213ce8a-28fd-4c53-b091-994c94ae27ef\", \"base_version_id\": \"dbec6e99-6bd2-4cf8-95f0-b5b5d93a691a\", \"content\": \"# Milestone 1\\n- Track lemons\\n- Track sugar\\n- Track cups (added by agent A)\\n- Track ice\"}",
+      "result": "{\"file_id\":\"b213ce8a-28fd-4c53-b091-994c94ae27ef\",\"name\":\"lab-plan-s2-1795498850.md\",\"version_id\":\"7c0de268-fc4f-43b7-8cbf-c6c828b47811\",\"revision\":3,\"parent_version_id\":\"dbec6e99-6bd2-4cf8-95f0-b5b5d93a691a\",\"restored_from\":null,\"content\":\"# Milestone 1\\n- Track lemons\\n- Track sugar\\n- Track cups "
+     }
+    ]
+   }
+  ],
+  "checks": [
+   [
+    "server rejects a direct stale write (409)",
+    true
+   ],
+   [
+    "rejected write is flagged isError for the client",
+    false
+   ],
+   [
+    "B called precheck_file before update_file",
+    true
+   ],
+   [
+    "stale write (old version_id) was rejected",
+    false
+   ],
+   [
+    "A's line survived",
+    true
+   ],
+   [
+    "B's line landed",
+    true
+   ]
+  ],
+  "direct_stale": {
+   "is_error_flag": false,
+   "text": "AIDrive returned HTTP 409 Conflict version_conflict. The file changed since you read it. Call read_file again, merge, and retry with the new version_id."
+  },
+  "stale_results": [],
+  "final_content": "# Milestone 1\n- Track lemons\n- Track sugar\n- Track cups (added by agent A)\n- Track ice",
+  "revisions": {
+   "versions": [
+    {
+     "id": "7c0de268-fc4f-43b7-8cbf-c6c828b47811",
+     "revision": 3,
+     "actor_id": "4d939e73-0c4d-4aae-873a-49c0b709f389",
+     "agent_id": "10081e8f-2bdb-4f2a-8a28-1f8444c2bc04",
+     "created_at": "2026-11-24T05:41:00.247932Z",
+     "sha256": "a2eec36159902d102d3e84b488a922d8d5aee200c6f30ede764b4f39a857a464",
+     "operation": "update",
+     "restored_from": null
+    },
+    {
+     "id": "dbec6e99-6bd2-4cf8-95f0-b5b5d93a691a",
+     "revision": 2,
+     "actor_id": "4d939e73-0c4d-4aae-873a-49c0b709f389",
+     "agent_id": "415f532a-25b2-4fd5-8fd4-905f0adba2ef",
+     "created_at": "2026-11-24T05:40:49.027010Z",
+     "sha256": "d1ea540753ffe62310657399cbc9c206d738723592f08257ef6a10c071472076",
+     "operation": "update",
+     "restored_from": null
+    },
+    {
+     "id": "ce9989b8-f79e-4efb-8afa-3a947397c6aa",
+     "revision": 1,
+     "actor_id": "4d939e73-0c4d-4aae-873a-49c0b709f389",
+     "agent_id": "415f532a-25b2-4fd5-8fd4-905f0adba2ef",
+     "created_at": "2026-11-24T05:40:49.012546Z",
+     "sha256": "71d1eef14f5fb2fd75ed1388dd9873b00f3adcb884b639e221650f581a6ff563",
+     "operation": "create",
+     "restored_from": null
+    }
+   ],
+   "next_before": null
+  },
+  "v2": "dbec6e99-6bd2-4cf8-95f0-b5b5d93a691a",
+  "seconds": 13.0,
+  "passed": 4,
+  "total": 6
+ },
+ "s3": {
+  "agents": [
+   {
+    "label": "agent-A-free",
+    "backend": "freellm",
+    "model": "auto",
+    "served_by": [
+     "kilo/nvidia/nemotron-3-ultra-550b-a55b:free"
+    ],
+    "steps": 4,
+    "error": null,
+    "llm_seconds": [
+     1.64,
+     2.36,
+     6.31,
+     2.5
+    ],
+    "final": "Done. The price list file `lab-pricing.md` already exists with the correct pricing:\n- Small cup: $1.50\n- Large cup: $2.50  \n- Lemons: $0.40 each (from Citrus Co.)\n\nI've recorded a handoff for the next assistant to create `lab-menu.md` with a one-paragraph menu text based on this price list.",
+    "calls": [
+     {
+      "tool": "get_project_brief",
+      "is_error": false,
+      "seconds": 0.062,
+      "args": "{}",
+      "result": "## Which space this is\nWARNING: this session started in C:\\Users\\USER\\AppData\\Local\\Temp\\claude\\c105f4461d0b23b2\\2681ba7b-fa17-4a76-b101-1ac3210d6163\\scratchpad\\lab-a, which is not inside any folder bound to an AIDrive space, so it uses the default profile \"claude-agent-test-lab\" and works in \"Agent"
+     },
+     {
+      "tool": "read_file",
+      "is_error": false,
+      "seconds": 0.016,
+      "args": "{\"file_id\": \"9e709ff9-ed2a-49ad-a1db-ffe276898440\"}",
+      "result": "{\"file_id\":\"9e709ff9-ed2a-49ad-a1db-ffe276898440\",\"name\":\"lab-pricing.md\",\"version_id\":\"4aa2e0ea-7b97-41fc-9cb8-911290872e2a\",\"revision\":1,\"parent_version_id\":null,\"restored_from\":null,\"content\":\"# Lemonade Stand Price List\\n\\n## Drinks\\n- Small cup: $1.50\\n- Large cup: $2.50\\n\\n## Supply Costs\\n- L"
+     },
+     {
+      "tool": "record_handoff",
+      "is_error": false,
+      "seconds": 0.015,
+      "args": "{\"summary\": \"The price list file lab-pricing.md already exists with the correct pricing: small cup $1.50, large cup $2.50, lemons $0.40 each from Citrus Co. Ready for the next assistant to create the menu text.\", \"next_step\": \"Create lab-menu.md with a one-paragraph menu text based on the price list",
+      "result": "Auto-accepted: this handoff is current now (evidence current, nothing needed the owner). It is labelled as not checked by the owner, who can keep or undo it.\n{\"id\":\"86043f31-b04a-419f-840f-773d369c0719\",\"status\":\"approved\",\"summary\":\"The price list file lab-pricing.md already exists with the correct"
+     }
+    ]
+   },
+   {
+    "label": "agent-B-2nd",
+    "backend": "freellm",
+    "model": "free-router",
+    "served_by": [
+     "kilo/openrouter/free"
+    ],
+    "steps": 6,
+    "error": null,
+    "llm_seconds": [
+     1.92,
+     8.91,
+     1.47,
+     3.3,
+     2.22,
+     5.58
+    ],
+    "final": "The previous assistant's pending task is complete. Following the handoff, I:\n\n1. Verified the price list (`lab-pricing.md`, rev 4aa2e0ea…) still had the correct pricing: small cup $1.50, large cup $2.50, lemons $0.40 each from Citrus Co.\n2. Created `lab-menu.md` with a one-paragraph menu text incorporating those prices and supplier info.\n\nThe menu text reads:\n\n> # Lemonade Stand Menu\n>\n> Fresh-squeezed lemonade, served by the cup: a small cup is $1.50 and a large cup is $2.50. Lemons are sourced from Citrus Co. at $0.40 each, so every cup is made from quality fruit at a fair price.\n\nI also rec",
+    "calls": [
+     {
+      "tool": "get_project_brief",
+      "is_error": false,
+      "seconds": 0.063,
+      "args": "{}",
+      "result": "## Which space this is\nWARNING: this session started in C:\\Users\\USER\\AppData\\Local\\Temp\\claude\\c105f4461d0b23b2\\2681ba7b-fa17-4a76-b101-1ac3210d6163\\scratchpad\\lab-b, which is not inside any folder bound to an AIDrive space, so it uses the default profile \"codex-agent-test-lab\" and works in \"Agent "
+     },
+     {
+      "tool": "get_latest_handoff",
+      "is_error": false,
+      "seconds": 0.0,
+      "args": "{}",
+      "result": "CURRENT HANDOFF, AUTO-ACCEPTED (its sources were current; the owner has not checked it, treat its decisions as unconfirmed by the owner):\nCurrent (auto-accepted):\n- The price list file lab-pricing.md already exists with the correct pricing: small cup $1.50, large cup $2.50, lemons $0.40 each from Ci"
+     },
+     {
+      "tool": "get_messages",
+      "is_error": false,
+      "seconds": 0.015,
+      "args": "{}",
+      "result": "No unread messages for you."
+     },
+     {
+      "tool": "read_file",
+      "is_error": false,
+      "seconds": 0.032,
+      "args": "{\"file_id\": \"9e709ff9-ed2a-49ad-a1db-ffe276898440\", \"version_id\": \"4aa2e0ea-7b97-41fc-9cb8-911290872e2a\"}",
+      "result": "{\"file_id\":\"9e709ff9-ed2a-49ad-a1db-ffe276898440\",\"name\":\"lab-pricing.md\",\"version_id\":\"4aa2e0ea-7b97-41fc-9cb8-911290872e2a\",\"revision\":1,\"parent_version_id\":null,\"restored_from\":null,\"content\":\"# Lemonade Stand Price List\\n\\n## Drinks\\n- Small cup: $1.50\\n- Large cup: $2.50\\n\\n## Supply Costs\\n- L"
+     },
+     {
+      "tool": "list_files",
+      "is_error": false,
+      "seconds": 0.0,
+      "args": "{}",
+      "result": "{\"files\":[{\"id\":\"0b17f7be-74f7-40fe-998e-ed3c93431dc3\",\"name\":\"lab-stale-direct.md\",\"current_version_id\":\"e0e400f8-e8eb-41da-93ef-f239f218ac0e\",\"byte_size\":3},{\"id\":\"0e1edc89-3f97-4c0c-b353-92e18f4afab9\",\"name\":\"lab-supplier-notes-s6-1795498771.md\",\"current_version_id\":\"036a1a69-3c46-4f27-9f39-5fad1"
+     },
+     {
+      "tool": "create_file",
+      "is_error": false,
+      "seconds": 0.016,
+      "args": "{\"name\": \"lab-menu.md\", \"content\": \"# Lemonade Stand Menu\\n\\nFresh-squeezed lemonade, served by the cup: a small cup is $1.50 and a large cup is $2.50. Lemons are sourced from Citrus Co. at $0.40 each, so every cup is made from quality fruit at a fair price.\"}",
+      "result": "{\"file_id\":\"61b69c73-f613-4fb7-bdeb-54172d608e6e\",\"name\":\"lab-menu.md\",\"version_id\":\"436ab277-562c-4b77-9efa-b891fb4c15c4\",\"revision\":1,\"parent_version_id\":null,\"restored_from\":null,\"content\":\"# Lemonade Stand Menu\\n\\nFresh-squeezed lemonade, served by the cup: a small cup is $1.50 and a large cup i"
+     },
+     {
+      "tool": "record_handoff",
+      "is_error": false,
+      "seconds": 0.0,
+      "args": "{\"next_step\": \"Owner reviews lab-menu.md; if approved, the lemonade stand deliverables (pricing + menu) are complete.\", \"sources\": [{\"file_id\": \"9e709ff9-ed2a-49ad-a1db-ffe276898440\", \"version_id\": \"4aa2e0ea-7b97-41fc-9cb8-911290872e2a\"}, {\"file_id\": \"61b69c73-f613-4fb7-bdeb-54172d608e6e\", \"version_",
+      "result": "Auto-accepted: this handoff is current now (evidence current, nothing needed the owner). It is labelled as not checked by the owner, who can keep or undo it.\n{\"id\":\"98f171cb-9ae9-4c78-8149-acb7606a83ef\",\"status\":\"approved\",\"summary\":\"Created lab-menu.md with a one-paragraph menu text based on the pr"
+     }
+    ]
+   }
+  ],
+  "checks": [
+   [
+    "A recorded a handoff",
+    true
+   ],
+   [
+    "A's handoff cites sources",
+    true
+   ],
+   [
+    "B called get_latest_handoff or get_project_brief first",
+    true
+   ],
+   [
+    "B read the cited source",
+    true
+   ],
+   [
+    "B created lab-menu.md",
+    true
+   ],
+   [
+    "menu mentions the prices",
+    true
+   ]
+  ],
+  "handoff_result": "Auto-accepted: this handoff is current now (evidence current, nothing needed the owner). It is labelled as not checked by the owner, who can keep or undo it.\n{\"id\":\"86043f31-b04a-419f-840f-773d369c0719\",\"status\":\"approved\",\"summary\":\"The price list file lab-pricing.md already exists with the correct pricing: small cup $1.50, large cup $2.50, lemons $0.40 each from Citrus Co. Ready for the next assistant to create the menu text.\",\"decisions\":[],\"next_step\":\"Create lab-menu.md with a one-paragraph menu text based on the price list in lab-pricing.md\",\"actor_id\":\"4d939e73-0c4d-4aae-873a-49c0b709f3",
+  "latest_handoff_status": "CURRENT HANDOFF, AUTO-ACCEPTED (its sources were current; the owner has not checked it, treat its decisions as unconfirmed by the owner):\nCurrent (auto-accepted):\n- Created lab-menu.md with a one-paragraph menu text based on the price list in lab-pricing.md (small cup $1.50, large cup $2.50, lemons ",
+  "seconds": 36.5,
+  "passed": 6,
+  "total": 6
+ },
+ "s4": {
+  "agents": [
+   {
+    "label": "agent-A-2nd",
+    "backend": "freellm",
+    "model": "free-router",
+    "served_by": [
+     "kilo/openrouter/free"
+    ],
+    "steps": 3,
+    "error": null,
+    "llm_seconds": [
+     2.88,
+     2.39,
+     1.61
+    ],
+    "final": "Message sent.",
+    "calls": [
+     {
+      "tool": "get_project_brief",
+      "is_error": false,
+      "seconds": 0.062,
+      "args": "{}",
+      "result": "## Which space this is\nWARNING: this session started in C:\\Users\\USER\\AppData\\Local\\Temp\\claude\\c105f4461d0b23b2\\2681ba7b-fa17-4a76-b101-1ac3210d6163\\scratchpad\\lab-a, which is not inside any folder bound to an AIDrive space, so it uses the default profile \"claude-agent-test-lab\" and works in \"Agent"
+     },
+     {
+      "tool": "get_messages",
+      "is_error": false,
+      "seconds": 0.0,
+      "args": "{}",
+      "result": "No unread messages for you."
+     },
+     {
+      "tool": "send_message",
+      "is_error": false,
+      "seconds": 0.015,
+      "args": "{\"to\": \"assistants\", \"body\": \"Which cup size sells better on hot days, small or large?\", \"subject\": \"Cup size sales on hot days\"}",
+      "result": "Sent (message id 6c69d434-3b98-46b8-8eab-afc7579e9cd9, thread 6c69d434-3b98-46b8-8eab-afc7579e9cd9)."
+     }
+    ]
+   },
+   {
+    "label": "agent-B-free",
+    "backend": "freellm",
+    "model": "auto",
+    "served_by": [
+     "kilo/nvidia/nemotron-3-ultra-550b-a55b:free"
+    ],
+    "steps": 3,
+    "error": null,
+    "llm_seconds": [
+     1.39,
+     4.31,
+     4.09
+    ],
+    "final": "Answered the message from \"Claude Code\" about cup sizes: **large cups sell better on hot days (synthetic test answer)**.",
+    "calls": [
+     {
+      "tool": "get_project_brief",
+      "is_error": false,
+      "seconds": 0.094,
+      "args": "{}",
+      "result": "## Which space this is\nWARNING: this session started in C:\\Users\\USER\\AppData\\Local\\Temp\\claude\\c105f4461d0b23b2\\2681ba7b-fa17-4a76-b101-1ac3210d6163\\scratchpad\\lab-b, which is not inside any folder bound to an AIDrive space, so it uses the default profile \"codex-agent-test-lab\" and works in \"Agent "
+     },
+     {
+      "tool": "send_message",
+      "is_error": false,
+      "seconds": 0.0,
+      "args": "{\"to\": \"assistants\", \"subject\": \"Re: Cup size sales on hot days\", \"body\": \"large cups sell better on hot days (synthetic test answer)\", \"reply_to\": \"6c69d434-3b98-46b8-8eab-afc7579e9cd9\"}",
+      "result": "Sent (message id fa9c2f60-741d-47ce-8eed-6c99304e7f23, thread 6c69d434-3b98-46b8-8eab-afc7579e9cd9)."
+     }
+    ]
+   },
+   {
+    "label": "agent-A-2nd",
+    "backend": "freellm",
+    "model": "free-router",
+    "served_by": [
+     "kilo/openrouter/free"
+    ],
+    "steps": 2,
+    "error": null,
+    "llm_seconds": [
+     1.76,
+     1.66
+    ],
+    "final": "Yes. The other assistant (Codex) replied that large cups sell better on hot days.",
+    "calls": [
+     {
+      "tool": "get_messages",
+      "is_error": false,
+      "seconds": 0.016,
+      "args": "{}",
+      "result": "- 2026-11-24 05:41:50Z · from assistant \"Codex\" to all assistants · \"Re: Cup size sales on hot days\": large cups sell better on hot days (synthetic test answer) (id fa9c2f60-741d-47ce-8eed-6c99304e7f23, thread 6c69d434-3b98-46b8-8eab-afc7579e9cd9)"
+     }
+    ]
+   }
+  ],
+  "checks": [
+   [
+    "A sent a message",
+    true
+   ],
+   [
+    "A addressed it to assistants, not the owner",
+    true
+   ],
+   [
+    "B read messages",
+    false
+   ],
+   [
+    "B replied",
+    true
+   ],
+   [
+    "B's reply is threaded (reply_to)",
+    true
+   ],
+   [
+    "A got the answer",
+    true
+   ]
+  ],
+  "send_args": [
+   {
+    "to": "assistants",
+    "body": "Which cup size sells better on hot days, small or large?",
+    "subject": "Cup size sales on hot days"
+   }
+  ],
+  "reply_args": [
+   {
+    "to": "assistants",
+    "subject": "Re: Cup size sales on hot days",
+    "body": "large cups sell better on hot days (synthetic test answer)",
+    "reply_to": "6c69d434-3b98-46b8-8eab-afc7579e9cd9"
+   }
+  ],
+  "seconds": 20.3,
+  "passed": 5,
+  "total": 6
+ },
+ "s5": {
+  "agents": [
+   {
+    "label": "agent-A-2nd",
+    "backend": "freellm",
+    "model": "free-router",
+    "served_by": [
+     "kilo/openrouter/free"
+    ],
+    "steps": 5,
+    "error": null,
+    "llm_seconds": [
+     2.22,
+     1.22,
+     3.61,
+     1.97,
+     1.59
+    ],
+    "final": "Saved as approved project knowledge (fact, id 8bb99701): \"We buy lemons from Citrus Co at 0.40 per lemon.\"\n\n- Evidence: lab-supplier-s5-1795498920.md, version 6f18966a-c7c9-4a65-b23b-6ded1b7ac1c2, quoting \"We buy lemons from Citrus Co at 0.40 per lemon\".\n- Auto-accepted (current evidence, no conflict); the owner can still undo it.",
+    "calls": [
+     {
+      "tool": "read_file",
+      "is_error": false,
+      "seconds": 0.015,
+      "args": "{\"file_id\": \"0d0f1086-22a4-4880-99ae-70c71d85ff70\"}",
+      "result": "{\"file_id\":\"0d0f1086-22a4-4880-99ae-70c71d85ff70\",\"name\":\"lab-supplier-s5-1795498920.md\",\"version_id\":\"6f18966a-c7c9-4a65-b23b-6ded1b7ac1c2\",\"revision\":1,\"parent_version_id\":null,\"restored_from\":null,\"content\":\"# Supplier\\nWe buy lemons from Citrus Co at 0.40 per lemon, delivered every Tuesday.\\nՄեն"
+     },
+     {
+      "tool": "search_memory",
+      "is_error": false,
+      "seconds": 0.016,
+      "args": "{\"query\": \"lemons supplier price\"}",
+      "result": "No approved knowledge yet."
+     },
+     {
+      "tool": "propose_memory",
+      "is_error": true,
+      "seconds": 0.0,
+      "args": "{\"evidence\": \"[{\\\"file_id\\\": \\\"0d0f1086-22a4-4880-99ae-70c71d85ff70\\\", \\\"version_id\\\": \\\"6f18966a-c7c9-4a65-b23b-6ded1b7ac1c2\\\", \\\"quote\\\": \\\"We buy lemons from Citrus Co at 0.40 per lemon\\\"}\", \"visibility\": \"team\", \"kind\": \"fact\", \"statement\": \"We buy lemons from Citrus Co at 0.40 per lemon.\"}",
+      "result": "failed to deserialize parameters: invalid type: string \"[{\\\"file_id\\\": \\\"0d0f1086-22a4-4880-99ae-70c71d85ff70\\\", \\\"version_id\\\": \\\"6f18966a-c7c9-4a65-b23b-6ded1b7ac1c2\\\", \\\"quote\\\": \\\"We buy lemons from Citrus Co at 0.40 per lemon\\\"}\", expected a sequence"
+     },
+     {
+      "tool": "propose_memory",
+      "is_error": false,
+      "seconds": 0.016,
+      "args": "{\"evidence\": [{\"file_id\": \"0d0f1086-22a4-4880-99ae-70c71d85ff70\", \"version_id\": \"6f18966a-c7c9-4a65-b23b-6ded1b7ac1c2\", \"quote\": \"We buy lemons from Citrus Co at 0.40 per lemon\"}], \"kind\": \"fact\", \"statement\": \"We buy lemons from Citrus Co at 0.40 per lemon.\", \"visibility\": \"team\"}",
+      "result": "Auto-accepted: this proposal is current now (evidence current, nothing needed the owner). It is labelled as not checked by the owner, who can keep or undo it.\n{\"id\":\"8bb99701-e89c-4187-a4e3-4519d7fe1287\",\"kind\":\"fact\",\"topic\":null,\"statement\":\"We buy lemons from Citrus Co at 0.40 per lemon.\",\"outcom"
+     }
+    ]
+   },
+   {
+    "label": "agent-B-2nd",
+    "backend": "freellm",
+    "model": "free-router",
+    "served_by": [
+     "kilo/openrouter/free"
+    ],
+    "steps": 7,
+    "error": null,
+    "llm_seconds": [
+     2.8,
+     1.47,
+     0.91,
+     1.36,
+     1.22,
+     5.09,
+     2.0
+    ],
+    "final": "**(1) Կիտրոն — որտեղի՞ց և ինչ գնով**\n\nFrom AIDrive's agreed knowledge (fact, auto-accepted — not yet checked by the owner):\n\n- **Supplier: Citrus Co**, at **0.40 per lemon**, delivered **every Tuesday**.\n- Source: `lab-supplier-s5-1795498920.md` (rev 1), which states in Armenian: «Մենք կիտրոնը գնում ենք Citrus Co-ից՝ 0.40 մեկ կիտրոնի համար, առաքումը երեքշաբթի օրերին է։»\n- Caveat: this item was auto-accepted under the space's review-by-exception rule, so the owner has not explicitly confirmed it.\n\n**(2) Office wifi password**\n\n**Not known.** There is no approved knowledge, no shared file, and n",
+    "calls": [
+     {
+      "tool": "search_memory",
+      "is_error": false,
+      "seconds": 0.015,
+      "args": "{\"query\": \"kitron\"}",
+      "result": "No approved knowledge yet."
+     },
+     {
+      "tool": "search_memory",
+      "is_error": false,
+      "seconds": 0.016,
+      "args": "{\"query\": \"wifi\"}",
+      "result": "No approved knowledge yet."
+     },
+     {
+      "tool": "get_project_brief",
+      "is_error": false,
+      "seconds": 0.062,
+      "args": "{}",
+      "result": "## Which space this is\nWARNING: this session started in C:\\Users\\USER\\AppData\\Local\\Temp\\claude\\c105f4461d0b23b2\\2681ba7b-fa17-4a76-b101-1ac3210d6163\\scratchpad\\lab-b, which is not inside any folder bound to an AIDrive space, so it uses the default profile \"codex-agent-test-lab\" and works in \"Agent "
+     },
+     {
+      "tool": "list_files",
+      "is_error": false,
+      "seconds": 0.062,
+      "args": "{}",
+      "result": "{\"files\":[{\"id\":\"0b17f7be-74f7-40fe-998e-ed3c93431dc3\",\"name\":\"lab-stale-direct.md\",\"current_version_id\":\"e0e400f8-e8eb-41da-93ef-f239f218ac0e\",\"byte_size\":3},{\"id\":\"0d0f1086-22a4-4880-99ae-70c71d85ff70\",\"name\":\"lab-supplier-s5-1795498920.md\",\"current_version_id\":\"6f18966a-c7c9-4a65-b23b-6ded1b7ac1c"
+     },
+     {
+      "tool": "read_file",
+      "is_error": false,
+      "seconds": 0.016,
+      "args": "{\"file_id\": \"0d0f1086-22a4-4880-99ae-70c71d85ff70\"}",
+      "result": "{\"file_id\":\"0d0f1086-22a4-4880-99ae-70c71d85ff70\",\"name\":\"lab-supplier-s5-1795498920.md\",\"version_id\":\"6f18966a-c7c9-4a65-b23b-6ded1b7ac1c2\",\"revision\":1,\"parent_version_id\":null,\"restored_from\":null,\"content\":\"# Supplier\\nWe buy lemons from Citrus Co at 0.40 per lemon, delivered every Tuesday.\\nՄեն"
+     },
+     {
+      "tool": "search_sessions",
+      "is_error": false,
+      "seconds": 0.187,
+      "args": "{\"query\": \"wifi password\"}",
+      "result": "No captured session mentions that."
+     },
+     {
+      "tool": "read_file",
+      "is_error": false,
+      "seconds": 0.0,
+      "args": "{\"file_id\": \"9c91e910-ec1b-40b1-8c55-2c5a987a0b13\"}",
+      "result": "{\"file_id\":\"9c91e910-ec1b-40b1-8c55-2c5a987a0b13\",\"name\":\"lab-plan-other-s6b-1795498889.md\",\"version_id\":\"141f6feb-1c7f-49c4-8670-3ba593d89293\",\"revision\":1,\"parent_version_id\":null,\"restored_from\":null,\"content\":\"# Other plan\\n- Keep\\n\",\"sha256\":\"4c26f7aae0b13e4feeaa18d5015c733086f8b36f795ada0f0a58"
+     },
+     {
+      "tool": "read_file",
+      "is_error": false,
+      "seconds": 0.0,
+      "args": "{\"file_id\": \"aba5086f-1def-4939-80c3-143b69609169\"}",
+      "result": "{\"file_id\":\"aba5086f-1def-4939-80c3-143b69609169\",\"name\":\"plan.md\",\"version_id\":\"cf5bb237-37f8-46dd-9675-14748c1ffbd1\",\"revision\":1,\"parent_version_id\":null,\"restored_from\":null,\"content\":\"no prefix\",\"sha256\":\"31c18ae16ef84b908802ef65bb2f63d927225fec39be5aaf5ed97b9053936422\",\"actor_id\":\"4d939e73-0c4"
+     },
+     {
+      "tool": "read_file",
+      "is_error": false,
+      "seconds": 0.016,
+      "args": "{\"file_id\": \"0b17f7be-74f7-40fe-998e-ed3c93431dc3\"}",
+      "result": "{\"file_id\":\"0b17f7be-74f7-40fe-998e-ed3c93431dc3\",\"name\":\"lab-stale-direct.md\",\"version_id\":\"e0e400f8-e8eb-41da-93ef-f239f218ac0e\",\"revision\":1,\"parent_version_id\":null,\"restored_from\":null,\"content\":\"dup\",\"sha256\":\"9eb6203435cb3e0033f544e3bf6f1b74b138c765fc489a38a092e8f7adbd9638\",\"actor_id\":\"4d939e"
+     },
+     {
+      "tool": "read_file",
+      "is_error": false,
+      "seconds": 0.0,
+      "args": "{\"file_id\": \"93cfb68a-3dc8-43d4-9a0b-88368eed680c\"}",
+      "result": "{\"file_id\":\"93cfb68a-3dc8-43d4-9a0b-88368eed680c\",\"name\":\"lab-stale-direct.md\",\"version_id\":\"74340106-2f65-48cc-807a-76e15a6fa54d\",\"revision\":2,\"parent_version_id\":\"f5bcb951-97a4-401a-8975-e31cf0d71de9\",\"restored_from\":null,\"content\":\"v1\\nv2\\n\",\"sha256\":\"105b2c8d7bdd46426f2067ec234b1208c89b21bd3a1bd"
+     }
+    ]
+   }
+  ],
+  "checks": [
+   [
+    "A proposed memory",
+    true
+   ],
+   [
+    "proposal carries file evidence",
+    true
+   ],
+   [
+    "proposal was accepted (review by exception)",
+    true
+   ],
+   [
+    "EN search finds it",
+    true
+   ],
+   [
+    "HY search finds it",
+    false
+   ],
+   [
+    "no-answer search returns nothing relevant",
+    true
+   ],
+   [
+    "B answered 0.40 / Citrus Co",
+    true
+   ],
+   [
+    "B did not invent a wifi password",
+    true
+   ]
+  ],
+  "search": {
+   "en": {
+    "seconds": 0.02,
+    "error": false,
+    "text": "- [fact · auto-accepted, not checked by the owner] We buy lemons from Citrus Co at 0.40 per lemon. (evidence: lab-supplier-s5-1795498920.md; id 8bb99701-e89c-4187-a4e3-4519d7fe1287)",
+    "has_citrus": true
+   },
+   "hy": {
+    "seconds": 0.0,
+    "error": false,
+    "text": "No approved knowledge yet.",
+    "has_citrus": false
+   },
+   "none": {
+    "seconds": 0.01,
+    "error": false,
+    "text": "No approved knowledge yet.",
+    "has_citrus": false
+   }
+  },
+  "proposal_result": "Auto-accepted: this proposal is current now (evidence current, nothing needed the owner). It is labelled as not checked by the owner, who can keep or undo it.\n{\"id\":\"8bb99701-e89c-4187-a4e3-4519d7fe1287\",\"kind\":\"fact\",\"topic\":null,\"statement\":\"We buy lemons from Citrus Co at 0.40 per lemon.\",\"outcome\":null,\"status\":\"approved\",\"supersedes\":null,\"actor_id\":\"4d939e73-0c4d-4aae-873a-49c0b709f389\",\"agent_id\":\"415f532a-25b2-4fd5-8fd4-905f0adba2ef\",\"decided_at\":\"2026-11-24T05:42:08Z\",\"decision_note\":\"Auto-accepted: current evidence, no conflict\",\"created_at\":\"2026-11-24T05:42:08Z\",\"valid_from\":\"2026-11-24T05:42:08.320776Z\",\"invalid_at\":null,\"superseded_by\":null,\"invalidation_note\":null,\"visibility\":\"team\",\"mine\":true,\"conflicts\":[],\"disputed_by\":[],\"stale\":false,\"auto_accepted\":true,\"owner_checke",
+  "seconds": 26.0,
+  "passed": 7,
+  "total": 8
+ },
+ "s7": {
+  "agents": [
+   {
+    "label": "agent-A-2nd",
+    "backend": "freellm",
+    "model": "free-router",
+    "served_by": [
+     "kilo/openrouter/free"
+    ],
+    "steps": 5,
+    "error": "Killed: harness killed the MCP server process after 2 files",
+    "llm_seconds": [
+     2.78,
+     1.64,
+     1.98,
+     3.92,
+     6.64
+    ],
+    "final": "",
+    "calls": [
+     {
+      "tool": "get_project_brief",
+      "is_error": false,
+      "seconds": 0.078,
+      "args": "{}",
+      "result": "## Which space this is\nWARNING: this session started in C:\\Users\\USER\\AppData\\Local\\Temp\\claude\\c105f4461d0b23b2\\2681ba7b-fa17-4a76-b101-1ac3210d6163\\scratchpad\\lab-a, which is not inside any folder bound to an AIDrive space, so it uses the default profile \"claude-agent-test-lab\" and works in \"Agent"
+     },
+     {
+      "tool": "get_messages",
+      "is_error": false,
+      "seconds": 0.0,
+      "args": "{}",
+      "result": "No unread messages for you."
+     },
+     {
+      "tool": "list_files",
+      "is_error": false,
+      "seconds": 0.0,
+      "args": "{}",
+      "result": "{\"files\":[{\"id\":\"0b17f7be-74f7-40fe-998e-ed3c93431dc3\",\"name\":\"lab-stale-direct.md\",\"current_version_id\":\"e0e400f8-e8eb-41da-93ef-f239f218ac0e\",\"byte_size\":3},{\"id\":\"0d0f1086-22a4-4880-99ae-70c71d85ff70\",\"name\":\"lab-supplier-s5-1795498920.md\",\"current_version_id\":\"6f18966a-c7c9-4a65-b23b-6ded1b7ac1c"
+     },
+     {
+      "tool": "read_file",
+      "is_error": false,
+      "seconds": 0.016,
+      "args": "{\"file_id\": \"9e709ff9-ed2a-49ad-a1db-ffe276898440\"}",
+      "result": "{\"file_id\":\"9e709ff9-ed2a-49ad-a1db-ffe276898440\",\"name\":\"lab-pricing.md\",\"version_id\":\"4aa2e0ea-7b97-41fc-9cb8-911290872e2a\",\"revision\":1,\"parent_version_id\":null,\"restored_from\":null,\"content\":\"# Lemonade Stand Price List\\n\\n## Drinks\\n- Small cup: $1.50\\n- Large cup: $2.50\\n\\n## Supply Costs\\n- L"
+     },
+     {
+      "tool": "read_file",
+      "is_error": false,
+      "seconds": 0.015,
+      "args": "{\"file_id\": \"61b69c73-f613-4fb7-bdeb-54172d608e6e\"}",
+      "result": "{\"file_id\":\"61b69c73-f613-4fb7-bdeb-54172d608e6e\",\"name\":\"lab-menu.md\",\"version_id\":\"436ab277-562c-4b77-9efa-b891fb4c15c4\",\"revision\":1,\"parent_version_id\":null,\"restored_from\":null,\"content\":\"# Lemonade Stand Menu\\n\\nFresh-squeezed lemonade, served by the cup: a small cup is $1.50 and a large cup i"
+     },
+     {
+      "tool": "read_file",
+      "is_error": false,
+      "seconds": 0.0,
+      "args": "{\"file_id\": \"0d0f1086-22a4-4880-99ae-70c71d85ff70\"}",
+      "result": "{\"file_id\":\"0d0f1086-22a4-4880-99ae-70c71d85ff70\",\"name\":\"lab-supplier-s5-1795498920.md\",\"version_id\":\"6f18966a-c7c9-4a65-b23b-6ded1b7ac1c2\",\"revision\":1,\"parent_version_id\":null,\"restored_from\":null,\"content\":\"# Supplier\\nWe buy lemons from Citrus Co at 0.40 per lemon, delivered every Tuesday.\\nՄեն"
+     },
+     {
+      "tool": "create_file",
+      "is_error": false,
+      "seconds": 0.016,
+      "args": "{\"name\": \"lab-s7-1-overview.md\", \"content\": \"# Lemonade Stand Tracker — Overview\\n\\nA simple web app to track daily sales, inventory, and profit for a lemonade stand.\\n\\nBuilt with vanilla HTML/CSS/JS, no framework, runs in any browser.\\n\\nData stored in localStorage; exports to CSV for accounting.\"",
+      "result": "{\"file_id\":\"d033f312-4e2c-4aa3-9c01-607516644cb1\",\"name\":\"lab-s7-1-overview.md\",\"version_id\":\"8c7227a0-4102-4ced-8218-f0643b91ec20\",\"revision\":1,\"parent_version_id\":null,\"restored_from\":null,\"content\":\"# Lemonade Stand Tracker — Overview\\n\\nA simple web app to track daily sales, inventory, and profi"
+     },
+     {
+      "tool": "create_file",
+      "is_error": false,
+      "seconds": 0.015,
+      "args": "{\"name\": \"lab-s7-2-data.md\", \"content\": \"# Lemonade Stand Tracker — Data Model\\n\\nSales record: date, small cups, large cups, price per cup, total revenue.\\n\\nInventory record: lemons bought, lemons used, cost per lemon from Citrus Co.\\n\\nProfit = revenue − lemon cost; all stored as JSON in localSto",
+      "result": "{\"file_id\":\"4d855516-511c-4ead-afd9-2babad49ec6f\",\"name\":\"lab-s7-2-data.md\",\"version_id\":\"153264bc-fbc1-47a5-8cfb-a3cf7b9e6162\",\"revision\":1,\"parent_version_id\":null,\"restored_from\":null,\"content\":\"# Lemonade Stand Tracker — Data Model\\n\\nSales record: date, small cups, large cups, price per cup, to"
+     }
+    ]
+   }
+  ],
+  "checks": [
+   [
+    "agent was killed mid-task",
+    true
+   ],
+   [
+    "files written before the kill are kept",
+    true
+   ],
+   [
+    "no handoff was written by the killed agent",
+    true
+   ],
+   [
+    "AIDrive tells the next assistant the session was cut off (any trace in brief/sessions)",
+    false
+   ]
+  ],
+  "files_after_kill": [
+   "lab-s7-1-overview.md",
+   "lab-s7-2-data.md"
+  ],
+  "captured_automatically": false,
+  "latest_handoff": "CURRENT HANDOFF, AUTO-ACCEPTED (its sources were current; the owner has not checked it, treat its decisions as unconfirmed by the owner):\nCurrent (auto-accepted):\n- Created lab-menu.md with a one-paragraph menu text based on the price list in lab-pricing.md (small cup $1.50, large cup $2.50, lemons $0.40 each from Citrus Co.).\n  decisions: none\n  next step: Owner reviews lab-menu.md; if approved, the lemonade stand deliverables (pricing + menu) are complete.\n  sources: lab-menu.md (file_id 61b69c73-f613-4fb7-bdeb-54172d608e6e, version_id 436ab277-562c-4b77-9efa-b891fb4c15c4); lab-pricing.md (f",
+  "search_sessions": "No captured session mentions that.",
+  "brief_sessions_section": "## Where each recent session left off (captured automatically)\nNone captured yet. Sessions in a folder bound to this space are captured after every turn once the hook is installed (aidrive-mcp-server install-hooks).",
+  "activity": [],
+  "seconds": 17.3,
+  "passed": 3,
+  "total": 4
+ },
+ "s8": {
+  "agents": [
+   {
+    "label": "agent-A-free",
+    "backend": "freellm",
+    "model": "free-router",
+    "served_by": [],
+    "steps": 1,
+    "error": "RuntimeError: freellm failed after retries: HTTP 429: {\"error\":{\"message\":\"All models exhausted: 1 route checked (1 rate-limited or on cooldown). Add more API keys or wait for rate limits to reset. Soonest reset ~60s.\",\"type\":\"rate_limit_error\",\"code\":\"rate_limit_exceeded\",\"retryAtMs\":1795499441185},\"execution_id\":\"fb71f414-71d7-4746-99a0-39707df63f77\"}",
+    "llm_seconds": [],
+    "final": "",
+    "calls": []
+   },
+   {
+    "label": "agent-B-free",
+    "backend": "freellm",
+    "model": "auto",
+    "served_by": [],
+    "steps": 1,
+    "error": "RuntimeError: freellm failed after retries: HTTP 429: {\"error\":{\"message\":\"All models exhausted: 48 routes checked (12 rate-limited or on cooldown, 36 model lacks tool-calling). Add more API keys or wait for rate limits to reset. Soonest reset ~8s. 380 models skipped: no key configured for their platform.\",\"type\":\"rate_limit_error\",\"code\":\"routing_exhausted\"},\"execution_id\":\"3bced7e5-9efb-4016-8bd5-a14d09e21c43\"}",
+    "llm_seconds": [],
+    "final": "",
+    "calls": []
+   }
+  ],
+  "checks": [
+   [
+    "A registered the scratch file",
+    false
+   ],
+   [
+    "A gave purpose and a short keep_days",
+    false
+   ],
+   [
+    "deadline forced into the past via the owner API",
+    false
+   ],
+   [
+    "B's brief showed the due file",
+    false
+   ],
+   [
+    "B resolved it",
+    false
+   ],
+   [
+    "B did not claim 'removed' while the file still exists",
+    true
+   ]
+  ],
+  "artifact_id": null,
+  "register_args": [],
+  "force_past": null,
+  "resolve_calls": [],
+  "list_after": "- C:/Users/USER/AppData/Local/Temp/claude/c105f4461d0b23b2/2681ba7b-fa17-4a76-b101-1ac3210d6163/scratchpad\\lab-a\\scratch-s8-probe-1795498963.py on <host> [active] One-off probe script to test the cup counter; not a project deliverable; needed for a day or two. (keep until 2026-11-26T05:42:55Z; registered by Claude Code; id 72606702-2a2e-43f1-a5ee-22f82c0c7e0f)\n- C:/Users/USER/AppData/Local/Temp/claude/c105f4461d0b23b2/2681ba7b-fa17-4a76-b101-1ac3210d6163/scratchpad\\lab-a\\scratch-s8-probe-1795499107.py on <host> [active] One-off probe script to test the cup counter; not a project deliverable; needed for a day or two. (keep until 2026-11-26T05:45:15Z; registered by Claude Code; id e9a80a2e-c9f4-4232-8d25-74fb18f64643)\n- C:/Users/USER/AppData/Local/Temp/claude/c105f4461d0b23b2/2681ba7b-fa17-4a76-b101-1ac3210d6163/scratchpad\\lab-a\\scratch-s8-probe-1795499203.py on <host> [active] Probe script to test the cup counter (keep until 2026-11-27T05:46:52Z; registered by Claude Code; id fbbf7767-7321-4e5e-bd8e-28742487c2c6)",
+  "brief_due_section": [],
+  "seconds": 102.9,
+  "passed": 1,
+  "total": 6
+ }
+}

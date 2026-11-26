@@ -1,0 +1,260 @@
+{
+  "model": "qwen3.5:9b",
+  "backend": "local Ollama",
+  "workspace_id": "15dc04f6-f44d-462a-9048-1f1efe011e7d",
+  "results": {
+    "directory_access": {
+      "pass": true,
+      "observations": [
+        {
+          "method": "GET",
+          "path": "/workspaces",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces",
+          "status": 401,
+          "seconds": 0.016
+        }
+      ]
+    },
+    "unknown_workspace": {
+      "pass": true,
+      "observations": [
+        {
+          "method": "GET",
+          "path": "/workspaces/f5b99387-973e-4e39-b73f-4c97db380952/files",
+          "status": 404,
+          "seconds": 0.015
+        }
+      ]
+    },
+    "cross_workspace_file": {
+      "pass": true,
+      "observations": [
+        {
+          "method": "GET",
+          "path": "/workspaces/15dc04f6-f44d-462a-9048-1f1efe011e7d/files/93bf23d3-68a1-4ce9-8df1-c8926defe0dd",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/e087c6d1-207f-40b9-a957-16fb4178e53d/files/93bf23d3-68a1-4ce9-8df1-c8926defe0dd",
+          "status": 404,
+          "seconds": 0.016
+        }
+      ]
+    },
+    "stale_write": {
+      "pass": true,
+      "observations": [
+        {
+          "method": "PUT",
+          "path": "/workspaces/15dc04f6-f44d-462a-9048-1f1efe011e7d/files/93bf23d3-68a1-4ce9-8df1-c8926defe0dd",
+          "status": 200,
+          "seconds": 0.015
+        },
+        {
+          "method": "PUT",
+          "path": "/workspaces/15dc04f6-f44d-462a-9048-1f1efe011e7d/files/93bf23d3-68a1-4ce9-8df1-c8926defe0dd",
+          "status": 409,
+          "seconds": 0.0
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/15dc04f6-f44d-462a-9048-1f1efe011e7d/files/93bf23d3-68a1-4ce9-8df1-c8926defe0dd",
+          "status": 200,
+          "seconds": 0.016
+        }
+      ]
+    },
+    "armenian_round_trip": {
+      "pass": true,
+      "observations": [
+        {
+          "method": "GET",
+          "path": "/workspaces",
+          "status": 200,
+          "seconds": 0.015
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/15dc04f6-f44d-462a-9048-1f1efe011e7d/files/93bf23d3-68a1-4ce9-8df1-c8926defe0dd/versions/c6d39a9e-af40-43a6-b570-e6cad469fa83",
+          "status": 200,
+          "seconds": 0.016
+        }
+      ]
+    }
+  },
+  "missing": [],
+  "pass": true,
+  "llm_seconds": [
+    18.171,
+    3.766
+  ],
+  "transcript": [
+    {
+      "role": "assistant",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "call_0_2375",
+            "type": "function",
+            "function": {
+              "name": "run_probe",
+              "arguments": "{\"name\": \"directory_access\"}"
+            }
+          },
+          {
+            "id": "call_1_2375",
+            "type": "function",
+            "function": {
+              "name": "run_probe",
+              "arguments": "{\"name\": \"unknown_workspace\"}"
+            }
+          },
+          {
+            "id": "call_2_2375",
+            "type": "function",
+            "function": {
+              "name": "run_probe",
+              "arguments": "{\"name\": \"cross_workspace_file\"}"
+            }
+          },
+          {
+            "id": "call_3_2375",
+            "type": "function",
+            "function": {
+              "name": "run_probe",
+              "arguments": "{\"name\": \"stale_write\"}"
+            }
+          },
+          {
+            "id": "call_4_2375",
+            "type": "function",
+            "function": {
+              "name": "run_probe",
+              "arguments": "{\"name\": \"armenian_round_trip\"}"
+            }
+          }
+        ]
+      },
+      "seconds": 18.171,
+      "served_by": "qwen3.5:9b"
+    },
+    {
+      "role": "tool",
+      "result": {
+        "pass": true,
+        "observations": [
+          {
+            "method": "GET",
+            "path": "/workspaces",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces",
+            "status": 401,
+            "seconds": 0.016
+          }
+        ]
+      }
+    },
+    {
+      "role": "tool",
+      "result": {
+        "pass": true,
+        "observations": [
+          {
+            "method": "GET",
+            "path": "/workspaces/f5b99387-973e-4e39-b73f-4c97db380952/files",
+            "status": 404,
+            "seconds": 0.015
+          }
+        ]
+      }
+    },
+    {
+      "role": "tool",
+      "result": {
+        "pass": true,
+        "observations": [
+          {
+            "method": "GET",
+            "path": "/workspaces/15dc04f6-f44d-462a-9048-1f1efe011e7d/files/93bf23d3-68a1-4ce9-8df1-c8926defe0dd",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/e087c6d1-207f-40b9-a957-16fb4178e53d/files/93bf23d3-68a1-4ce9-8df1-c8926defe0dd",
+            "status": 404,
+            "seconds": 0.016
+          }
+        ]
+      }
+    },
+    {
+      "role": "tool",
+      "result": {
+        "pass": true,
+        "observations": [
+          {
+            "method": "PUT",
+            "path": "/workspaces/15dc04f6-f44d-462a-9048-1f1efe011e7d/files/93bf23d3-68a1-4ce9-8df1-c8926defe0dd",
+            "status": 200,
+            "seconds": 0.015
+          },
+          {
+            "method": "PUT",
+            "path": "/workspaces/15dc04f6-f44d-462a-9048-1f1efe011e7d/files/93bf23d3-68a1-4ce9-8df1-c8926defe0dd",
+            "status": 409,
+            "seconds": 0.0
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/15dc04f6-f44d-462a-9048-1f1efe011e7d/files/93bf23d3-68a1-4ce9-8df1-c8926defe0dd",
+            "status": 200,
+            "seconds": 0.016
+          }
+        ]
+      }
+    },
+    {
+      "role": "tool",
+      "result": {
+        "pass": true,
+        "observations": [
+          {
+            "method": "GET",
+            "path": "/workspaces",
+            "status": 200,
+            "seconds": 0.015
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/15dc04f6-f44d-462a-9048-1f1efe011e7d/files/93bf23d3-68a1-4ce9-8df1-c8926defe0dd/versions/c6d39a9e-af40-43a6-b570-e6cad469fa83",
+            "status": 200,
+            "seconds": 0.016
+          }
+        ]
+      }
+    },
+    {
+      "role": "assistant",
+      "message": {
+        "role": "assistant",
+        "content": "All five probes passed successfully:\n\n- **directory_access**: Authenticated access (200) and anonymous denial (401) verified.\n- **unknown_workspace**: Unknown workspace returned 404 as expected.\n- **cross_workspace_file**: File ID accessible in its native workspace (200), denied in another (404).\n- **stale_write**: Old base version produced 409 conflict while preserving newer content.\n- **armenian_round_trip**: Project name, file name, and content preserved Armenian text correctly.\n\nNo failures observed; full coverage of the five probes achieved."
+      },
+      "seconds": 3.766,
+      "served_by": "qwen3.5:9b"
+    }
+  ]
+}

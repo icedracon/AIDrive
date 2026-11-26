@@ -1,0 +1,1539 @@
+openapi: 3.1.0
+info:
+  title: AIDrive API
+  version: 0.0.1
+  description: Local development sessions, workspaces, revocable agent access, versioned UTF-8 text files, handoffs, activity, desktop pairing, captured assistant sessions and owner-reviewed project knowledge. Provider workflows remain planned.
+servers:
+  - url: http://127.0.0.1:8080
+paths:
+  /healthz:
+    get:
+      operationId: getHealth
+      summary: Check that the API process is running
+      responses:
+        "200":
+          description: API process is running
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+  /readyz:
+    get:
+      operationId: getReadiness
+      summary: Check whether the API's required dependencies are usable
+      description: >-
+        Probes PostgreSQL through the runtime role. Not ready when the database is
+        unconfigured or unreachable, when the connected role is not aidrive_app,
+        has superuser, BYPASSRLS, CREATEDB, CREATEROLE or owner-role membership,
+        owns a public table, or required schema objects are missing. This is not
+        a complete schema/privilege drift audit. Bodies carry check names only,
+        never connection details. File storage is not yet a dependency.
+      responses:
+        "200":
+          description: All checks passed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Readiness"
+        "503":
+          description: At least one check failed; the process itself is alive
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Readiness"
+  /auth/register:
+    post:
+      operationId: register
+      summary: Create an owner account and start a session (only when AIDRIVE_ALLOW_SIGNUP=1)
+      description: State-changing requests require Sec-Fetch-Site same-origin or a matching Origin (ADR 0002).
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/Credentials" } } } }
+      responses:
+        "201": { description: Created; sets __Host-aidrive_session, content: { application/json: { schema: { $ref: "#/components/schemas/Session" } } } }
+        "403": { description: signup_disabled or cross_origin_request, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+        "409": { description: email_taken, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+        "422": { description: invalid_email, password_too_short, password_too_long or password_blocklisted, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+  /auth/login:
+    post:
+      operationId: login
+      summary: Verify credentials and issue a new session token
+      description: Passwords are checked in full. Inputs above 256 Unicode characters return invalid_credentials; they are never truncated.
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/Credentials" } } } }
+      responses:
+        "200": { description: Signed in; sets __Host-aidrive_session, content: { application/json: { schema: { $ref: "#/components/schemas/Session" } } } }
+        "401": { description: invalid_credentials (same response for unknown email), content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+        "403": { description: cross_origin_request, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+  /auth/logout:
+    post:
+      operationId: logout
+      summary: Revoke the current session server-side and clear the cookie
+      responses:
+        "204": { description: Signed out }
+        "403": { description: cross_origin_request, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+  /auth/session:
+    get:
+      operationId: getSession
+      summary: Return the signed-in user
+      responses:
+        "200": { description: Active session, content: { application/json: { schema: { $ref: "#/components/schemas/Session" } } } }
+        "401": { description: unauthenticated, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+  /workspaces:
+    get:
+      operationId: listWorkspaces
+      summary: List workspaces where the signed-in user is a member
+      responses:
+        "200": { description: Workspaces with the caller's role, content: { application/json: { schema: { $ref: "#/components/schemas/WorkspaceList" } } } }
+        "401": { description: unauthenticated, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+    post:
+      operationId: createWorkspace
+      summary: Create a workspace owned by the signed-in user
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [name], properties: { name: { type: string, minLength: 1, maxLength: 120 } } } } } }
+      responses:
+        "201": { description: Created, content: { application/json: { schema: { $ref: "#/components/schemas/WorkspaceBody" } } } }
+        "401": { description: unauthenticated, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+        "403": { description: cross_origin_request, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+        "422": { description: invalid_name (empty after trimming or over 120 characters), content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+  /workspaces/{id}:
+    get:
+      operationId: getWorkspace
+      summary: Return one workspace the signed-in user belongs to
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: Workspace with the caller's role, content: { application/json: { schema: { $ref: "#/components/schemas/WorkspaceBody" } } } }
+        "401": { description: unauthenticated, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+        "404": { description: not_found — same response for unknown and foreign workspaces, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+  /workspaces/{id}/agents:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+    get:
+      operationId: listAgentGrants
+      security: [{ sessionCookie: [] }]
+      summary: List access keys for a current owner, without secrets
+      responses:
+        "200":
+          description: Grant metadata; Cache-Control no-store
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [grants]
+                properties:
+                  grants: { type: array, items: { $ref: "#/components/schemas/AgentGrant" } }
+        "401": { description: Human session required }
+        "404": { description: Unknown workspace or caller is not an owner }
+        "503": { description: Database unavailable }
+    post:
+      operationId: issueAgentGrant
+      security: [{ sessionCookie: [] }]
+      summary: Issue one seven-day workspace or file access key
+      description: Requires same-origin CSRF checks. A request UUID is unique; retrying it returns 409 and never reveals the secret again. On ambiguous failure, list keys and revoke an unrecoverable key before replacing it. Scopes are workspace:read, files:read, files:write (role low), review:accept (role medium) and grand (role grand); default workspace:read. Only the space owner issues keys; local trust never issues more than files:write. Extra fields are rejected.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [request_id, name]
+              properties:
+                request_id: { type: string, format: uuid }
+                name: { type: string, minLength: 1, maxLength: 120 }
+                scope: { type: string, enum: ["workspace:read", "files:read", "files:write", "review:accept", "grand"], default: "workspace:read" }
+      responses:
+        "201":
+          description: One-time secret; Cache-Control no-store
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [grant, token]
+                properties:
+                  grant: { $ref: "#/components/schemas/AgentGrant" }
+                  token: { type: string, pattern: '^aidrive_agent_[0-9a-f]{64}$' }
+        "401": { description: Human session required }
+        "403": { description: Cross-origin request rejected }
+        "404": { description: Unknown workspace or caller is not an owner }
+        "409": { description: request_already_used; secret cannot be recovered }
+        "422": { description: Invalid name, UUID or unsupported fields }
+        "503": { description: Creation not confirmed; inspect keys before replacing }
+  /workspaces/{id}/agents/{agent}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      - { name: agent, in: path, required: true, schema: { type: string, format: uuid } }
+    delete:
+      operationId: revokeAgentGrant
+      security: [{ sessionCookie: [] }]
+      summary: Permanently revoke a workspace key as a current owner
+      description: Requires same-origin CSRF checks. Repeated revocation returns 204. Completed revocation prevents subsequent reads; already returned data cannot be recalled.
+      responses:
+        "204": { description: Revoked, including already revoked keys }
+        "401": { description: Human session required }
+        "403": { description: Cross-origin request rejected }
+        "404": { description: Not owner or grant not in this workspace }
+        "503": { description: Revocation not confirmed }
+  /agent/workspaces/{id}:
+    get:
+      operationId: readAgentWorkspace
+      security: [{ agentBearer: [] }]
+      summary: Read only the bound workspace ID and name using an agent key
+      description: Cookie sessions do not authorize this endpoint. Expiry, revocation, workspace binding, scope and the issuing owner's current membership are checked for each read. Owner demotion or departure permanently revokes their grants.
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200":
+          description: Authorized metadata; Cache-Control no-store
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, name, agent_id, scope]
+                properties:
+                  id: { type: string, format: uuid }
+                  name: { type: string }
+                  agent_id: { type: string, format: uuid }
+                  scope: { type: string, enum: ["workspace:read", "files:read", "files:write", "review:accept", "grand"] }
+        "401": { description: Missing, malformed, expired, revoked or wrong-workspace agent token }
+        "503": { description: Database unavailable }
+  /workspaces/{id}/files:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      operationId: humanListFiles
+      summary: ListFiles
+      description: Human session required; viewer or higher.
+      security:
+      - sessionCookie: []
+      responses:
+        '200':
+          description: Result; Cache-Control no-store and X-Content-Type-Options nosniff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileList'
+        '401':
+          description: Invalid or missing credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope, read-only membership or failed CSRF check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown or unauthorized workspace/file/version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Unavailable; a write may have committed. Retry the identical request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: after
+        in: query
+        schema:
+          type: string
+          format: uuid
+        description: Exclusive file ID cursor; up to 100 rows.
+    post:
+      operationId: humanCreateTextFile
+      summary: CreateTextFile
+      description: Human session required; editor/owner plus same-origin CSRF checks. A request UUID deduplicates
+        retries. Same UUID and same input returns the original version without moving the head; different input returns
+        request_conflict. Inspect current_version_id before editing a replayed result.
+      security:
+      - sessionCookie: []
+      responses:
+        '201':
+          description: Result; Cache-Control no-store and X-Content-Type-Options nosniff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileVersion'
+        '401':
+          description: Invalid or missing credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope, read-only membership or failed CSRF check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown or unauthorized workspace/file/version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Unavailable; a write may have committed. Retry the identical request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: version_conflict or request_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: Content above 256 KiB, or request body above the framework 2 MiB JSON limit
+        '422':
+          description: Invalid filename, UUID, text, or unsupported fields
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTextFile'
+  /workspaces/{id}/files/{file}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: file
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      operationId: humanReadFile
+      summary: ReadFile
+      description: Human session required; viewer or higher.
+      security:
+      - sessionCookie: []
+      responses:
+        '200':
+          description: Result; Cache-Control no-store and X-Content-Type-Options nosniff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileVersion'
+        '401':
+          description: Invalid or missing credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope, read-only membership or failed CSRF check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown or unauthorized workspace/file/version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Unavailable; a write may have committed. Retry the identical request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: humanEditTextFile
+      summary: EditTextFile
+      description: Human session required; editor/owner plus same-origin CSRF checks. A request UUID deduplicates
+        retries. Same UUID and same input returns the original version without moving the head; different input returns
+        request_conflict. Inspect current_version_id before editing a replayed result. Requires base_version_id matching
+        current head; stale base returns version_conflict. Restore copies a source from this file into a new version.
+      security:
+      - sessionCookie: []
+      responses:
+        '200':
+          description: Result; Cache-Control no-store and X-Content-Type-Options nosniff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileVersion'
+        '401':
+          description: Invalid or missing credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope, read-only membership or failed CSRF check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown or unauthorized workspace/file/version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Unavailable; a write may have committed. Retry the identical request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: version_conflict or request_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: Content above 256 KiB, or request body above the framework 2 MiB JSON limit
+        '422':
+          description: Invalid filename, UUID, text, or unsupported fields
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditTextFile'
+  /workspaces/{id}/files/{file}/versions:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: file
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      operationId: humanFileHistory
+      summary: FileHistory
+      description: Human session required; viewer or higher.
+      security:
+      - sessionCookie: []
+      responses:
+        '200':
+          description: Result; Cache-Control no-store and X-Content-Type-Options nosniff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileHistory'
+        '401':
+          description: Invalid or missing credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope, read-only membership or failed CSRF check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown or unauthorized workspace/file/version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Unavailable; a write may have committed. Retry the identical request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: before
+        in: query
+        schema:
+          type: integer
+        description: Exclusive revision cursor; newest first, up to 50 rows.
+  /workspaces/{id}/files/{file}/versions/{version}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: file
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: version
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      operationId: humanReadFileVersion
+      summary: ReadFileVersion
+      description: Human session required; viewer or higher.
+      security:
+      - sessionCookie: []
+      responses:
+        '200':
+          description: Result; Cache-Control no-store and X-Content-Type-Options nosniff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileVersion'
+        '401':
+          description: Invalid or missing credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope, read-only membership or failed CSRF check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown or unauthorized workspace/file/version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Unavailable; a write may have committed. Retry the identical request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /workspaces/{id}/files/{file}/versions/{version}/download:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: file
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: version
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      operationId: humanDownloadFileVersion
+      summary: DownloadFileVersion
+      description: Human session required; viewer or higher.
+      security:
+      - sessionCookie: []
+      responses:
+        '200':
+          description: Exact saved UTF-8 text as attachment; filename uses UTF-8 percent encoding, never HTML rendering.
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+            Cache-Control:
+              schema:
+                type: string
+                const: no-store
+            X-Content-Type-Options:
+              schema:
+                type: string
+                const: nosniff
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Invalid or missing credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope, read-only membership or failed CSRF check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown or unauthorized workspace/file/version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Unavailable; a write may have committed. Retry the identical request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /workspaces/{id}/files/{file}/restore:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: file
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    post:
+      operationId: humanRestoreTextFile
+      summary: RestoreTextFile
+      description: Human session required; editor/owner plus same-origin CSRF checks. A request UUID deduplicates
+        retries. Same UUID and same input returns the original version without moving the head; different input returns
+        request_conflict. Inspect current_version_id before editing a replayed result. Requires base_version_id matching
+        current head; stale base returns version_conflict. Restore copies a source from this file into a new version.
+      security:
+      - sessionCookie: []
+      responses:
+        '200':
+          description: Result; Cache-Control no-store and X-Content-Type-Options nosniff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileVersion'
+        '401':
+          description: Invalid or missing credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope, read-only membership or failed CSRF check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown or unauthorized workspace/file/version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Unavailable; a write may have committed. Retry the identical request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: version_conflict or request_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: Content above 256 KiB, or request body above the framework 2 MiB JSON limit
+        '422':
+          description: Invalid filename, UUID, text, or unsupported fields
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestoreTextFile'
+  /agent/workspaces/{id}/files:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      operationId: agentListFiles
+      summary: ListFiles
+      description: 'Bearer-only; cookies are ignored. Requires files:read or higher. '
+      security:
+      - agentBearer: []
+      responses:
+        '200':
+          description: Result; Cache-Control no-store and X-Content-Type-Options nosniff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileList'
+        '401':
+          description: Invalid or missing credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope, read-only membership or failed CSRF check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown or unauthorized workspace/file/version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Unavailable; a write may have committed. Retry the identical request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: after
+        in: query
+        schema:
+          type: string
+          format: uuid
+        description: Exclusive file ID cursor; up to 100 rows.
+    post:
+      operationId: agentCreateTextFile
+      summary: CreateTextFile
+      description: Bearer-only; cookies are ignored. Requires files:write.  A request UUID deduplicates retries. Same
+        UUID and same input returns the original version without moving the head; different input returns request_conflict.
+        Inspect current_version_id before editing a replayed result.
+      security:
+      - agentBearer: []
+      responses:
+        '201':
+          description: Result; Cache-Control no-store and X-Content-Type-Options nosniff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileVersion'
+        '401':
+          description: Invalid or missing credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope, read-only membership or failed CSRF check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown or unauthorized workspace/file/version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Unavailable; a write may have committed. Retry the identical request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: version_conflict or request_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: Content above 256 KiB, or request body above the framework 2 MiB JSON limit
+        '422':
+          description: Invalid filename, UUID, text, or unsupported fields
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTextFile'
+  /agent/workspaces/{id}/files/{file}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: file
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      operationId: agentReadFile
+      summary: ReadFile
+      description: 'Bearer-only; cookies are ignored. Requires files:read or higher. '
+      security:
+      - agentBearer: []
+      responses:
+        '200':
+          description: Result; Cache-Control no-store and X-Content-Type-Options nosniff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileVersion'
+        '401':
+          description: Invalid or missing credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope, read-only membership or failed CSRF check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown or unauthorized workspace/file/version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Unavailable; a write may have committed. Retry the identical request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: agentEditTextFile
+      summary: EditTextFile
+      description: Bearer-only; cookies are ignored. Requires files:write.  A request UUID deduplicates retries. Same
+        UUID and same input returns the original version without moving the head; different input returns request_conflict.
+        Inspect current_version_id before editing a replayed result. Requires base_version_id matching current head;
+        stale base returns version_conflict. Restore copies a source from this file into a new version.
+      security:
+      - agentBearer: []
+      responses:
+        '200':
+          description: Result; Cache-Control no-store and X-Content-Type-Options nosniff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileVersion'
+        '401':
+          description: Invalid or missing credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope, read-only membership or failed CSRF check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown or unauthorized workspace/file/version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Unavailable; a write may have committed. Retry the identical request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: version_conflict or request_conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: Content above 256 KiB, or request body above the framework 2 MiB JSON limit
+        '422':
+          description: Invalid filename, UUID, text, or unsupported fields
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditTextFile'
+  /agent/workspaces/{id}/files/{file}/versions:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: file
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      operationId: agentFileHistory
+      summary: FileHistory
+      description: 'Bearer-only; cookies are ignored. Requires files:read or higher. '
+      security:
+      - agentBearer: []
+      responses:
+        '200':
+          description: Result; Cache-Control no-store and X-Content-Type-Options nosniff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileHistory'
+        '401':
+          description: Invalid or missing credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope, read-only membership or failed CSRF check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown or unauthorized workspace/file/version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Unavailable; a write may have committed. Retry the identical request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - name: before
+        in: query
+        schema:
+          type: integer
+        description: Exclusive revision cursor; newest first, up to 50 rows.
+  /agent/workspaces/{id}/files/{file}/versions/{version}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: file
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: version
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      operationId: agentReadFileVersion
+      summary: ReadFileVersion
+      description: 'Bearer-only; cookies are ignored. Requires files:read or higher. '
+      security:
+      - agentBearer: []
+      responses:
+        '200':
+          description: Result; Cache-Control no-store and X-Content-Type-Options nosniff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileVersion'
+        '401':
+          description: Invalid or missing credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope, read-only membership or failed CSRF check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown or unauthorized workspace/file/version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Unavailable; a write may have committed. Retry the identical request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /workspaces/{id}/handoffs:
+    get:
+      operationId: listHandoffs
+      summary: Recent handoffs with exact sources and computed staleness (viewer or higher; also /agent/... with files:read)
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: "{ handoffs: Handoff[] } — each with status proposed|approved|rejected|superseded, stale, sources[]" }
+    post:
+      operationId: recordHandoff
+      summary: Record a proposed handoff (editor/owner session, or /agent/... with files:write). Content is immutable.
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "201": { description: Proposed handoff with agent_id when recorded by an agent }
+        "403": { description: read_only or insufficient_scope }
+        "409": { description: request_conflict (request ID reused with different input) }
+        "422": { description: invalid_handoff, unknown_source or duplicate_source }
+  /workspaces/{id}/handoffs/latest:
+    get:
+      operationId: latestHandoff
+      summary: "{ approved: Handoff|null, pending: Handoff[] } — the approved handoff (flagged stale if a cited file changed) and unapproved proposals. Also /agent/..."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: Latest state }
+  /workspaces/{id}/handoffs/{handoff}/decision:
+    post:
+      operationId: decideHandoff
+      summary: Owner approves or rejects a proposed handoff. Session only; no agent route. Approval locks cited files and requires them unchanged; it supersedes the previous approval. Also /agent/... with a review:accept key (handoffs by other actors only) or a grand key; 403 otherwise.
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: handoff, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: Decided handoff }
+        "403": { description: owner_required }
+        "409": { description: stale_sources or already_decided }
+  /workspaces/{id}/activity:
+    get:
+      operationId: workspaceActivity
+      summary: "Timeline derived from file actions, handoffs and agent keys, newest first: { events: [{ at, kind, actor_email, agent_id, agent_name, subject, file_id, version_id, revision, handoff_id }], next_before }. Viewer or higher; also /agent/... with files:read."
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+        - { name: before, in: query, required: false, schema: { type: string, description: "next_before cursor (RFC 3339, microseconds, UTC)" } }
+        - { name: limit, in: query, required: false, schema: { type: integer, minimum: 1, maximum: 100, default: 50 } }
+      responses:
+        "200": { description: "kind is file.create|file.update|file.restore|handoff.proposed|handoff.approved|handoff.rejected|agent.issued|agent.revoked" }
+        "403": { description: insufficient_scope (agent key below files:read) }
+        "404": { description: Not a member }
+        "422": { description: invalid_cursor }
+  /agent/pairing:
+    post:
+      operationId: startPairing
+      summary: "Unauthenticated. Body { pairing_id (uuid), client_name, token_sha256 (64 hex) }; the client keeps the secret. Returns { user_code (8 consonants), verification_url, expires_in: 600 }. Same ID and hash replays the same code."
+      responses:
+        "201": { description: Pairing started }
+        "409": { description: already_used }
+        "422": { description: invalid_request }
+        "429": { description: too_many_attempts (global cap on live pending requests) }
+  /agent/pairing/{id}/status:
+    post:
+      operationId: pairingStatus
+      summary: "Bearer = the client's own secret. { status: pending|approved|denied|expired, workspace_id, workspace_name, scope, approver_email }. Unknown ID or wrong secret: 404."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: Status }
+        "404": { description: not_found }
+  /pairing/{code}:
+    get:
+      operationId: lookupPairing
+      summary: "Session. { client_name, status, expires_at }. Unknown or expired codes count as failed attempts; ten in ten minutes returns 429."
+      parameters: [{ name: code, in: path, required: true, schema: { type: string } }]
+      responses:
+        "200": { description: Pending request }
+        "404": { description: not_found }
+        "429": { description: too_many_attempts }
+  /pairing/{code}/decision:
+    post:
+      operationId: decidePairing
+      summary: "Session + same-origin. { decision: approved|denied, workspace_id, scope }. Approval issues an ordinary agent grant for the client's hash in a space the caller owns."
+      parameters: [{ name: code, in: path, required: true, schema: { type: string } }]
+      responses:
+        "200": { description: "{ status, agent_id }" }
+        "403": { description: owner_required }
+        "404": { description: not_found }
+        "409": { description: already_used }
+        "429": { description: too_many_attempts }
+  /workspaces/{id}/sessions:
+    get:
+      operationId: listSessions
+      summary: "Captured sessions the caller can see, newest first: [{ id, client (claude-code|codex), label, capture_origin (import|hook), coverage (complete|partial), agent_id, started_at, ended_at, event_count, visibility (private|team), mine }]. private sessions are visible only to the person who captured them and the assistants acting for that person; workspace owners do not see other people's private sessions. Viewer or higher; also /agent/... with files:read."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100 } }]
+      responses:
+        "200": { description: Sessions }
+    post:
+      operationId: upsertSession
+      summary: "Create or merge a captured session { client, external_id, label, origin, started_at?, ended_at? } -> { session_id }. New sessions are private. Editor/owner or files:write agent; the same person's same (client, external_id) merges bounds; another person's session with that id is refused (409 session_belongs_to_another_person)."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: "{ session_id }" }
+        "403": { description: read_only or insufficient_scope }
+        "409": { description: session_belongs_to_another_person }
+        "422": { description: invalid_session }
+  /workspaces/{id}/sessions/search:
+    get:
+      operationId: searchSessions
+      summary: "Full-text search over captured events the caller can see ('simple' configuration). A plain question is planned: English and Armenian stopwords dropped, light suffix normalisation, 3+ character terms as prefixes, sources matching more terms first, and a matched user question is followed by its answer (the next assistant event). Text with quoted phrases or -exclusions uses websearch syntax (any term may match; exclusions stay ANDed). [{ session_id, client, label, ordinal, role, at, snippet (matches wrapped in «»), rank }]."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: q, in: query, required: true, schema: { type: string, maxLength: 200 } }, { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 50 } }]
+      responses:
+        "200": { description: Ranked hits }
+        "422": { description: invalid_query }
+  /workspaces/{id}/sessions/{session}/events:
+    get:
+      operationId: sessionExcerpt
+      summary: "Events around an ordinal: ?around=N&radius=R (R <= 20) -> [{ ordinal, role, at, text }]"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: session, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: Events }
+        "404": { description: not_found }
+    post:
+      operationId: addSessionEvents
+      summary: "Append up to 500 events { events: [{ key, ordinal, role: user|assistant|tool, at?, text (1-4000 chars) }], complete }. Idempotent by key; returns { inserted }."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: session, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: "{ inserted }" }
+        "422": { description: invalid_session }
+  /workspaces/{id}/sessions/{session}:
+    delete:
+      operationId: deleteSession
+      summary: A workspace owner or the person who captured it (session only); removes the session, its events and search entries. No agent route.
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: session, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "204": { description: Deleted }
+        "403": { description: owner_required }
+        "404": { description: not_found }
+  /workspaces/{id}/knowledge:
+    get:
+      operationId: listKnowledge
+      summary: "Project knowledge with evidence: [{ id, kind, topic, statement, outcome, status (proposed|approved|rejected|superseded|retired), supersedes, actor_id, agent_id, decided_at, decision_note, created_at, valid_from, invalid_at (microsecond UTC validity bounds), superseded_by, invalidation_note, visibility (team|private), mine, conflicts (proposals: approved items of the same kind, topic and visibility that approval would contradict), disputed_by (approved items: pending proposals that challenge them), stale, evidence: [{ file_id, file_name, version_id, current_version_id, session_id, event_key, handoff_id, quote, stale }] }]. Default status=approved (current knowledge, keystone/constraint/decision first); proposed for the review inbox; all adds rejected, superseded and retired history. as_of=<timestamp> returns what was approved knowledge at that moment (cannot be combined with status). q uses the session search planning (without answer pairing). stale is true when a cited file moved past the cited version. Viewer or higher; also /agent/... with files:read."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: status, in: query, schema: { type: string, enum: [approved, proposed, all] } }, { name: kind, in: query, schema: { type: string, enum: [decision, fact, constraint, preference, gotcha, attempt, keystone] } }, { name: q, in: query, schema: { type: string, maxLength: 200 } }, { name: as_of, in: query, schema: { type: string, format: date-time } }, { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 200 } }]
+      responses:
+        "200": { description: "{ items }" }
+        "422": { description: invalid_knowledge or invalid_query }
+    post:
+      operationId: proposeKnowledge
+      summary: "Propose { request_id, kind, statement (1-2000 chars, no control characters except newline/tab), topic?, outcome? (required iff kind=attempt: failed|partial|worked), supersedes? (an approved item id), evidence?: up to 10 of { file_id, version_id, quote? } | { session_id, ordinal, quote? } | { handoff_id, quote? }, visibility?: team (default) | private }. Private items are visible to their creator (and that person's assistants) only and are decided by their creator; a correction must target an approved item of the same visibility; cited sessions must be visible to the proposer. Always created as proposed; idempotent per request_id. Editor/owner or files:write agent; also /agent/..."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "201": { description: Proposed item }
+        "403": { description: read_only or insufficient_scope }
+        "409": { description: request_conflict (request_id reused with different input) }
+        "422": { description: invalid_knowledge or unknown_evidence }
+  /workspaces/{id}/knowledge/{item}/decision:
+    post:
+      operationId: decideKnowledge
+      summary: "Decision from a web session { decision: approved|rejected, note?, statement?, resolution?: replace|keep_both }: a workspace owner for team items, the creator for private items (404 for anyone else). With statement, approval stores a new approved revision with the same evidence and marks the proposal superseded. Approving a correction supersedes the item it corrects. When the proposal conflicts with approved items, approval requires resolution: replace supersedes them, keep_both keeps them current. Refused when cited file evidence changed since the proposal. No agent route. Also /agent/... with a review:accept key (team proposals by other actors only) or a grand key; assistants never decide private items; 403 otherwise."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: item, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: The decided (or newly approved) item }
+        "403": { description: owner_required }
+        "404": { description: not_found }
+        "409": { description: stale_evidence, already_decided or conflict_unresolved }
+        "422": { description: invalid_knowledge }
+  /workspaces/{id}/knowledge/{item}/retire:
+    post:
+      operationId: retireKnowledge
+      summary: "Owner-only (session) { note? }: ends a current approved item without a replacement (status retired, invalid_at set). It stays in status=all history and in as_of recall before that moment. No agent route. Also /agent/... with a grand key."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: item, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: The retired item }
+        "403": { description: owner_required }
+        "404": { description: not_found }
+        "409": { description: not_current }
+        "422": { description: invalid_knowledge }
+  /workspaces/{id}/files/{file}/precheck:
+    get:
+      operationId: precheckFile
+      summary: "What to know before editing one file: { file: { id, name, current_version_id, revision, changed_at, changed_by_agent_id }, knowledge: approved and proposed items citing any version of the file (keystone, constraint, unsuccessful attempts, decisions, others; each with stale), handoffs: up to 5 approved or proposed handoffs citing it [{ id, status, summary, next_step, cited_version_id, stale }], sessions: up to 5 captured sessions whose events contain the exact file name [{ session_id, client, label, ordinal, at, snippet, changed_since }] }. Viewer or higher; also /agent/... with files:read."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: file, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: Precheck }
+        "404": { description: not_found }
+  /workspaces/{id}/sessions/{session}/visibility:
+    post:
+      operationId: setSessionVisibility
+      summary: "{ visibility: private|team }. Only the person who captured the session, from a web session; assistants have no route."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: session, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "204": { description: Changed }
+        "404": { description: not_found (missing or not the caller's session) }
+        "422": { description: invalid_session }
+  /workspaces/{id}/messages:
+    get:
+      operationId: listMessages
+      summary: "Messages in the space, newest first: { messages: [{ id, thread_id, reply_to, from_email, from_agent_id, from_agent_name, to (assistants|owner|agent), to_agent_id, to_agent_name, subject, body, created_at, read_by_me, sources: [{ file_id, file_name, version_id, current_version_id, stale }] }] }. for_me=true: for an assistant, messages to all assistants or to its key that it did not send; for a person, messages to the owner it did not send. unread=true: not yet marked read by this reader. thread=<id>: one conversation. Viewer or higher; also /agent/... with files:read."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: for_me, in: query, schema: { type: boolean } }, { name: unread, in: query, schema: { type: boolean } }, { name: thread, in: query, schema: { type: string, format: uuid } }, { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100 } }]
+      responses:
+        "200": { description: "{ messages }" }
+    post:
+      operationId: sendMessage
+      summary: "{ request_id, to: assistants | owner | <name or id of an active assistant key>, body (1-8000 chars), subject?, reply_to?, sources?: up to 10 { file_id, version_id } }. Idempotent per request_id. Editor/owner or files:write agent; also /agent/... A message is coordination, not approved project state."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "201": { description: The message }
+        "403": { description: read_only or insufficient_scope }
+        "409": { description: request_conflict }
+        "422": { description: invalid_message, unknown_recipient or unknown_reference }
+  /workspaces/{id}/messages/read:
+    post:
+      operationId: markMessagesRead
+      summary: "{ ids: up to 100 message ids } -> { marked }. Receipts are per reader: each assistant key, or the person. Viewer or higher; also /agent/... with files:read."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: "{ marked }" }
+  /workspaces/{id}/messages/{message}:
+    get:
+      operationId: getMessage
+      summary: One message (same fields as the list). Viewer or higher; also /agent/... with files:read.
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: message, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: The message }
+        "404": { description: not_found }
+  /workspaces/{id}/artifacts:
+    get:
+      operationId: listArtifacts
+      summary: "File index (0020). Query: status (all | open | active | kept | removed | missing), due (true = active and past keep_until), host, limit (1-500). -> { artifacts: [{ id, path, host, worktree, branch, purpose, keep_until, status, due, registered_by_email, registered_by_agent_id, registered_by_agent_name, created_at, updated_at, last_checked_at, last_seen_at, closed_at, note }] }. Viewer or higher; also /agent/... with files:read."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: "{ artifacts }" }
+        "404": { description: not_found }
+        "422": { description: invalid_artifact }
+    post:
+      operationId: registerArtifact
+      summary: "{ path, host?, worktree?, branch?, purpose, keep_until? (RFC 3339) | keep_days? (1-400) } -> the artifact. Neither deadline = needed until someone decides. Registering the same host and path again updates and reactivates it. Editor or higher; also /agent/... with files:write."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "201": { description: The artifact }
+        "403": { description: forbidden }
+        "422": { description: invalid_artifact }
+  /workspaces/{id}/artifacts/check:
+    post:
+      operationId: checkArtifacts
+      summary: "{ checks: [{ id, exists }] (1-100) } -> { updated }. What a client found on its machine: a missing active file becomes status missing; a present one keeps its status and records last_seen_at. Editor or higher; also /agent/... with files:write."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: "{ updated }" }
+        "422": { description: invalid_artifact }
+  /workspaces/{id}/artifacts/{artifact}/resolve:
+    post:
+      operationId: resolveArtifact
+      summary: "{ action: keep | extend | removed, keep_until? | keep_days? (extend only, required), note? } -> { status }. Editor or higher; also /agent/... with files:write."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: artifact, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        "200": { description: "{ status }" }
+        "404": { description: not_found }
+        "422": { description: invalid_artifact }
+components:
+  securitySchemes:
+    sessionCookie: { type: apiKey, in: cookie, name: __Host-aidrive_session }
+    agentBearer: { type: http, scheme: bearer, bearerFormat: opaque }
+  schemas:
+    FileSummary:
+      type: object
+      required:
+      - id
+      - name
+      - current_version_id
+      - byte_size
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        current_version_id:
+          type: string
+          format: uuid
+        byte_size:
+          type: integer
+          minimum: 0
+          maximum: 262144
+    FileList:
+      type: object
+      required:
+      - files
+      - next_after
+      properties:
+        files:
+          type: array
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/FileSummary'
+        next_after:
+          type:
+          - string
+          - 'null'
+          format: uuid
+    FileVersion:
+      type: object
+      required:
+      - file_id
+      - name
+      - version_id
+      - revision
+      - parent_version_id
+      - restored_from
+      - content
+      - sha256
+      - actor_id
+      - agent_id
+      - created_at
+      - current_version_id
+      - created_by
+      - operation
+      properties:
+        file_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        version_id:
+          type: string
+          format: uuid
+        revision:
+          type: integer
+          minimum: 1
+        parent_version_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        restored_from:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        content:
+          type: string
+          description: Exact UTF-8 text, no NUL; at most 262144 bytes (not characters).
+        sha256:
+          type: string
+          pattern: ^[0-9a-f]{64}$
+        actor_id:
+          type: string
+          format: uuid
+        agent_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        current_version_id:
+          type: string
+          format: uuid
+        created_by:
+          type: string
+          format: uuid
+        operation:
+          type: string
+          enum:
+          - create
+          - update
+          - restore
+    FileHistoryItem:
+      type: object
+      required:
+      - id
+      - revision
+      - actor_id
+      - agent_id
+      - created_at
+      - sha256
+      - operation
+      - restored_from
+      properties:
+        id:
+          type: string
+          format: uuid
+        revision:
+          type: integer
+          minimum: 1
+        actor_id:
+          type: string
+          format: uuid
+        agent_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        sha256:
+          type: string
+          pattern: ^[0-9a-f]{64}$
+        operation:
+          type: string
+          enum:
+          - create
+          - update
+          - restore
+        restored_from:
+          type:
+          - string
+          - 'null'
+          format: uuid
+    FileHistory:
+      type: object
+      required:
+      - versions
+      - next_before
+      properties:
+        versions:
+          type: array
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/FileHistoryItem'
+        next_before:
+          type:
+          - integer
+          - 'null'
+    CreateTextFile:
+      type: object
+      additionalProperties: false
+      required:
+      - request_id
+      - name
+      - content
+      properties:
+        request_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Trimmed .txt or .md label; no control characters or path separators.
+        content:
+          type: string
+          description: Exact UTF-8 text, no NUL; at most 262144 bytes (not characters).
+    EditTextFile:
+      type: object
+      additionalProperties: false
+      required:
+      - request_id
+      - base_version_id
+      - content
+      properties:
+        request_id:
+          type: string
+          format: uuid
+        base_version_id:
+          type: string
+          format: uuid
+        content:
+          type: string
+          description: Exact UTF-8 text, no NUL; at most 262144 bytes (not characters).
+    RestoreTextFile:
+      type: object
+      additionalProperties: false
+      required:
+      - request_id
+      - base_version_id
+      - source_version_id
+      properties:
+        request_id:
+          type: string
+          format: uuid
+        base_version_id:
+          type: string
+          format: uuid
+        source_version_id:
+          type: string
+          format: uuid
+    AgentGrant:
+      type: object
+      required: [id, name, scope, created_at, expires_at, status]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        scope: { type: string, enum: ["workspace:read", "files:read", "files:write"] }
+        created_at: { type: string, format: date-time }
+        expires_at: { type: string, format: date-time }
+        status: { type: string, enum: [active, expired, revoked, issuer_unavailable] }
+    Workspace:
+      type: object
+      required: [id, name, role]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        role: { type: string, enum: [owner, editor, viewer] }
+    WorkspaceList:
+      type: object
+      required: [workspaces]
+      properties:
+        workspaces: { type: array, items: { $ref: "#/components/schemas/Workspace" } }
+    WorkspaceBody:
+      type: object
+      required: [workspace]
+      properties:
+        workspace: { $ref: "#/components/schemas/Workspace" }
+    Credentials:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string }
+        password: { type: string, minLength: 15, maxLength: 256 }
+    Session:
+      type: object
+      required: [user]
+      properties:
+        user:
+          type: object
+          required: [id, email]
+          properties:
+            id: { type: string, format: uuid }
+            email: { type: string }
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+    Check:
+      type: string
+      enum: [ok, failed, not_configured, skipped]
+    Readiness:
+      type: object
+      required: [status, service, checks]
+      properties:
+        status:
+          type: string
+          enum: [ready, not_ready]
+        service:
+          type: string
+          const: aidrive-api
+        checks:
+          type: object
+          required: [database, role, schema]
+          properties:
+            database: { $ref: "#/components/schemas/Check" }
+            role: { $ref: "#/components/schemas/Check" }
+            schema: { $ref: "#/components/schemas/Check" }
+    Health:
+      type: object
+      required: [status, service]
+      properties:
+        status:
+          type: string
+          const: ok
+        service:
+          type: string
+          const: aidrive-api

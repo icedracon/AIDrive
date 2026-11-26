@@ -1,0 +1,1129 @@
+{
+ "about": "Held-out set 2 (RU): synthetic history of «Волна», a fictional children's swimming school in Kazan with booking, subscriptions and reminders (Oct 2026). Owner Irina, coach Dmitry (editor), an English-speaking payments contractor. Russian with English sources. Written for the T4 held-out run without reading eval/t4 results, eval/dev or eval/heldout cases.",
+ "spec": {
+  "categories": {
+   "session-recall": 8,
+   "knowledge-recall": 6,
+   "changed-fact": 4,
+   "temporal": 4,
+   "flagged": 4,
+   "abstention": 6,
+   "permission": 4,
+   "semantic": 4
+  },
+  "languages": {
+   "ru": 32,
+   "en": 8
+  }
+ },
+ "steps": [
+  {
+   "op": "file",
+   "key": "prices",
+   "content": "# Школа плавания «Волна» — цены (октябрь 2026)\n\nРазовое занятие в группе — 600 ₽\nАбонемент на 8 занятий — 4 000 ₽\nИндивидуальное занятие — 1 500 ₽\n",
+   "name": "цены.md"
+  },
+  {
+   "op": "file",
+   "key": "schedule",
+   "content": "# Расписание\n\nДетские группы: пн, ср, пт — 17:00 и 18:00; сб — 10:00.\n",
+   "name": "расписание.md"
+  },
+  {
+   "op": "file",
+   "key": "rules",
+   "content": "# Pool rules\n\n- A medical certificate is required before the first lesson.\n- Swim cap is mandatory for everyone.\n- Shower before entering the pool.\n- Parents watch from the gallery, not from the poolside.\n",
+   "name": "pool-rules.md"
+  },
+  {
+   "op": "session",
+   "key": "s1",
+   "actor": "agent",
+   "client": "claude-code",
+   "label": "Волна: запись на занятия",
+   "start": "2026-10-04T16",
+   "events": [
+    [
+     "user",
+     "Делаем сайт для школы плавания «Волна». В группе не больше 6 детей на одного тренера, на дорожке работают 2 тренера."
+    ],
+    [
+     "assistant",
+     "Сделал модель группы: максимум 6 детей на тренера, до 12 детей на дорожку при двух тренерах. Запись закрывается, когда мест нет."
+    ],
+    [
+     "user",
+     "Абонемент на 8 занятий действует 5 недель."
+    ],
+    [
+     "assistant",
+     "Срок действия абонемента — 5 недель с первого занятия; неиспользованные занятия сгорают."
+    ],
+    [
+     "user",
+     "Пропуск по болезни: если есть справка, занятие переносится."
+    ],
+    [
+     "assistant",
+     "Добавил перенос занятия при загрузке медицинской справки; без справки занятие списывается."
+    ],
+    [
+     "user",
+     "Напоминания родителям — в WhatsApp за 3 часа до занятия."
+    ],
+    [
+     "assistant",
+     "Напоминание в WhatsApp уходит за 3 часа до начала занятия через WhatsApp Business API."
+    ],
+    [
+     "user",
+     "С какого возраста берём детей?"
+    ],
+    [
+     "assistant",
+     "Детские группы — с 5 лет; до 5 лет только индивидуальные занятия с родителем в воде."
+    ],
+    [
+     "user",
+     "Напомни, на чём мы вообще пишем?"
+    ],
+    [
+     "assistant",
+     "Фронтенд на Vue 3 (Nuxt), бэкенд на Django, база PostgreSQL, всё размещено в Yandex Cloud."
+    ]
+   ]
+  },
+  {
+   "op": "propose",
+   "key": "k_group_size",
+   "kind": "fact",
+   "topic": "group-size",
+   "statement": "В группе не больше 6 детей на одного тренера, до 12 детей на дорожке при двух тренерах.",
+   "evidence": [
+    "s1#0",
+    "s1#1"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_validity_1",
+   "kind": "constraint",
+   "topic": "subscription-validity",
+   "statement": "Абонемент действует 5 недель с первого занятия; неиспользованные занятия сгорают.",
+   "evidence": [
+    "s1#3"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_sick",
+   "kind": "constraint",
+   "topic": "sick-leave",
+   "statement": "Пропущенное по болезни занятие переносится, если загружена справка; без справки оно списывается.",
+   "evidence": [
+    "s1#5"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_reminder_1",
+   "kind": "decision",
+   "topic": "reminders",
+   "statement": "Напоминание родителям уходит в WhatsApp за 3 часа до занятия.",
+   "evidence": [
+    "s1#7"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_age",
+   "kind": "constraint",
+   "topic": "age",
+   "statement": "Детские группы — с 5 лет; младше 5 лет только индивидуальные занятия с родителем в воде.",
+   "evidence": [
+    "s1#9"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_stack",
+   "kind": "fact",
+   "topic": "stack",
+   "statement": "Nuxt (Vue 3), Django и PostgreSQL в Yandex Cloud.",
+   "evidence": [
+    "s1#11"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_single_1",
+   "kind": "fact",
+   "topic": "single-lesson-price",
+   "statement": "Разовое занятие в группе стоит 600 ₽.",
+   "evidence": [
+    "file:prices"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_individual",
+   "kind": "fact",
+   "topic": "individual-price",
+   "statement": "Индивидуальное занятие стоит 1 500 ₽.",
+   "evidence": [
+    "file:prices"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_sub_price_1",
+   "kind": "fact",
+   "topic": "subscription-price",
+   "statement": "Абонемент на 8 занятий стоит 4 000 ₽.",
+   "evidence": [
+    "file:prices"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_schedule",
+   "kind": "fact",
+   "topic": "kids-schedule",
+   "statement": "Детские группы занимаются в пн, ср, пт в 17:00 и 18:00 и в сб в 10:00.",
+   "evidence": [
+    "file:schedule"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_pool_rules",
+   "kind": "constraint",
+   "topic": "pool-rules",
+   "statement": "A medical certificate is required before the first lesson, and a swim cap is mandatory.",
+   "evidence": [
+    "file:rules"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "session",
+   "key": "s2",
+   "actor": "agent",
+   "client": "codex",
+   "label": "Volna: payments",
+   "start": "2026-10-08T14",
+   "events": [
+    [
+     "user",
+     "I'm the contractor for payments. Irina wants online payment for subscriptions through YooKassa."
+    ],
+    [
+     "assistant",
+     "Integrated YooKassa: card and SBP payments for subscriptions and single lessons; fiscal receipts are sent automatically under 54-FZ."
+    ],
+    [
+     "user",
+     "What's the refund policy for unused subscriptions?"
+    ],
+    [
+     "assistant",
+     "Unused lessons are refunded pro rata only within the first 2 weeks of a subscription; after that, no refunds."
+    ],
+    [
+     "user",
+     "The YooKassa webhook signature check fails on staging."
+    ],
+    [
+     "assistant",
+     "Staging had the production shop ID paired with the test secret key. Pairing them correctly fixed signature validation, and a startup check now verifies both come from the same environment."
+    ],
+    [
+     "user",
+     "Is there a family discount?"
+    ],
+    [
+     "assistant",
+     "The second child in the same family gets 15% off the subscription; it is applied automatically when the parent account has two children."
+    ],
+    [
+     "user",
+     "The price page loads slowly in Safari."
+    ],
+    [
+     "assistant",
+     "Safari blocked a third-party font loaded over http. I switched to self-hosted fonts and the page now renders in under a second."
+    ]
+   ]
+  },
+  {
+   "op": "propose",
+   "key": "k_yookassa",
+   "kind": "decision",
+   "topic": "payments",
+   "statement": "Online payment for subscriptions and single lessons goes through YooKassa (card and SBP) with automatic 54-FZ receipts.",
+   "evidence": [
+    "s2#1"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_refund",
+   "kind": "constraint",
+   "topic": "refunds",
+   "statement": "Unused lessons are refunded pro rata only within the first 2 weeks of a subscription.",
+   "evidence": [
+    "s2#3"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_webhook",
+   "kind": "gotcha",
+   "topic": "yookassa-webhook",
+   "statement": "YooKassa signature checks fail when the shop ID and secret key come from different environments; a startup check now guards it.",
+   "evidence": [
+    "s2#5"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_family",
+   "kind": "fact",
+   "topic": "family-discount",
+   "statement": "The second child in a family gets 15% off the subscription, applied automatically.",
+   "evidence": [
+    "s2#7"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_safari",
+   "kind": "gotcha",
+   "topic": "safari-fonts",
+   "statement": "Safari blocked a third-party font over http; fonts are now self-hosted.",
+   "evidence": [
+    "s2#9"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "session",
+   "key": "o1",
+   "actor": "other",
+   "client": "codex",
+   "label": "Лагерь «Сосны»",
+   "start": "2026-10-09T12",
+   "events": [
+    [
+     "user",
+     "Для сайта детского лагеря «Сосны»: смена 14 дней, стоимость 38 000 ₽, в отряде 15 детей."
+    ],
+    [
+     "assistant",
+     "Добавил страницу смены: 14 дней, 38 000 ₽, отряды по 15 детей."
+    ]
+   ]
+  },
+  {
+   "op": "session",
+   "key": "e1",
+   "actor": "editor",
+   "client": "claude-code",
+   "label": "Заметки Дмитрия",
+   "start": "2026-10-10T21",
+   "events": [
+    [
+     "user",
+     "Код от тренерской — 5182."
+    ],
+    [
+     "assistant",
+     "Записал, это только в твоих личных заметках."
+    ],
+    [
+     "user",
+     "Думаю весной уйти тренером в фитнес-клуб."
+    ],
+    [
+     "assistant",
+     "Понял, это останется в личной сессии."
+    ]
+   ]
+  },
+  {
+   "op": "session",
+   "key": "d1",
+   "actor": "agent",
+   "client": "claude-code",
+   "label": "Аренда дорожек",
+   "start": "2026-10-12T11",
+   "events": [
+    [
+     "user",
+     "Аренда дорожек в бассейне «Ак Барс» поднимается с 2 500 до 3 200 рублей в час. Предложу 2 800 при договоре на год."
+    ],
+    [
+     "assistant",
+     "Записал: сейчас 2 500 ₽ в час, бассейн просит 3 200 ₽, наше предложение — 2 800 ₽ при годовом договоре."
+    ]
+   ]
+  },
+  {
+   "op": "propose",
+   "key": "k_rent",
+   "kind": "decision",
+   "topic": "lane-rent",
+   "statement": "Предложить бассейну 2 800 ₽ в час за дорожку при годовом договоре.",
+   "evidence": [
+    "d1#0"
+   ],
+   "decide": null
+  },
+  {
+   "op": "delete_session",
+   "key": "d1"
+  },
+  {
+   "op": "session",
+   "key": "s3",
+   "actor": "agent",
+   "client": "claude-code",
+   "label": "Волна: изменения цен и расписания",
+   "start": "2026-10-17T17",
+   "events": [
+    [
+     "user",
+     "С января абонемент на 8 занятий стоит 4 400 рублей вместо 4 000."
+    ],
+    [
+     "assistant",
+     "Обновил цены.md: абонемент 4 400 ₽ с 1 января; купленные до этого действуют по старой цене. Индивидуальное занятие тоже подняли до 1 800 ₽."
+    ],
+    [
+     "user",
+     "Добавляем взрослые группы по вторникам и четвергам в 19:00."
+    ],
+    [
+     "assistant",
+     "Добавил в расписание.md взрослые группы: вт и чт в 19:00. В субботу появилась вторая детская группа в 11:00."
+    ],
+    [
+     "user",
+     "Напоминание за 3 часа приходит поздно, пусть будет накануне в 19:00."
+    ],
+    [
+     "assistant",
+     "Напоминание в WhatsApp теперь уходит накануне занятия в 19:00."
+    ],
+    [
+     "user",
+     "Пусть абонемент действует 6 недель, а не 5."
+    ],
+    [
+     "assistant",
+     "Срок действия абонемента увеличен до 6 недель."
+    ],
+    [
+     "user",
+     "Что делаем с забытыми вещами?"
+    ],
+    [
+     "assistant",
+     "Забытые вещи хранятся у администратора 30 дней, потом передаются в благотворительный фонд."
+    ],
+    [
+     "user",
+     "Родители спрашивают, чем обрабатывают воду."
+    ],
+    [
+     "assistant",
+     "Вода обеззараживается ультрафиолетом и низкой дозой хлора; это написано на странице FAQ."
+    ]
+   ]
+  },
+  {
+   "op": "file",
+   "key": "prices",
+   "content": "# Школа плавания «Волна» — цены (с 1 января 2027)\n\nРазовое занятие в группе — 600 ₽\nАбонемент на 8 занятий — 4 400 ₽ (купленные до 1 января действуют по старой цене)\nИндивидуальное занятие — 1 800 ₽\n"
+  },
+  {
+   "op": "file",
+   "key": "schedule",
+   "content": "# Расписание\n\nДетские группы: пн, ср, пт — 17:00 и 18:00; сб — 10:00 и 11:00.\nВзрослые группы: вт, чт — 19:00.\n"
+  },
+  {
+   "op": "propose",
+   "key": "k_sub_price_2",
+   "kind": "fact",
+   "topic": "subscription-price",
+   "statement": "Абонемент на 8 занятий стоит 4 400 ₽ с 1 января; купленные раньше действуют по старой цене.",
+   "evidence": [
+    "s3#1"
+   ],
+   "decide": "approved",
+   "supersedes": "k_sub_price_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_adults",
+   "kind": "decision",
+   "topic": "adult-groups",
+   "statement": "Взрослые группы занимаются по вторникам и четвергам в 19:00.",
+   "evidence": [
+    "s3#3"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_reminder_2",
+   "kind": "decision",
+   "topic": "reminders",
+   "statement": "Напоминание родителям уходит в WhatsApp накануне занятия в 19:00.",
+   "evidence": [
+    "s3#5"
+   ],
+   "decide": "approved",
+   "supersedes": "k_reminder_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_validity_2",
+   "kind": "constraint",
+   "topic": "subscription-validity",
+   "statement": "Абонемент действует 6 недель с первого занятия.",
+   "evidence": [
+    "s3#7"
+   ],
+   "decide": "approved",
+   "supersedes": "k_validity_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_lost",
+   "kind": "constraint",
+   "topic": "lost-items",
+   "statement": "Забытые вещи хранятся у администратора 30 дней, затем передаются в благотворительный фонд.",
+   "evidence": [
+    "s3#9"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_water",
+   "kind": "fact",
+   "topic": "water-treatment",
+   "statement": "Вода обеззараживается ультрафиолетом и низкой дозой хлора.",
+   "evidence": [
+    "s3#11"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "session",
+   "key": "s4",
+   "actor": "agent",
+   "client": "codex",
+   "label": "Волна: тренеры и уведомления",
+   "start": "2026-10-22T18",
+   "events": [
+    [
+     "user",
+     "Тренеру нужно видеть список детей на завтра."
+    ],
+    [
+     "assistant",
+     "Каждый вечер в 20:00 тренер получает в Telegram список детей на свои завтрашние группы."
+    ],
+    [
+     "user",
+     "Как делаются резервные копии базы?"
+    ],
+    [
+     "assistant",
+     "Yandex Managed PostgreSQL делает ежедневный бэкап и хранит его 7 дней; раз в неделю дополнительно выгружаем дамп в Object Storage."
+    ],
+    [
+     "user",
+     "Пробное занятие — сколько стоит?"
+    ],
+    [
+     "assistant",
+     "Первое пробное занятие бесплатное, одно на ребёнка; повторная запись на пробное блокируется по номеру телефона."
+    ],
+    [
+     "user",
+     "Сайт нужен на татарском?"
+    ],
+    [
+     "assistant",
+     "Пока только русский; татарский добавим позже, тексты уже вынесены в файлы локализации."
+    ],
+    [
+     "user",
+     "А если заболел тренер?"
+    ],
+    [
+     "assistant",
+     "Если тренер заболел, занятие переносится, родители получают сообщение в WhatsApp, и занятие не списывается с абонемента."
+    ]
+   ]
+  },
+  {
+   "op": "propose",
+   "key": "k_coach_list",
+   "kind": "decision",
+   "topic": "coach-digest",
+   "statement": "Каждый вечер в 20:00 тренер получает в Telegram список детей на завтрашние группы.",
+   "evidence": [
+    "s4#1"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_backup",
+   "kind": "fact",
+   "topic": "backups",
+   "statement": "Ежедневный бэкап Yandex Managed PostgreSQL хранится 7 дней; раз в неделю дамп выгружается в Object Storage.",
+   "evidence": [
+    "s4#3"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_trial",
+   "kind": "constraint",
+   "topic": "trial-lesson",
+   "statement": "Первое пробное занятие бесплатное, одно на ребёнка; повтор блокируется по номеру телефона.",
+   "evidence": [
+    "s4#5"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_lang",
+   "kind": "decision",
+   "topic": "site-language",
+   "statement": "Сайт пока только на русском; татарский добавим позже.",
+   "evidence": [
+    "s4#7"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_coach_sick",
+   "kind": "constraint",
+   "topic": "coach-illness",
+   "statement": "Если заболел тренер, занятие переносится, родителям пишем в WhatsApp, и занятие не списывается.",
+   "evidence": [
+    "s4#9"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_backup_alt",
+   "kind": "fact",
+   "topic": "backups",
+   "statement": "Бэкапы хранятся 30 дней.",
+   "evidence": [
+    "s4#3"
+   ],
+   "decide": null
+  },
+  {
+   "op": "propose",
+   "key": "k_family_alt",
+   "kind": "fact",
+   "topic": "family-discount",
+   "statement": "The second child in a family gets 20% off.",
+   "evidence": [
+    "s2#7"
+   ],
+   "decide": null
+  },
+  {
+   "op": "session",
+   "key": "s5",
+   "actor": "agent",
+   "client": "codex",
+   "label": "Volna: single lesson price",
+   "start": "2026-10-31T10",
+   "events": [
+    [
+     "user",
+     "A single group lesson goes from 600 to 700 rubles starting February."
+    ],
+    [
+     "assistant",
+     "Updated: a single group lesson costs 700 RUB from 1 February."
+    ]
+   ]
+  },
+  {
+   "op": "propose",
+   "key": "k_single_2",
+   "kind": "fact",
+   "topic": "single-lesson-price",
+   "statement": "A single group lesson costs 700 RUB from 1 February.",
+   "evidence": [
+    "s5#1"
+   ],
+   "decide": "approved",
+   "supersedes": "k_single_1"
+  }
+ ],
+ "cases": [
+  {
+   "id": "R001",
+   "lang": "ru",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Сколько детей приходится на одного тренера",
+   "expect": [
+    "s1#1"
+   ]
+  },
+  {
+   "id": "R002",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Why did the YooKassa webhook signature fail on staging?",
+   "expect": [
+    "s2#5"
+   ]
+  },
+  {
+   "id": "R003",
+   "lang": "ru",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Что делаем с забытыми вещами",
+   "expect": [
+    "s3#9"
+   ]
+  },
+  {
+   "id": "R004",
+   "lang": "ru",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Чем обрабатывают воду в бассейне",
+   "expect": [
+    "s3#11"
+   ]
+  },
+  {
+   "id": "R005",
+   "lang": "ru",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Как часто выгружаем дамп в Object Storage",
+   "expect": [
+    "s4#3"
+   ]
+  },
+  {
+   "id": "R006",
+   "lang": "ru",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Почему страница цен медленно грузилась в Safari",
+   "expect": [
+    "s2#9"
+   ]
+  },
+  {
+   "id": "R007",
+   "lang": "ru",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Когда тренер получает список детей",
+   "expect": [
+    "s4#1"
+   ]
+  },
+  {
+   "id": "R008",
+   "lang": "ru",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "Будет ли сайт на татарском",
+   "expect": [
+    "s4#7"
+   ]
+  },
+  {
+   "id": "R009",
+   "lang": "ru",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "С какого возраста принимают детей",
+   "expect": [
+    "k_age"
+   ]
+  },
+  {
+   "id": "R010",
+   "lang": "ru",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "Что если ребёнок заболел и есть справка",
+   "expect": [
+    "k_sick"
+   ]
+  },
+  {
+   "id": "R011",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "Is the trial lesson free?",
+   "expect": [
+    "k_trial"
+   ]
+  },
+  {
+   "id": "R012",
+   "lang": "ru",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "Что будет, если заболел тренер",
+   "expect": [
+    "k_coach_sick"
+   ]
+  },
+  {
+   "id": "R013",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "Is a swim cap required?",
+   "expect": [
+    "k_pool_rules"
+   ]
+  },
+  {
+   "id": "R014",
+   "lang": "ru",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "Можно ли вернуть деньги за неиспользованный абонемент",
+   "expect": [
+    "k_refund"
+   ]
+  },
+  {
+   "id": "R015",
+   "lang": "ru",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "Сколько стоит абонемент на 8 занятий",
+   "expect": [
+    "k_sub_price_2"
+   ],
+   "forbid": [
+    "k_sub_price_1"
+   ]
+  },
+  {
+   "id": "R016",
+   "lang": "ru",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "Когда приходит напоминание в WhatsApp",
+   "expect": [
+    "k_reminder_2"
+   ],
+   "forbid": [
+    "k_reminder_1"
+   ]
+  },
+  {
+   "id": "R017",
+   "lang": "ru",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "Сколько действует абонемент",
+   "expect": [
+    "k_validity_2"
+   ],
+   "forbid": [
+    "k_validity_1"
+   ]
+  },
+  {
+   "id": "R018",
+   "lang": "en",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "single lesson price",
+   "expect": [
+    "k_single_2"
+   ],
+   "forbid": [
+    "k_single_1"
+   ]
+  },
+  {
+   "id": "R019",
+   "lang": "ru",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "Стоимость абонемента",
+   "expect": [
+    "k_sub_price_1"
+   ],
+   "forbid": [
+    "k_sub_price_2"
+   ],
+   "as_of": "k_safari"
+  },
+  {
+   "id": "R020",
+   "lang": "ru",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "Напоминание родителям",
+   "expect": [
+    "k_reminder_1"
+   ],
+   "forbid": [
+    "k_reminder_2"
+   ],
+   "as_of": "k_adults"
+  },
+  {
+   "id": "R021",
+   "lang": "ru",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "Срок действия абонемента",
+   "expect": [
+    "k_validity_1"
+   ],
+   "forbid": [
+    "k_validity_2"
+   ],
+   "as_of": "k_pool_rules"
+  },
+  {
+   "id": "R022",
+   "lang": "ru",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "Цена разового занятия",
+   "expect": [
+    "k_single_1"
+   ],
+   "forbid": [
+    "k_single_2"
+   ],
+   "as_of": "k_coach_sick"
+  },
+  {
+   "id": "R023",
+   "lang": "ru",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "Расписание детских групп",
+   "expect": [
+    "k_schedule"
+   ],
+   "flag": "stale"
+  },
+  {
+   "id": "R024",
+   "lang": "en",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "individual lesson price",
+   "expect": [
+    "k_individual"
+   ],
+   "flag": "stale"
+  },
+  {
+   "id": "R025",
+   "lang": "ru",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "Сколько дней хранятся бэкапы",
+   "expect": [
+    "k_backup"
+   ],
+   "flag": "disputed"
+  },
+  {
+   "id": "R026",
+   "lang": "ru",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "Скидка на второго ребёнка",
+   "expect": [
+    "k_family"
+   ],
+   "flag": "disputed"
+  },
+  {
+   "id": "R027",
+   "lang": "ru",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Есть ли у вас сауна после занятия",
+   "expect": []
+  },
+  {
+   "id": "R028",
+   "lang": "ru",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Сколько стоит аренда шапочки",
+   "expect": []
+  },
+  {
+   "id": "R029",
+   "lang": "en",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Do you teach diving?",
+   "expect": []
+  },
+  {
+   "id": "R030",
+   "lang": "ru",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Пароль от Wi-Fi в бассейне",
+   "expect": []
+  },
+  {
+   "id": "R031",
+   "lang": "ru",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Скидка для пенсионеров на абонемент",
+   "expect": []
+  },
+  {
+   "id": "R032",
+   "lang": "ru",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Работаете ли вы 31 декабря",
+   "expect": []
+  },
+  {
+   "id": "R033",
+   "lang": "ru",
+   "category": "permission",
+   "tool": "both",
+   "query": "Код от тренерской",
+   "expect": [],
+   "forbid": [
+    "e1#0",
+    "e1#1"
+   ]
+  },
+  {
+   "id": "R034",
+   "lang": "en",
+   "category": "permission",
+   "tool": "both",
+   "query": "Is Dmitry planning to leave?",
+   "expect": [],
+   "forbid": [
+    "e1#2",
+    "e1#3"
+   ]
+  },
+  {
+   "id": "R035",
+   "lang": "ru",
+   "category": "permission",
+   "tool": "both",
+   "query": "Сколько стоит аренда дорожек",
+   "expect": [],
+   "forbid": [
+    "d1#0",
+    "d1#1",
+    "k_rent"
+   ]
+  },
+  {
+   "id": "R036",
+   "lang": "ru",
+   "category": "permission",
+   "tool": "both",
+   "query": "Стоимость смены в лагере",
+   "expect": [],
+   "forbid": [
+    "o1#0",
+    "o1#1"
+   ]
+  },
+  {
+   "id": "R037",
+   "lang": "ru",
+   "category": "semantic",
+   "tool": "memory",
+   "query": "Абонемент теперь четыре тысячи четыреста?",
+   "expect": [
+    "k_sub_price_2"
+   ],
+   "forbid": [
+    "k_sub_price_1"
+   ]
+  },
+  {
+   "id": "R038",
+   "lang": "en",
+   "category": "semantic",
+   "tool": "memory",
+   "query": "How is the pool water disinfected?",
+   "expect": [
+    "k_water"
+   ]
+  },
+  {
+   "id": "R039",
+   "lang": "ru",
+   "category": "semantic",
+   "tool": "memory",
+   "query": "Через какой сервис принимаем оплату картой",
+   "expect": [
+    "k_yookassa"
+   ]
+  },
+  {
+   "id": "R040",
+   "lang": "ru",
+   "category": "semantic",
+   "tool": "memory",
+   "query": "Ребёнок оставил полотенце, где его искать?",
+   "expect": [
+    "k_lost"
+   ]
+  }
+ ]
+}

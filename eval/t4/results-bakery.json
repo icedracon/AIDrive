@@ -1,0 +1,830 @@
+{
+  "rows": [
+    {
+      "setting": "lexical planner",
+      "recall": 0.6518987341772152,
+      "en": 0.9090909090909091,
+      "hy": 0.32857142857142857,
+      "session": 0.725,
+      "knowledge": 0.8125,
+      "changed": 0.7,
+      "temporal": 0.6,
+      "flags": "5/10",
+      "abstention": "5/14",
+      "abst_hits": 94,
+      "violations": 0,
+      "semantic": 0.4,
+      "targets": {},
+      "misses": [
+        "H002(0/1 got s4#17,s2#4)",
+        "H004(0/1 got )",
+        "H005(1/2 got s2#10,s2#9,s6#11)",
+        "H007(1/2 got s6#11,s3#7,s6#10)",
+        "H011(1/2 got s4#11,s4#13,s2#10)",
+        "H015(0/1 got s2#8,s2#13,s6#6)",
+        "H019(0/1 got s4#0,s6#6,s6#4)",
+        "H022(0/1 got )",
+        "H031(0/1 got k_zhingyalov,k_confirm_pref)",
+        "H035(0/1 got k_no_outside,k_zone_b,k_confirm_pref)",
+        "H038(0/1 got k_flour_3)",
+        "H040(0/1 got k_zone_b,k_no_outside)",
+        "H042(0/1 got )",
+        "H048(0/1 got )",
+        "H050(0/1 got )",
+        "H053(0/1 got )",
+        "H055(0/1 got )",
+        "H058(0/1 got )",
+        "H060(0/1 got k_flour_3,k_zhingyalov)",
+        "H062(0/1 got k_flour_3)",
+        "H064(0/1 got k_flour_3,k_zhingyalov)",
+        "H066(0/1 got k_no_outside,k_zone_b,k_flour_3)",
+        "H067(abstain:3)",
+        "H071(abstain:3)",
+        "H073(abstain:12)",
+        "H075(abstain:19)",
+        "H076(abstain:11)",
+        "H077(abstain:12)",
+        "H078(abstain:7)",
+        "H079(abstain:20)",
+        "H080(abstain:7)",
+        "H089(0/1 got )",
+        "H093(0/1 got )",
+        "H095(0/1 got s6#8,s5#15,s5#7)",
+        "H097(0/2 got s2#5,s2#6,s6#18)",
+        "H098(0/2 got s4#10,s2#9,s2#10)",
+        "H099(0/2 got s3#16,s3#5,s3#0)",
+        "H100(0/2 got )"
+      ]
+    },
+    {
+      "setting": "bge-m3 hybrid RRF (ungated)",
+      "recall": 0.9746835443037974,
+      "en": 0.9772727272727273,
+      "hy": 0.9714285714285714,
+      "session": 0.975,
+      "knowledge": 1.0,
+      "changed": 1.0,
+      "temporal": 1.0,
+      "flags": "10/10",
+      "abstention": "0/14",
+      "abst_hits": 280,
+      "violations": 0,
+      "semantic": 0.85,
+      "targets": {},
+      "misses": [
+        "H005(1/2 got s2#10,s2#9,s5#4)",
+        "H067(abstain:20)",
+        "H068(abstain:20)",
+        "H069(abstain:20)",
+        "H070(abstain:20)",
+        "H071(abstain:20)",
+        "H072(abstain:20)",
+        "H073(abstain:20)",
+        "H074(abstain:20)",
+        "H075(abstain:20)",
+        "H076(abstain:20)",
+        "H077(abstain:20)",
+        "H078(abstain:20)",
+        "H079(abstain:20)",
+        "H080(abstain:20)",
+        "H097(1/2 got s2#5,s3#14,s6#18)",
+        "H098(1/2 got s4#10,s2#9,s5#16)",
+        "H099(1/2 got s3#16,s5#8,s3#5)"
+      ]
+    },
+    {
+      "setting": "J1: hybrid + qwen3.5:9b abstains",
+      "recall": 0.9493670886075949,
+      "en": 0.9318181818181818,
+      "hy": 0.9714285714285714,
+      "session": 0.925,
+      "knowledge": 1.0,
+      "changed": 1.0,
+      "temporal": 1.0,
+      "flags": "10/10",
+      "abstention": "14/14",
+      "abst_hits": 0,
+      "violations": 0,
+      "semantic": 0.85,
+      "targets": {},
+      "misses": [
+        "H005(1/2 got s2#10,s2#9,s5#4)",
+        "H007(0/2 got )",
+        "H088(0/1 got )",
+        "H097(1/2 got s2#5,s3#14,s6#18)",
+        "H098(1/2 got s4#10,s2#9,s5#16)",
+        "H099(1/2 got s3#16,s5#8,s3#5)"
+      ]
+    },
+    {
+      "setting": "J2: hybrid + qwen3.5:9b abstains and filters",
+      "recall": 0.9113924050632911,
+      "en": 0.8863636363636364,
+      "hy": 0.9428571428571428,
+      "session": 0.85,
+      "knowledge": 1.0,
+      "changed": 1.0,
+      "temporal": 1.0,
+      "flags": "10/10",
+      "abstention": "14/14",
+      "abst_hits": 0,
+      "violations": 0,
+      "semantic": 0.7,
+      "targets": {},
+      "misses": [
+        "H003(1/2 got s1#16)",
+        "H005(1/2 got s2#10)",
+        "H006(1/2 got s2#12,s2#16)",
+        "H007(0/2 got )",
+        "H014(1/2 got s5#8)",
+        "H088(0/1 got )",
+        "H096(0/2 got s5#0)",
+        "H097(1/2 got s5#3,s3#15)",
+        "H098(0/2 got s4#10)",
+        "H099(1/2 got s5#8,s5#12)"
+      ]
+    }
+  ],
+  "latency": {
+    "embed_query_median_ms": 23.287199997866992,
+    "embed_query_p95_ms": 35.054500000114786,
+    "judge_median_ms": 741.2397499992949,
+    "judge_p95_ms": 1024.4318000004569,
+    "judge_max_ms": 1184.3868999967526,
+    "judge_calls_timed": 100
+  },
+  "verdicts": {
+    "H001": {
+      "answerable": true,
+      "relevant": [
+        "s1#0"
+      ],
+      "ms": 722
+    },
+    "H002": {
+      "answerable": true,
+      "relevant": [
+        "s1#10",
+        "s1#11"
+      ],
+      "ms": 888
+    },
+    "H003": {
+      "answerable": true,
+      "relevant": [
+        "s1#16"
+      ],
+      "ms": 698
+    },
+    "H004": {
+      "answerable": true,
+      "relevant": [
+        "s2#3"
+      ],
+      "ms": 742
+    },
+    "H005": {
+      "answerable": true,
+      "relevant": [
+        "s2#10"
+      ],
+      "ms": 794
+    },
+    "H006": {
+      "answerable": true,
+      "relevant": [
+        "s2#12",
+        "s2#16"
+      ],
+      "ms": 910
+    },
+    "H007": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 667
+    },
+    "H008": {
+      "answerable": true,
+      "relevant": [
+        "s3#3"
+      ],
+      "ms": 772
+    },
+    "H009": {
+      "answerable": true,
+      "relevant": [
+        "s3#12"
+      ],
+      "ms": 616
+    },
+    "H010": {
+      "answerable": true,
+      "relevant": [
+        "s3#16",
+        "s3#17"
+      ],
+      "ms": 807
+    },
+    "H011": {
+      "answerable": true,
+      "relevant": [
+        "s4#13",
+        "s4#12"
+      ],
+      "ms": 837
+    },
+    "H012": {
+      "answerable": true,
+      "relevant": [
+        "s4#17"
+      ],
+      "ms": 823
+    },
+    "H013": {
+      "answerable": true,
+      "relevant": [
+        "s4#6"
+      ],
+      "ms": 795
+    },
+    "H014": {
+      "answerable": true,
+      "relevant": [
+        "s5#8"
+      ],
+      "ms": 703
+    },
+    "H015": {
+      "answerable": true,
+      "relevant": [
+        "s5#6"
+      ],
+      "ms": 810
+    },
+    "H016": {
+      "answerable": true,
+      "relevant": [
+        "s5#16",
+        "s5#17"
+      ],
+      "ms": 755
+    },
+    "H017": {
+      "answerable": true,
+      "relevant": [
+        "s6#6",
+        "s6#4"
+      ],
+      "ms": 923
+    },
+    "H018": {
+      "answerable": true,
+      "relevant": [
+        "s6#10"
+      ],
+      "ms": 621
+    },
+    "H019": {
+      "answerable": true,
+      "relevant": [
+        "s6#8"
+      ],
+      "ms": 902
+    },
+    "H020": {
+      "answerable": true,
+      "relevant": [
+        "s6#17",
+        "s6#16"
+      ],
+      "ms": 740
+    },
+    "H021": {
+      "answerable": true,
+      "relevant": [
+        "k_no_outside"
+      ],
+      "ms": 765
+    },
+    "H022": {
+      "answerable": true,
+      "relevant": [
+        "k_menu_cap"
+      ],
+      "ms": 788
+    },
+    "H023": {
+      "answerable": true,
+      "relevant": [
+        "k_int_prices"
+      ],
+      "ms": 786
+    },
+    "H024": {
+      "answerable": true,
+      "relevant": [
+        "k_maps_attempt"
+      ],
+      "ms": 760
+    },
+    "H025": {
+      "answerable": true,
+      "relevant": [
+        "k_capacity"
+      ],
+      "ms": 710
+    },
+    "H026": {
+      "answerable": true,
+      "relevant": [
+        "k_idram_gotcha"
+      ],
+      "ms": 714
+    },
+    "H027": {
+      "answerable": true,
+      "relevant": [
+        "k_vpos_attempt"
+      ],
+      "ms": 736
+    },
+    "H028": {
+      "answerable": true,
+      "relevant": [
+        "k_confirm_pref",
+        "k_sms_attempt"
+      ],
+      "ms": 804
+    },
+    "H029": {
+      "answerable": true,
+      "relevant": [
+        "k_sms_attempt"
+      ],
+      "ms": 782
+    },
+    "H030": {
+      "answerable": true,
+      "relevant": [
+        "k_phone_gotcha"
+      ],
+      "ms": 724
+    },
+    "H031": {
+      "answerable": true,
+      "relevant": [
+        "k_tz_gotcha"
+      ],
+      "ms": 800
+    },
+    "H032": {
+      "answerable": true,
+      "relevant": [
+        "k_zone_c"
+      ],
+      "ms": 739
+    },
+    "H033": {
+      "answerable": true,
+      "relevant": [
+        "k_zhingyalov"
+      ],
+      "ms": 726
+    },
+    "H034": {
+      "answerable": true,
+      "relevant": [
+        "k_ny_gata"
+      ],
+      "ms": 698
+    },
+    "H035": {
+      "answerable": true,
+      "relevant": [
+        "k_ny_gata"
+      ],
+      "ms": 738
+    },
+    "H036": {
+      "answerable": true,
+      "relevant": [
+        "k_badge_gotcha"
+      ],
+      "ms": 665
+    },
+    "H037": {
+      "answerable": true,
+      "relevant": [
+        "k_price_matnakash_3"
+      ],
+      "ms": 683
+    },
+    "H038": {
+      "answerable": true,
+      "relevant": [
+        "k_price_matnakash_3"
+      ],
+      "ms": 709
+    },
+    "H039": {
+      "answerable": true,
+      "relevant": [
+        "k_price_pakhlava_2"
+      ],
+      "ms": 634
+    },
+    "H040": {
+      "answerable": true,
+      "relevant": [
+        "k_free_threshold_2"
+      ],
+      "ms": 751
+    },
+    "H041": {
+      "answerable": true,
+      "relevant": [
+        "k_cutoff_2"
+      ],
+      "ms": 751
+    },
+    "H042": {
+      "answerable": true,
+      "relevant": [
+        "k_hours_2"
+      ],
+      "ms": 694
+    },
+    "H043": {
+      "answerable": true,
+      "relevant": [
+        "k_pay_3"
+      ],
+      "ms": 626
+    },
+    "H044": {
+      "answerable": true,
+      "relevant": [
+        "k_flour_3"
+      ],
+      "ms": 736
+    },
+    "H045": {
+      "answerable": true,
+      "relevant": [
+        "k_pack_2"
+      ],
+      "ms": 642
+    },
+    "H046": {
+      "answerable": true,
+      "relevant": [
+        "k_flour_3"
+      ],
+      "ms": 678
+    },
+    "H047": {
+      "answerable": true,
+      "relevant": [
+        "k_price_matnakash_1"
+      ],
+      "ms": 484
+    },
+    "H048": {
+      "answerable": true,
+      "relevant": [
+        "k_price_matnakash_2"
+      ],
+      "ms": 654
+    },
+    "H049": {
+      "answerable": true,
+      "relevant": [
+        "k_free_threshold_1"
+      ],
+      "ms": 613
+    },
+    "H050": {
+      "answerable": true,
+      "relevant": [
+        "k_cutoff_1"
+      ],
+      "ms": 693
+    },
+    "H051": {
+      "answerable": true,
+      "relevant": [
+        "k_hours_1"
+      ],
+      "ms": 711
+    },
+    "H052": {
+      "answerable": true,
+      "relevant": [
+        "k_pay_1"
+      ],
+      "ms": 599
+    },
+    "H053": {
+      "answerable": true,
+      "relevant": [
+        "k_pay_2",
+        "k_cash_limit"
+      ],
+      "ms": 691
+    },
+    "H054": {
+      "answerable": true,
+      "relevant": [
+        "k_flour_2"
+      ],
+      "ms": 608
+    },
+    "H055": {
+      "answerable": true,
+      "relevant": [
+        "k_pack_1"
+      ],
+      "ms": 619
+    },
+    "H056": {
+      "answerable": true,
+      "relevant": [
+        "k_price_pakhlava_1"
+      ],
+      "ms": 527
+    },
+    "H057": {
+      "answerable": true,
+      "relevant": [
+        "k_menu_launch"
+      ],
+      "ms": 634
+    },
+    "H058": {
+      "answerable": true,
+      "relevant": [
+        "k_allergen_walnuts"
+      ],
+      "ms": 642
+    },
+    "H059": {
+      "answerable": true,
+      "relevant": [
+        "k_zone_a"
+      ],
+      "ms": 714
+    },
+    "H060": {
+      "answerable": true,
+      "relevant": [
+        "k_zone_b"
+      ],
+      "ms": 747
+    },
+    "H061": {
+      "answerable": true,
+      "relevant": [
+        "k_hours_2",
+        "k_staff"
+      ],
+      "ms": 764
+    },
+    "H062": {
+      "answerable": true,
+      "relevant": [
+        "k_pack_2"
+      ],
+      "ms": 713
+    },
+    "H063": {
+      "answerable": true,
+      "relevant": [
+        "k_lang"
+      ],
+      "ms": 707
+    },
+    "H064": {
+      "answerable": true,
+      "relevant": [
+        "k_windows"
+      ],
+      "ms": 758
+    },
+    "H065": {
+      "answerable": true,
+      "relevant": [
+        "k_cash_limit"
+      ],
+      "ms": 676
+    },
+    "H066": {
+      "answerable": true,
+      "relevant": [
+        "k_courier"
+      ],
+      "ms": 843
+    },
+    "H067": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 1007
+    },
+    "H068": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 1063
+    },
+    "H069": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 840
+    },
+    "H070": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 972
+    },
+    "H071": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 888
+    },
+    "H072": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 884
+    },
+    "H073": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 951
+    },
+    "H074": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 1024
+    },
+    "H075": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 946
+    },
+    "H076": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 1067
+    },
+    "H077": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 889
+    },
+    "H078": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 1107
+    },
+    "H079": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 928
+    },
+    "H080": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 1086
+    },
+    "H081": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 849
+    },
+    "H082": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 907
+    },
+    "H083": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 859
+    },
+    "H084": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 993
+    },
+    "H085": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 832
+    },
+    "H086": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 964
+    },
+    "H087": {
+      "answerable": true,
+      "relevant": [
+        "s4#0",
+        "k_hours_2"
+      ],
+      "ms": 1184
+    },
+    "H088": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 567
+    },
+    "H089": {
+      "answerable": true,
+      "relevant": [
+        "k_lang"
+      ],
+      "ms": 711
+    },
+    "H090": {
+      "answerable": true,
+      "relevant": [
+        "k_windows"
+      ],
+      "ms": 699
+    },
+    "H091": {
+      "answerable": true,
+      "relevant": [
+        "k_price_pakhlava_2"
+      ],
+      "ms": 617
+    },
+    "H092": {
+      "answerable": true,
+      "relevant": [
+        "k_zone_c"
+      ],
+      "ms": 698
+    },
+    "H093": {
+      "answerable": true,
+      "relevant": [
+        "k_cutoff_2"
+      ],
+      "ms": 693
+    },
+    "H094": {
+      "answerable": true,
+      "relevant": [
+        "s2#14",
+        "s2#15",
+        "s2#16"
+      ],
+      "ms": 907
+    },
+    "H095": {
+      "answerable": true,
+      "relevant": [
+        "s2#5"
+      ],
+      "ms": 630
+    },
+    "H096": {
+      "answerable": true,
+      "relevant": [
+        "s5#0"
+      ],
+      "ms": 710
+    },
+    "H097": {
+      "answerable": true,
+      "relevant": [
+        "s5#3",
+        "s3#15"
+      ],
+      "ms": 908
+    },
+    "H098": {
+      "answerable": true,
+      "relevant": [
+        "s4#10"
+      ],
+      "ms": 741
+    },
+    "H099": {
+      "answerable": true,
+      "relevant": [
+        "s5#8",
+        "s5#12"
+      ],
+      "ms": 652
+    },
+    "H100": {
+      "answerable": true,
+      "relevant": [
+        "s5#17",
+        "s5#16"
+      ],
+      "ms": 758
+    }
+  }
+}

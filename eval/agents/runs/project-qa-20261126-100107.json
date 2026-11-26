@@ -1,0 +1,985 @@
+{
+  "model": "qwen3.5:9b",
+  "backend": "local Ollama",
+  "workspace_id": "6a393cc1-3b30-4721-a22a-ea95f8615afb",
+  "results": {
+    "directory_access": {
+      "pass": true,
+      "observations": [
+        {
+          "method": "GET",
+          "path": "/workspaces",
+          "status": 200,
+          "seconds": 0.032
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces",
+          "status": 401,
+          "seconds": 0.0
+        }
+      ],
+      "checks": {}
+    },
+    "unknown_workspace": {
+      "pass": true,
+      "observations": [
+        {
+          "method": "GET",
+          "path": "/workspaces/fc91f498-57ba-4d0d-ab26-abd77c2e01d8/files",
+          "status": 404,
+          "seconds": 0.031
+        }
+      ],
+      "checks": {}
+    },
+    "cross_workspace_file": {
+      "pass": true,
+      "observations": [
+        {
+          "method": "GET",
+          "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/files/569f6659-a78d-49c6-89ca-02368f0b2bd8",
+          "status": 200,
+          "seconds": 0.0
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/e087c6d1-207f-40b9-a957-16fb4178e53d/files/569f6659-a78d-49c6-89ca-02368f0b2bd8",
+          "status": 404,
+          "seconds": 0.0
+        }
+      ],
+      "checks": {}
+    },
+    "stale_write": {
+      "pass": true,
+      "observations": [
+        {
+          "method": "PUT",
+          "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/files/569f6659-a78d-49c6-89ca-02368f0b2bd8",
+          "status": 200,
+          "seconds": 0.015
+        },
+        {
+          "method": "PUT",
+          "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/files/569f6659-a78d-49c6-89ca-02368f0b2bd8",
+          "status": 409,
+          "seconds": 0.0
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/files/569f6659-a78d-49c6-89ca-02368f0b2bd8",
+          "status": 200,
+          "seconds": 0.0
+        }
+      ],
+      "checks": {}
+    },
+    "armenian_round_trip": {
+      "pass": true,
+      "observations": [
+        {
+          "method": "GET",
+          "path": "/workspaces",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/files/569f6659-a78d-49c6-89ca-02368f0b2bd8/versions/5697fdd4-0cb8-40ef-a26f-cdb1e0c3fb2b",
+          "status": 200,
+          "seconds": 0.016
+        }
+      ],
+      "checks": {}
+    },
+    "summary_directory": {
+      "pass": true,
+      "observations": [
+        {
+          "method": "POST",
+          "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/agents",
+          "status": 201,
+          "seconds": 0.015
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/summaries",
+          "status": 401,
+          "seconds": 0.0
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/summaries",
+          "status": 401,
+          "seconds": 0.0
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/summaries",
+          "status": 401,
+          "seconds": 0.032
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/summary",
+          "status": 401,
+          "seconds": 0.0
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/summary",
+          "status": 401,
+          "seconds": 0.015
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/summary",
+          "status": 401,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces",
+          "status": 200,
+          "seconds": 0.031
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/summaries",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/e087c6d1-207f-40b9-a957-16fb4178e53d/summary",
+          "status": 200,
+          "seconds": 0.015
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/388ec77c-f02f-4a63-9b8e-3158f64d5472/summary",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/15f9c0d9-2e41-4662-89a1-2698b0c17a02/summary",
+          "status": 200,
+          "seconds": 0.0
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/c37a1240-03e5-4309-acf3-48f44c61fdd9/summary",
+          "status": 200,
+          "seconds": 0.0
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/15dc04f6-f44d-462a-9048-1f1efe011e7d/summary",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/8ed94520-e914-4606-bdc8-67601fc6ffc1/summary",
+          "status": 200,
+          "seconds": 0.015
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/1ff3d919-0c45-48fc-9dae-da6dd5d7a8a7/summary",
+          "status": 200,
+          "seconds": 0.0
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/c7324015-630a-4500-864a-44bdeda0c1aa/summary",
+          "status": 200,
+          "seconds": 0.031
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/a786d861-7711-4911-a1cf-8a9c1f99a715/summary",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/477aa9d4-5022-4ea1-b208-ef587cb2e0d0/summary",
+          "status": 200,
+          "seconds": 0.0
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/c24f07d2-e7ce-4da3-9be0-57887d226c13/summary",
+          "status": 200,
+          "seconds": 0.0
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/summary",
+          "status": 200,
+          "seconds": 0.016
+        }
+      ],
+      "checks": {
+        "/workspaces/summaries cookie_only": true,
+        "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/summary cookie_only": true,
+        "list_order_and_membership": true,
+        "valid_fields": true,
+        "metadata_and_single_equality": true
+      }
+    },
+    "summary_empty": {
+      "pass": true,
+      "observations": [
+        {
+          "method": "POST",
+          "path": "/workspaces",
+          "status": 201,
+          "seconds": 0.015
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/8523a7a4-42a0-4707-b09d-bee45379ad1c/summary",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/8523a7a4-42a0-4707-b09d-bee45379ad1c/files",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/8523a7a4-42a0-4707-b09d-bee45379ad1c/activity?limit=1",
+          "status": 200,
+          "seconds": 0.015
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/summaries",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/22f24b0b-32ff-4085-a645-8df8f955950f/summary",
+          "status": 404,
+          "seconds": 0.0
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/not-a-uuid/summary",
+          "status": 404,
+          "seconds": 0.015
+        }
+      ],
+      "checks": {
+        "fresh_zero_null": true,
+        "empty_file_list": true,
+        "no_visible_activity": true,
+        "empty_batch_equality": true,
+        "missing_22f24b0b-32ff-4085-a645-8df8f955950f": true,
+        "missing_not-a-uuid": true
+      }
+    },
+    "summary_resources": {
+      "pass": true,
+      "observations": [
+        {
+          "method": "POST",
+          "path": "/workspaces",
+          "status": 201,
+          "seconds": 0.0
+        },
+        {
+          "method": "POST",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/agents",
+          "status": 201,
+          "seconds": 0.032
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/summary",
+          "status": 200,
+          "seconds": 0.015
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/activity?limit=1",
+          "status": 200,
+          "seconds": 0.0
+        },
+        {
+          "method": "POST",
+          "path": "/agent/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/chats",
+          "status": 200,
+          "seconds": 0.0
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/summary",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "POST",
+          "path": "/agent/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/chats",
+          "status": 200,
+          "seconds": 0.015
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/summary",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "POST",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/sessions",
+          "status": 200,
+          "seconds": 0.015
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/summary",
+          "status": 200,
+          "seconds": 0.0
+        },
+        {
+          "method": "POST",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files",
+          "status": 201,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/summary",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files",
+          "status": 200,
+          "seconds": 0.015
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/activity?limit=1",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "PUT",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files/045b346d-72cf-4695-ac76-ce4e98f2f467",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/summary",
+          "status": 200,
+          "seconds": 0.015
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files/045b346d-72cf-4695-ac76-ce4e98f2f467/versions",
+          "status": 200,
+          "seconds": 0.031
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files/045b346d-72cf-4695-ac76-ce4e98f2f467",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files",
+          "status": 200,
+          "seconds": 0.016
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/activity?limit=1",
+          "status": 200,
+          "seconds": 0.015
+        },
+        {
+          "method": "GET",
+          "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files/045b346d-72cf-4695-ac76-ce4e98f2f467/versions/a0467e9a-ea02-4bbc-8906-ca8006879606",
+          "status": 200,
+          "seconds": 0.016
+        }
+      ],
+      "checks": {
+        "post_key_baseline": true,
+        "registration_0": true,
+        "registration_1": true,
+        "duplicate_chat_identity": true,
+        "session_not_visible_activity": true,
+        "file_create_count_and_time": true,
+        "revision_history_not_file_count": true,
+        "revision_visible_and_chat_persists": true,
+        "original_history_preserved": true
+      }
+    }
+  },
+  "missing": [],
+  "pass": true,
+  "llm_seconds": [
+    14.062,
+    4.844
+  ],
+  "transcript": [
+    {
+      "role": "assistant",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "call_0_22281",
+            "type": "function",
+            "function": {
+              "name": "run_probe",
+              "arguments": "{\"name\": \"directory_access\"}"
+            }
+          },
+          {
+            "id": "call_1_22281",
+            "type": "function",
+            "function": {
+              "name": "run_probe",
+              "arguments": "{\"name\": \"unknown_workspace\"}"
+            }
+          },
+          {
+            "id": "call_2_22281",
+            "type": "function",
+            "function": {
+              "name": "run_probe",
+              "arguments": "{\"name\": \"cross_workspace_file\"}"
+            }
+          },
+          {
+            "id": "call_3_22281",
+            "type": "function",
+            "function": {
+              "name": "run_probe",
+              "arguments": "{\"name\": \"stale_write\"}"
+            }
+          },
+          {
+            "id": "call_4_22281",
+            "type": "function",
+            "function": {
+              "name": "run_probe",
+              "arguments": "{\"name\": \"armenian_round_trip\"}"
+            }
+          },
+          {
+            "id": "call_5_22281",
+            "type": "function",
+            "function": {
+              "name": "run_probe",
+              "arguments": "{\"name\": \"summary_directory\"}"
+            }
+          },
+          {
+            "id": "call_6_22281",
+            "type": "function",
+            "function": {
+              "name": "run_probe",
+              "arguments": "{\"name\": \"summary_empty\"}"
+            }
+          },
+          {
+            "id": "call_7_22281",
+            "type": "function",
+            "function": {
+              "name": "run_probe",
+              "arguments": "{\"name\": \"summary_resources\"}"
+            }
+          }
+        ]
+      },
+      "seconds": 14.062,
+      "served_by": "qwen3.5:9b"
+    },
+    {
+      "role": "tool",
+      "result": {
+        "pass": true,
+        "observations": [
+          {
+            "method": "GET",
+            "path": "/workspaces",
+            "status": 200,
+            "seconds": 0.032
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces",
+            "status": 401,
+            "seconds": 0.0
+          }
+        ],
+        "checks": {}
+      }
+    },
+    {
+      "role": "tool",
+      "result": {
+        "pass": true,
+        "observations": [
+          {
+            "method": "GET",
+            "path": "/workspaces/fc91f498-57ba-4d0d-ab26-abd77c2e01d8/files",
+            "status": 404,
+            "seconds": 0.031
+          }
+        ],
+        "checks": {}
+      }
+    },
+    {
+      "role": "tool",
+      "result": {
+        "pass": true,
+        "observations": [
+          {
+            "method": "GET",
+            "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/files/569f6659-a78d-49c6-89ca-02368f0b2bd8",
+            "status": 200,
+            "seconds": 0.0
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/e087c6d1-207f-40b9-a957-16fb4178e53d/files/569f6659-a78d-49c6-89ca-02368f0b2bd8",
+            "status": 404,
+            "seconds": 0.0
+          }
+        ],
+        "checks": {}
+      }
+    },
+    {
+      "role": "tool",
+      "result": {
+        "pass": true,
+        "observations": [
+          {
+            "method": "PUT",
+            "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/files/569f6659-a78d-49c6-89ca-02368f0b2bd8",
+            "status": 200,
+            "seconds": 0.015
+          },
+          {
+            "method": "PUT",
+            "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/files/569f6659-a78d-49c6-89ca-02368f0b2bd8",
+            "status": 409,
+            "seconds": 0.0
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/files/569f6659-a78d-49c6-89ca-02368f0b2bd8",
+            "status": 200,
+            "seconds": 0.0
+          }
+        ],
+        "checks": {}
+      }
+    },
+    {
+      "role": "tool",
+      "result": {
+        "pass": true,
+        "observations": [
+          {
+            "method": "GET",
+            "path": "/workspaces",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/files/569f6659-a78d-49c6-89ca-02368f0b2bd8/versions/5697fdd4-0cb8-40ef-a26f-cdb1e0c3fb2b",
+            "status": 200,
+            "seconds": 0.016
+          }
+        ],
+        "checks": {}
+      }
+    },
+    {
+      "role": "tool",
+      "result": {
+        "pass": true,
+        "observations": [
+          {
+            "method": "POST",
+            "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/agents",
+            "status": 201,
+            "seconds": 0.015
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/summaries",
+            "status": 401,
+            "seconds": 0.0
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/summaries",
+            "status": 401,
+            "seconds": 0.0
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/summaries",
+            "status": 401,
+            "seconds": 0.032
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/summary",
+            "status": 401,
+            "seconds": 0.0
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/summary",
+            "status": 401,
+            "seconds": 0.015
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/summary",
+            "status": 401,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces",
+            "status": 200,
+            "seconds": 0.031
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/summaries",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/e087c6d1-207f-40b9-a957-16fb4178e53d/summary",
+            "status": 200,
+            "seconds": 0.015
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/388ec77c-f02f-4a63-9b8e-3158f64d5472/summary",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/15f9c0d9-2e41-4662-89a1-2698b0c17a02/summary",
+            "status": 200,
+            "seconds": 0.0
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/c37a1240-03e5-4309-acf3-48f44c61fdd9/summary",
+            "status": 200,
+            "seconds": 0.0
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/15dc04f6-f44d-462a-9048-1f1efe011e7d/summary",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/8ed94520-e914-4606-bdc8-67601fc6ffc1/summary",
+            "status": 200,
+            "seconds": 0.015
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/1ff3d919-0c45-48fc-9dae-da6dd5d7a8a7/summary",
+            "status": 200,
+            "seconds": 0.0
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/c7324015-630a-4500-864a-44bdeda0c1aa/summary",
+            "status": 200,
+            "seconds": 0.031
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/a786d861-7711-4911-a1cf-8a9c1f99a715/summary",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/477aa9d4-5022-4ea1-b208-ef587cb2e0d0/summary",
+            "status": 200,
+            "seconds": 0.0
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/c24f07d2-e7ce-4da3-9be0-57887d226c13/summary",
+            "status": 200,
+            "seconds": 0.0
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/summary",
+            "status": 200,
+            "seconds": 0.016
+          }
+        ],
+        "checks": {
+          "/workspaces/summaries cookie_only": true,
+          "/workspaces/6a393cc1-3b30-4721-a22a-ea95f8615afb/summary cookie_only": true,
+          "list_order_and_membership": true,
+          "valid_fields": true,
+          "metadata_and_single_equality": true
+        }
+      }
+    },
+    {
+      "role": "tool",
+      "result": {
+        "pass": true,
+        "observations": [
+          {
+            "method": "POST",
+            "path": "/workspaces",
+            "status": 201,
+            "seconds": 0.015
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/8523a7a4-42a0-4707-b09d-bee45379ad1c/summary",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/8523a7a4-42a0-4707-b09d-bee45379ad1c/files",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/8523a7a4-42a0-4707-b09d-bee45379ad1c/activity?limit=1",
+            "status": 200,
+            "seconds": 0.015
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/summaries",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/22f24b0b-32ff-4085-a645-8df8f955950f/summary",
+            "status": 404,
+            "seconds": 0.0
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/not-a-uuid/summary",
+            "status": 404,
+            "seconds": 0.015
+          }
+        ],
+        "checks": {
+          "fresh_zero_null": true,
+          "empty_file_list": true,
+          "no_visible_activity": true,
+          "empty_batch_equality": true,
+          "missing_22f24b0b-32ff-4085-a645-8df8f955950f": true,
+          "missing_not-a-uuid": true
+        }
+      }
+    },
+    {
+      "role": "tool",
+      "result": {
+        "pass": true,
+        "observations": [
+          {
+            "method": "POST",
+            "path": "/workspaces",
+            "status": 201,
+            "seconds": 0.0
+          },
+          {
+            "method": "POST",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/agents",
+            "status": 201,
+            "seconds": 0.032
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/summary",
+            "status": 200,
+            "seconds": 0.015
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/activity?limit=1",
+            "status": 200,
+            "seconds": 0.0
+          },
+          {
+            "method": "POST",
+            "path": "/agent/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/chats",
+            "status": 200,
+            "seconds": 0.0
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/summary",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "POST",
+            "path": "/agent/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/chats",
+            "status": 200,
+            "seconds": 0.015
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/summary",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "POST",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/sessions",
+            "status": 200,
+            "seconds": 0.015
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/summary",
+            "status": 200,
+            "seconds": 0.0
+          },
+          {
+            "method": "POST",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files",
+            "status": 201,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/summary",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files",
+            "status": 200,
+            "seconds": 0.015
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/activity?limit=1",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "PUT",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files/045b346d-72cf-4695-ac76-ce4e98f2f467",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/summary",
+            "status": 200,
+            "seconds": 0.015
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files/045b346d-72cf-4695-ac76-ce4e98f2f467/versions",
+            "status": 200,
+            "seconds": 0.031
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files/045b346d-72cf-4695-ac76-ce4e98f2f467",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files",
+            "status": 200,
+            "seconds": 0.016
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/activity?limit=1",
+            "status": 200,
+            "seconds": 0.015
+          },
+          {
+            "method": "GET",
+            "path": "/workspaces/56e083dc-0523-4887-ab0d-26c48b3abfa2/files/045b346d-72cf-4695-ac76-ce4e98f2f467/versions/a0467e9a-ea02-4bbc-8906-ca8006879606",
+            "status": 200,
+            "seconds": 0.016
+          }
+        ],
+        "checks": {
+          "post_key_baseline": true,
+          "registration_0": true,
+          "registration_1": true,
+          "duplicate_chat_identity": true,
+          "session_not_visible_activity": true,
+          "file_create_count_and_time": true,
+          "revision_history_not_file_count": true,
+          "revision_visible_and_chat_persists": true,
+          "original_history_preserved": true
+        }
+      }
+    },
+    {
+      "role": "assistant",
+      "message": {
+        "role": "assistant",
+        "content": "All eight probes passed. No failures observed. Coverage: directory_access, unknown_workspace, cross_workspace_file, stale_write, armenian_round_trip, summary_directory, summary_empty, summary_resources."
+      },
+      "seconds": 4.844,
+      "served_by": "qwen3.5:9b"
+    }
+  ]
+}

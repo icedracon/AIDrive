@@ -1,0 +1,9 @@
+/migrations/*.sql -text
+*.sh text eol=lf
+/eval/heldout/*.json -text
+/eval/heldout2/*.json -text
+/eval/t4/judge_eval.py text eol=lf
+/eval/t3/embed_eval.py text eol=lf
+/apps/api/src/search.rs text eol=lf
+/apps/api/src/eval_tests.rs text eol=lf
+/eval/heldout2/run.py text eol=lf

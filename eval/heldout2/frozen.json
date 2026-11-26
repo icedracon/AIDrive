@@ -1,0 +1,35 @@
+{
+  "about": "Held-out set 2, locked 2026-11-24 before any run. Three new synthetic projects (EN, HY, RU), 120 cases, written in a session that did not author T4 and did not open eval/t4 results, eval/dev cases or eval/heldout cases. One lexical run (eval/heldout2/lexical.sh) and one T4 run (run.py) per set; run.py refuses a mismatch and never reruns a set. Any change here, to a set file, to the code listed or to a model digest invalidates held-out claims.",
+  "sets": {
+    "eval/heldout2/ridgeway.json": "9c6478ce7c971bc58d466cf85093ffb71354738c96612278eb1f63791314aae4",
+    "eval/heldout2/kav.json": "21a98a8149d04f27994ef6ae26169cd2b0e6886c7ea23f003067fa85c1e0a0e3",
+    "eval/heldout2/volna.json": "4960e8a8b286c68c4280e17f99f3694359f18083ee23d10d3d56a00d5fad1183"
+  },
+  "code": {
+    "eval/t4/judge_eval.py": "984c739ffb3eca2501bcba905c49eb7f036f884b7580c883596d7764c5c1d0c5",
+    "eval/t3/embed_eval.py": "b68f05cc16f62f322a6164e7f572575bc9b1109b4a134efe012cea31599f25f3",
+    "apps/api/src/search.rs": "51afb84f3558bf4f19029eeee061f86e0aedec31d04dd299f1725f8a4e1eebce",
+    "apps/api/src/eval_tests.rs": "3eabbb037da14621817d5d6da4bfbe8196e48e5c44765ce0426dd8a07037322a",
+    "eval/heldout2/run.py": "4e149af34f92717eef11032ef9080f0f3c0efffd22e39768c33e48b013e8036e"
+  },
+  "models": {
+    "bge-m3": "7907646426070047a77226ac3e684fbbe8410524f7b4a74d02837e43f2146bab",
+    "qwen3.5:9b": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90"
+  },
+  "candidate": "T4 J1 as frozen in ROADMAP (2026-11-23): lexical + bge-m3 ungated RRF k=60, K=10 per tool, candidates only from API-visible pools; qwen3.5:9b judge (think off, temperature 0, seed 7, JSON schema), SYSTEM prompt as committed in eval/t4/judge_eval.py, 500-character snippets; judge 'not answerable' returns nothing, otherwise the retrieval result unchanged; fail open on unparsable output.",
+  "pass_rule": {
+    "source": "ROADMAP, T4 section, written before this run",
+    "recall": 0.9,
+    "per_language": 0.85,
+    "per_category": 0.85,
+    "abstention": 0.9,
+    "violations": 0,
+    "judge_p95_ms": 2000,
+    "scope": "J1 pooled over the three sets; per-category covers every category with expected sources (session-recall, knowledge-recall, changed-fact, temporal, flagged, semantic); judge p95 over all judge calls of this run"
+  },
+  "known_handicaps": [
+    "The frozen judge prompt says sources are 'in English or Armenian'; Russian is new here and the prompt was not changed for it."
+  ],
+  "author": "Claude Code session local-search-8cdca3 (started by the AIDrive launch session); generators kept outside the repo",
+  "amendments": []
+}

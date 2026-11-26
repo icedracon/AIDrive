@@ -1,0 +1,31 @@
+s1: 6/6 in 117.0s 
+   [x] agent-A-qwen: first tool is get_project_brief
+   [x] agent-A-qwen: created a plan file
+   [x] agent-A-qwen: every created name starts with lab- (keystone)
+   [x] agent-B-free: first tool is get_project_brief
+   [x] agent-B-free: created a plan file
+   [x] agent-B-free: every created name starts with lab- (keystone)
+s2: 0/0 in 0.3s TypeError: string indices must be integers, not 'str'
+s3: 6/6 in 58.4s 
+   [x] A recorded a handoff
+   [x] A's handoff cites sources
+   [x] B called get_latest_handoff or get_project_brief first
+   [x] B read the cited source
+   [x] B created the menu file
+   [x] menu mentions the prices
+s4: 5/6 in 53.1s 
+   [x] A sent a message
+   [x] A addressed it to assistants, not the owner
+   [x] B read messages
+   [x] B replied
+   [ ] B's reply is threaded (reply_to)
+   [x] A got the answer
+s5: 0/0 in 0.1s TypeError: string indices must be integers, not 'str'
+s6: 0/0 in 0.1s TypeError: string indices must be integers, not 'str'
+s6b: 0/0 in 0.1s TypeError: string indices must be integers, not 'str'
+s7: 3/4 in 32.6s 
+   [x] agent process was killed after two successful file writes
+   [x] files written before the kill are kept
+   [x] no handoff was written by the killed agent
+   [ ] AIDrive tells the next assistant the session was cut off (any trace in brief/sessions)
+s8: 0/0 in 8.3s RuntimeError: no local sign-in link

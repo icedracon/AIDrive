@@ -1,0 +1,102 @@
+.evidence {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  color: #25332c;
+  font: 13px/1.55 "Segoe UI", Arial, sans-serif;
+  overflow-wrap: anywhere;
+}
+
+.source,
+.handoff {
+  min-width: 0;
+  border: 1px solid #89998f55;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ffffff52, #edf1ee38);
+  box-shadow: inset 0 1px 0 #ffffff80, 0 3px 12px #253b2e05;
+  backdrop-filter: blur(14px);
+}
+
+.sourceHeading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.sourceHeading::-webkit-details-marker { display: none; }
+.sourceHeading strong,
+.handoffHeading strong { font-size: 13px; font-weight: 600; }
+.icon { flex: 0 0 auto; color: #29654a; }
+.fileName { flex: 1; min-width: 80px; text-align: right; font-size: 12px; }
+.muted { color: #526257; font-size: 11px; }
+.warning { color: #805019; font-size: 11px; }
+.chevron { flex: 0 0 auto; margin-left: auto; color: #526257; }
+.source[open] > .sourceHeading .chevron { transform: rotate(180deg); }
+.source[open] > .sourceHeading { border-bottom: 1px solid #89998f38; }
+.content { padding: 8px 12px; min-width: 0; }
+.metadata { display: flex; flex-wrap: wrap; gap: 4px 14px; justify-content: space-between; color: #526257; font-size: 11px; }
+
+.code {
+  max-height: 100px;
+  max-width: 100%;
+  overflow: auto;
+  margin: 6px 0;
+  padding: 8px;
+  border: 1px solid #89998f30;
+  border-radius: 8px;
+  background: #f6f8f379;
+  color: #263c30;
+  white-space: pre;
+  overflow-wrap: normal;
+  font: 11.5px/1.5 Consolas, "Courier New", monospace;
+  tab-size: 2;
+}
+
+.download { color: #235e43; font-size: 12px; text-underline-offset: 3px; }
+.handoffs { display: grid; gap: 8px; min-width: 0; }
+.sectionHeading { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #42584a; font-size: 12px; font-weight: 600; }
+.evidence .scope { margin: -4px 0 0; color: #526257; font-size: 11px; }
+.evidence .handoffHeading { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 14px 0; margin: 0; }
+.badge { margin-left: auto; padding: 2px 8px; border: 1px solid #80938955; border-radius: 20px; color: #405b49; background: #ffffff38; font-size: 11px; }
+.acceptance { flex-basis: 100%; color: #526257; font-size: 11px; }
+.handoffBody { display: grid; gap: 6px; padding: 8px 14px 12px; }
+.decisionDetails { min-width: 0; border-top: 1px solid #89998f30; }
+.decisionSummary { display: flex; align-items: center; gap: 8px; padding-top: 8px; color: #42584a; font-size: 11px; cursor: pointer; list-style: none; }
+.decisionSummary::-webkit-details-marker { display: none; }
+.decisionDetails[open] > .decisionSummary .chevron { transform: rotate(180deg); }
+.decisionBody { display: grid; gap: 9px; min-width: 0; padding-top: 10px; }
+.evidence .text { margin: 0; white-space: pre-wrap; font-size: 13px; line-height: 1.6; }
+.label { margin: 2px 0 -5px; color: #42584a; font-size: 11px; font-weight: 600; }
+.decisions { margin: 0; padding-left: 18px; white-space: pre-wrap; }
+.decisions li + li { margin-top: 4px; }
+.evidence .note { margin: 0; color: #526257; font-size: 12px; white-space: pre-wrap; }
+.sources { display: grid; gap: 8px; min-width: 0; }
+.evidence .error { margin: 0; color: #813315; font-size: 12px; }
+.evidence.evidence p { background: transparent !important; padding: 0; border: 0; border-radius: 0; }
+
+.button {
+  width: auto;
+  min-height: 30px;
+  padding: 4px 9px;
+  border: 1px solid #80938966;
+  border-radius: 7px;
+  background: #ffffff40;
+  color: #294e38;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.button:hover { background: #ffffff80; }
+.evidence :is(summary, button, a, pre):focus-visible { outline: 2px solid #296b4a; outline-offset: 3px; }
+
+@media (max-width: 600px) {
+  .sourceHeading { gap: 6px 8px; padding: 10px; }
+  .fileName { flex-basis: calc(100% - 36px); order: 3; text-align: left; }
+  .evidence .handoffHeading { padding: 10px 10px 0; }
+  .handoffBody { padding: 8px 10px 10px; }
+}

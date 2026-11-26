@@ -1,0 +1,1251 @@
+{
+ "about": "Held-out set 2 (EN): synthetic history of Ridgeway Fix, the repair-booking and parts site of a fictional community bike co-op in Millbrook (Oct 2026). Coordinator Maya, mechanic Tom (editor), volunteers. Written for the T4 held-out run without reading eval/t4 results, eval/dev or eval/heldout cases.",
+ "spec": {
+  "categories": {
+   "session-recall": 8,
+   "knowledge-recall": 6,
+   "changed-fact": 4,
+   "temporal": 4,
+   "flagged": 4,
+   "abstention": 6,
+   "permission": 4,
+   "semantic": 4
+  },
+  "languages": {
+   "en": 40
+  }
+ },
+ "steps": [
+  {
+   "op": "file",
+   "key": "pricing",
+   "content": "# Ridgeway Fix prices (October 2026)\n\nMembership: $40 per year.\nTune-up: members $25, non-members $45.\nParts: inner tube $6, brake pads $9 a pair, chain $18.\nLabour for other repairs is quoted at the stand.\n",
+   "name": "pricing.md"
+  },
+  {
+   "op": "file",
+   "key": "hours",
+   "content": "# Workshop hours\n\nTuesday and Thursday 17:00-20:00 (booked repairs).\nSaturday 10:00-16:00 (booked repairs and walk-ins).\nClosed on public holidays.\n",
+   "name": "hours.md"
+  },
+  {
+   "op": "file",
+   "key": "policy",
+   "content": "# Safety and workshop policy\n\n- Riders under 16 need a parent or guardian present at the stand.\n- We do not open or repair e-bike batteries; we refer people to a battery specialist.\n- Bikes left more than 60 days after a completed repair are donated to the youth programme after two reminder SMS.\n- Closed-toe shoes in the workshop.\n",
+   "name": "safety-policy.md"
+  },
+  {
+   "op": "session",
+   "key": "s1",
+   "actor": "agent",
+   "client": "claude-code",
+   "label": "Ridgeway Fix: booking flow",
+   "start": "2026-10-02T17",
+   "events": [
+    [
+     "user",
+     "We're building the booking page for Ridgeway Fix, the co-op's repair site. Repair slots are 45 minutes each, and the workshop has three stands, so at most three bookings can overlap."
+    ],
+    [
+     "assistant",
+     "Got it. A slot is 45 minutes with a capacity of 3 per start time. Bookings open 14 days ahead by default."
+    ],
+    [
+     "user",
+     "14 days is fine. People keep no-showing though. If someone misses two bookings in a row, block online booking for 30 days."
+    ],
+    [
+     "assistant",
+     "Added a no-show counter on the member record. Two consecutive no-shows set booking_blocked_until to now plus 30 days. Staff can lift the block from the admin page."
+    ],
+    [
+     "user",
+     "Remind me what stack this is on, I lost track."
+    ],
+    [
+     "assistant",
+     "SvelteKit on the frontend, a small Go API, SQLite for storage, deployed on a single Hetzner VPS. Bookings live in the bookings table."
+    ],
+    [
+     "user",
+     "Reminders: send an SMS the evening before at 18:00, not email. Half our members never read email."
+    ],
+    [
+     "assistant",
+     "Customer reminders now go out by SMS at 18:00 the day before, through Twilio. Roughly one cent per message."
+    ],
+    [
+     "user",
+     "Kids' bikes: anyone under 16 needs a parent at the stand. Put a checkbox on the form."
+    ],
+    [
+     "assistant",
+     "Added a required 'guardian present' checkbox when the rider's age is under 16; the form won't submit without it."
+    ],
+    [
+     "user",
+     "And cancellations: free cancellation up to 2 hours before the slot."
+    ],
+    [
+     "assistant",
+     "Done: cancelling is free until 2 hours before the start; after that it counts as a no-show."
+    ]
+   ]
+  },
+  {
+   "op": "propose",
+   "key": "k_slot_len",
+   "kind": "fact",
+   "topic": "slot-length",
+   "statement": "Repair slots are 45 minutes; the workshop has three stands, so up to three bookings per start time.",
+   "evidence": [
+    "s1#0",
+    "s1#1"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_booking_window_1",
+   "kind": "fact",
+   "topic": "booking-window",
+   "statement": "Online bookings open 14 days ahead.",
+   "evidence": [
+    "s1#1",
+    "s1#2"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_noshow",
+   "kind": "constraint",
+   "topic": "no-show-rule",
+   "statement": "Two consecutive no-shows block online booking for 30 days; staff can lift the block.",
+   "evidence": [
+    "s1#3"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_stack",
+   "kind": "fact",
+   "topic": "stack",
+   "statement": "Ridgeway Fix runs on SvelteKit, a Go API and SQLite on one Hetzner VPS.",
+   "evidence": [
+    "s1#5"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_reminder_1",
+   "kind": "decision",
+   "topic": "customer-reminders",
+   "statement": "Customer booking reminders are sent by SMS at 18:00 the evening before, not by email.",
+   "evidence": [
+    "s1#6",
+    "s1#7"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_guardian",
+   "kind": "constraint",
+   "topic": "under-16",
+   "statement": "Riders under 16 need a parent or guardian present at the stand; the booking form requires a checkbox.",
+   "evidence": [
+    "s1#9"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_cancel_1",
+   "kind": "constraint",
+   "topic": "cancellation-window",
+   "statement": "Cancellation is free up to 2 hours before the slot; later it counts as a no-show.",
+   "evidence": [
+    "s1#11"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "session",
+   "key": "s2",
+   "actor": "agent",
+   "client": "codex",
+   "label": "Ridgeway Fix: parts shop and payments",
+   "start": "2026-10-06T18",
+   "events": [
+    [
+     "user",
+     "Next: a small parts shop. We sell inner tubes, brake pads, chains, and used parts stripped from donated bikes."
+    ],
+    [
+     "assistant",
+     "Created a products table with sku, name, price_cents, stock and condition (new or used). Used parts are one-off rows with stock 1."
+    ],
+    [
+     "user",
+     "Payments go through Stripe. No cash on the site; cash only at the counter."
+    ],
+    [
+     "assistant",
+     "Stripe Checkout handles online orders. The site says cash is accepted in person, but checkout has no cash option."
+    ],
+    [
+     "user",
+     "Inner tubes are $6, brake pads $9 a pair, chains $18."
+    ],
+    [
+     "assistant",
+     "Prices entered: inner tube 600 cents, brake pads 900 cents per pair, chain 1800 cents."
+    ],
+    [
+     "user",
+     "Orders are pickup only. We don't ship anything, not even small parts."
+    ],
+    [
+     "assistant",
+     "Shipping is disabled. Checkout only offers pickup at the workshop, and the confirmation email asks people to bring the order number."
+    ],
+    [
+     "user",
+     "Members get 10% off parts."
+    ],
+    [
+     "assistant",
+     "Member discount: 10% off parts at checkout for logged-in active members. It does not apply to labour."
+    ],
+    [
+     "user",
+     "The Stripe webhook failed twice last night and orders stayed pending."
+    ],
+    [
+     "assistant",
+     "Cause: production was configured with the test-mode webhook signing secret. I rotated it to the live secret and added a retry job that re-checks pending orders every 10 minutes."
+    ],
+    [
+     "user",
+     "Unclaimed pickups, how long do we hold them?"
+    ],
+    [
+     "assistant",
+     "Orders not picked up within 21 days are cancelled and refunded automatically, and the parts go back into stock."
+    ]
+   ]
+  },
+  {
+   "op": "propose",
+   "key": "k_payments",
+   "kind": "decision",
+   "topic": "payments",
+   "statement": "Online payments go through Stripe only; cash is accepted only at the counter.",
+   "evidence": [
+    "s2#3"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_price_tube_1",
+   "kind": "fact",
+   "topic": "price-inner-tube",
+   "statement": "An inner tube costs $6.",
+   "evidence": [
+    "s2#5"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_parts_prices",
+   "kind": "fact",
+   "topic": "parts-prices",
+   "statement": "Brake pads cost $9 a pair and a chain costs $18.",
+   "evidence": [
+    "s2#5",
+    "file:pricing"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_pickup",
+   "kind": "constraint",
+   "topic": "shipping",
+   "statement": "Parts orders are pickup only at the workshop; nothing is shipped.",
+   "evidence": [
+    "s2#7"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_member_discount",
+   "kind": "fact",
+   "topic": "member-discount",
+   "statement": "Active members get 10% off parts, not labour.",
+   "evidence": [
+    "s2#9"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_webhook",
+   "kind": "gotcha",
+   "topic": "stripe-webhook",
+   "statement": "Stripe webhooks failed because production used the test-mode signing secret; rotated, and a job re-checks pending orders every 10 minutes.",
+   "evidence": [
+    "s2#11"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_unclaimed",
+   "kind": "constraint",
+   "topic": "unclaimed-orders",
+   "statement": "Orders not picked up within 21 days are cancelled, refunded and restocked automatically.",
+   "evidence": [
+    "s2#13"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "session",
+   "key": "o1",
+   "actor": "other",
+   "client": "codex",
+   "label": "Millbrook food bank: shifts",
+   "start": "2026-10-07T10",
+   "events": [
+    [
+     "user",
+     "Food bank pantry opens Mondays 9 to 12 and needs four volunteers per shift. Volunteers who log 20 hours get a free lunch voucher."
+    ],
+    [
+     "assistant",
+     "Shift page created: Monday 9:00-12:00, four volunteer slots, and an hours counter that issues a lunch voucher at 20 hours."
+    ]
+   ]
+  },
+  {
+   "op": "session",
+   "key": "e1",
+   "actor": "editor",
+   "client": "claude-code",
+   "label": "Tom's notes",
+   "start": "2026-10-08T21",
+   "events": [
+    [
+     "user",
+     "Note to self: the tool cabinet code is 4471."
+    ],
+    [
+     "assistant",
+     "Noted, kept in this private session."
+    ],
+    [
+     "user",
+     "I'm thinking about leaving the co-op in spring to open my own repair shop across town."
+    ],
+    [
+     "assistant",
+     "Understood, this stays in your private notes."
+    ]
+   ]
+  },
+  {
+   "op": "propose",
+   "key": "k_member_fee_1",
+   "kind": "fact",
+   "topic": "membership-fee",
+   "statement": "Membership costs $40 a year.",
+   "evidence": [
+    "file:pricing"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_tuneup_1",
+   "kind": "fact",
+   "topic": "tune-up-price",
+   "statement": "A tune-up costs $25 for members and $45 for non-members.",
+   "evidence": [
+    "file:pricing"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_hours",
+   "kind": "fact",
+   "topic": "workshop-hours",
+   "statement": "The workshop is open Tuesday and Thursday 17:00-20:00 and Saturday 10:00-16:00.",
+   "evidence": [
+    "file:hours"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_ebike",
+   "kind": "constraint",
+   "topic": "e-bike-batteries",
+   "statement": "We do not open or repair e-bike batteries; people are referred to a battery specialist.",
+   "evidence": [
+    "file:policy"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_abandoned",
+   "kind": "constraint",
+   "topic": "abandoned-bikes",
+   "statement": "Bikes left more than 60 days after a completed repair are donated to the youth programme after two reminder SMS.",
+   "evidence": [
+    "file:policy"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "session",
+   "key": "d1",
+   "actor": "agent",
+   "client": "claude-code",
+   "label": "Lease renewal",
+   "start": "2026-10-10T12",
+   "events": [
+    [
+     "user",
+     "The landlord wants $2,300 a month from March; we pay $1,850 now. I'm going to offer $2,000 with a three-year lease."
+    ],
+    [
+     "assistant",
+     "Recorded: current rent $1,850, landlord asks $2,300 from March, counter-offer $2,000 on a three-year lease."
+    ]
+   ]
+  },
+  {
+   "op": "propose",
+   "key": "k_lease",
+   "kind": "decision",
+   "topic": "lease",
+   "statement": "Counter-offer the landlord $2,000 a month on a three-year lease.",
+   "evidence": [
+    "d1#0"
+   ],
+   "decide": null
+  },
+  {
+   "op": "delete_session",
+   "key": "d1"
+  },
+  {
+   "op": "session",
+   "key": "s3",
+   "actor": "agent",
+   "client": "claude-code",
+   "label": "Ridgeway Fix: membership and pricing",
+   "start": "2026-10-15T19",
+   "events": [
+    [
+     "user",
+     "Membership is $40 a year right now. The board voted to raise it to $50 from January 1, 2027."
+    ],
+    [
+     "assistant",
+     "Updated pricing.md: membership $50 a year for new and renewing members from 1 Jan 2027; renewals before that stay at $40."
+    ],
+    [
+     "user",
+     "Also a reduced membership for students and unemployed people, $20."
+    ],
+    [
+     "assistant",
+     "Added a reduced tier at $20 a year. It's self-declared, no document upload."
+    ],
+    [
+     "user",
+     "Tune-up for members goes from $25 to $30. Non-members stay at $45."
+    ],
+    [
+     "assistant",
+     "Changed pricing.md: member tune-up $30, non-member tune-up $45. Brake pads also moved to $10 a pair from the new supplier list."
+    ],
+    [
+     "user",
+     "Open shop night: members can use the stands and tools themselves on Wednesdays, free."
+    ],
+    [
+     "assistant",
+     "Added Wednesday 18:00-21:00 open shop to hours.md: members only, no booking needed, three stands."
+    ],
+    [
+     "user",
+     "Did we ever settle what happens to bikes left more than 60 days?"
+    ],
+    [
+     "assistant",
+     "Yes, it's in the safety policy: bikes left over 60 days after a completed repair are donated to the youth programme after two reminder SMS."
+    ],
+    [
+     "user",
+     "Can we take donations through the site?"
+    ],
+    [
+     "assistant",
+     "Added a donation page on the same Stripe account with suggested amounts of $10, $25 and $50. No tax receipts, since the co-op isn't a registered charity."
+    ]
+   ]
+  },
+  {
+   "op": "file",
+   "key": "pricing",
+   "content": "# Ridgeway Fix prices (from 1 January 2027)\n\nMembership: $50 per year for new and renewing members from 1 Jan 2027 (renewals before then stay $40).\nReduced membership: $20 per year, students and unemployed people, self-declared.\nTune-up: members $30, non-members $45.\nParts: inner tube $6, brake pads $10 a pair, chain $18.\n"
+  },
+  {
+   "op": "file",
+   "key": "hours",
+   "content": "# Workshop hours\n\nTuesday and Thursday 17:00-20:00 (booked repairs).\nWednesday 18:00-21:00 open shop: members use stands and tools themselves, free, no booking.\nSaturday 10:00-16:00 (booked repairs and walk-ins).\nClosed on public holidays.\n"
+  },
+  {
+   "op": "propose",
+   "key": "k_member_fee_2",
+   "kind": "fact",
+   "topic": "membership-fee",
+   "statement": "Membership costs $50 a year from 1 January 2027; renewals before then stay at $40.",
+   "evidence": [
+    "s3#1",
+    "file:pricing"
+   ],
+   "decide": "approved",
+   "supersedes": "k_member_fee_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_reduced",
+   "kind": "fact",
+   "topic": "reduced-membership",
+   "statement": "Reduced membership is $20 a year for students and unemployed people, self-declared.",
+   "evidence": [
+    "s3#3"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_tuneup_2",
+   "kind": "fact",
+   "topic": "tune-up-price",
+   "statement": "A tune-up costs $30 for members and $45 for non-members.",
+   "evidence": [
+    "s3#5"
+   ],
+   "decide": "approved",
+   "supersedes": "k_tuneup_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_open_shop",
+   "kind": "decision",
+   "topic": "open-shop",
+   "statement": "Wednesday 18:00-21:00 is open shop: members use stands and tools themselves, free, no booking.",
+   "evidence": [
+    "s3#7"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_donations",
+   "kind": "decision",
+   "topic": "donations",
+   "statement": "Donations are taken through Stripe on the site; no tax receipts because the co-op is not a registered charity.",
+   "evidence": [
+    "s3#11"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "session",
+   "key": "s4",
+   "actor": "agent",
+   "client": "codex",
+   "label": "Ridgeway Fix: volunteer rota",
+   "start": "2026-10-20T18",
+   "events": [
+    [
+     "user",
+     "Volunteers sign up for shifts. Each Saturday needs at least two mechanics."
+    ],
+    [
+     "assistant",
+     "Built a rota page; a Saturday shows red when fewer than two mechanics are signed up."
+    ],
+    [
+     "user",
+     "Who gets told when a shift is understaffed?"
+    ],
+    [
+     "assistant",
+     "Maya gets a Telegram message on Thursday at noon if Saturday still has fewer than two mechanics."
+    ],
+    [
+     "user",
+     "Use Telegram for staff things, SMS only for customers."
+    ],
+    [
+     "assistant",
+     "Noted: staff notifications go to the Telegram group 'Ridgeway crew'; customer reminders stay on SMS."
+    ],
+    [
+     "user",
+     "What about backups?"
+    ],
+    [
+     "assistant",
+     "The SQLite file is copied nightly at 03:00 to Backblaze B2 and kept 30 days. A restore was tested on 14 October."
+    ],
+    [
+     "user",
+     "Volunteer hours: 20 hours of volunteering earns a free year of membership."
+    ],
+    [
+     "assistant",
+     "Added an hours counter per volunteer; at 20 logged hours their next membership renewal is free."
+    ]
+   ]
+  },
+  {
+   "op": "propose",
+   "key": "k_rota",
+   "kind": "constraint",
+   "topic": "saturday-staffing",
+   "statement": "Each Saturday needs at least two mechanics on the rota.",
+   "evidence": [
+    "s4#1"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_understaffed",
+   "kind": "decision",
+   "topic": "understaffed-alert",
+   "statement": "Maya gets a Telegram alert Thursday at noon if Saturday has fewer than two mechanics.",
+   "evidence": [
+    "s4#3"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_staff_channel",
+   "kind": "decision",
+   "topic": "notification-channels",
+   "statement": "Staff notifications go to the Telegram group 'Ridgeway crew'; customers get SMS.",
+   "evidence": [
+    "s4#5"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_backup",
+   "kind": "fact",
+   "topic": "backups",
+   "statement": "The SQLite database is copied nightly at 03:00 to Backblaze B2 and kept 30 days.",
+   "evidence": [
+    "s4#7"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_volunteer_hours",
+   "kind": "fact",
+   "topic": "volunteer-reward",
+   "statement": "20 logged volunteer hours earn a free year of membership.",
+   "evidence": [
+    "s4#9"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "session",
+   "key": "s5",
+   "actor": "agent",
+   "client": "claude-code",
+   "label": "Ridgeway Fix: changes after the October review",
+   "start": "2026-10-29T18",
+   "events": [
+    [
+     "user",
+     "Two hours is too short for cancellations, the stands sit empty. Free cancellation should end 24 hours before."
+    ],
+    [
+     "assistant",
+     "Free cancellation now ends 24 hours before the slot; later cancellations count as a no-show."
+    ],
+    [
+     "user",
+     "And open bookings 21 days ahead instead of 14, people plan around weekends."
+    ],
+    [
+     "assistant",
+     "Booking window extended to 21 days."
+    ],
+    [
+     "user",
+     "The 18:00 reminder arrives while people commute. Send it at 20:00 instead."
+    ],
+    [
+     "assistant",
+     "Reminder SMS moved to 20:00 the evening before."
+    ],
+    [
+     "user",
+     "The Go API keeps growing in memory on the Hetzner box. Any idea?"
+    ],
+    [
+     "assistant",
+     "An unclosed rows iterator in the parts search handler leaked connections; fixed with defer rows.Close(). Memory has stayed flat around 60 MB for two days."
+    ],
+    [
+     "user",
+     "Our supplier raised prices: sell inner tubes at $7."
+    ],
+    [
+     "assistant",
+     "Inner tube price is now $7 (700 cents) in the shop."
+    ]
+   ]
+  },
+  {
+   "op": "propose",
+   "key": "k_cancel_2",
+   "kind": "constraint",
+   "topic": "cancellation-window",
+   "statement": "Cancellation is free up to 24 hours before the slot; later it counts as a no-show.",
+   "evidence": [
+    "s5#1"
+   ],
+   "decide": "approved",
+   "supersedes": "k_cancel_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_booking_window_2",
+   "kind": "fact",
+   "topic": "booking-window",
+   "statement": "Online bookings open 21 days ahead.",
+   "evidence": [
+    "s5#3"
+   ],
+   "decide": "approved",
+   "supersedes": "k_booking_window_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_reminder_2",
+   "kind": "decision",
+   "topic": "customer-reminders",
+   "statement": "Customer booking reminders are sent by SMS at 20:00 the evening before.",
+   "evidence": [
+    "s5#5"
+   ],
+   "decide": "approved",
+   "supersedes": "k_reminder_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_memleak",
+   "kind": "gotcha",
+   "topic": "go-api-memory",
+   "statement": "The Go API leaked memory through an unclosed rows iterator in parts search; fixed with defer rows.Close().",
+   "evidence": [
+    "s5#7"
+   ],
+   "decide": "approved"
+  },
+  {
+   "op": "propose",
+   "key": "k_price_tube_2",
+   "kind": "fact",
+   "topic": "price-inner-tube",
+   "statement": "An inner tube costs $7.",
+   "evidence": [
+    "s5#9"
+   ],
+   "decide": "approved",
+   "supersedes": "k_price_tube_1"
+  },
+  {
+   "op": "propose",
+   "key": "k_backup_alt",
+   "kind": "fact",
+   "topic": "backups",
+   "statement": "Backups are kept for 90 days.",
+   "evidence": [
+    "s4#7"
+   ],
+   "decide": null
+  },
+  {
+   "op": "propose",
+   "key": "k_stack_alt",
+   "kind": "fact",
+   "topic": "stack",
+   "statement": "The API has been rewritten in Python with FastAPI.",
+   "evidence": [
+    "s1#5"
+   ],
+   "decide": null
+  }
+ ],
+ "cases": [
+  {
+   "id": "E001",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "how many repair stands does the workshop have",
+   "expect": [
+    "s1#0"
+   ]
+  },
+  {
+   "id": "E002",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "why were orders stuck as pending after the Stripe webhook failed",
+   "expect": [
+    "s2#11"
+   ]
+  },
+  {
+   "id": "E003",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "how long do we hold orders nobody picked up",
+   "expect": [
+    "s2#13"
+   ]
+  },
+  {
+   "id": "E004",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "what fixed the memory growth in the Go API",
+   "expect": [
+    "s5#7"
+   ]
+  },
+  {
+   "id": "E005",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "when was restoring from backup last tested",
+   "expect": [
+    "s4#7"
+   ]
+  },
+  {
+   "id": "E006",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "suggested amounts on the donation page",
+   "expect": [
+    "s3#11"
+   ]
+  },
+  {
+   "id": "E007",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "who is told when Saturday is short of mechanics",
+   "expect": [
+    "s4#3"
+   ]
+  },
+  {
+   "id": "E008",
+   "lang": "en",
+   "category": "session-recall",
+   "tool": "sessions",
+   "query": "how are used parts from donated bikes stored in the products table",
+   "expect": [
+    "s2#1"
+   ]
+  },
+  {
+   "id": "E009",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "Do we ship parts to customers?",
+   "expect": [
+    "k_pickup"
+   ]
+  },
+  {
+   "id": "E010",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "member discount on parts",
+   "expect": [
+    "k_member_discount"
+   ]
+  },
+  {
+   "id": "E011",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "What happens to a bike nobody collects after the repair?",
+   "expect": [
+    "k_abandoned"
+   ]
+  },
+  {
+   "id": "E012",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "can we fix an e-bike battery",
+   "expect": [
+    "k_ebike"
+   ]
+  },
+  {
+   "id": "E013",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "What do volunteers get for their hours?",
+   "expect": [
+    "k_volunteer_hours"
+   ]
+  },
+  {
+   "id": "E014",
+   "lang": "en",
+   "category": "knowledge-recall",
+   "tool": "memory",
+   "query": "rule for riders under 16",
+   "expect": [
+    "k_guardian"
+   ]
+  },
+  {
+   "id": "E015",
+   "lang": "en",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "current price of an inner tube",
+   "expect": [
+    "k_price_tube_2"
+   ],
+   "forbid": [
+    "k_price_tube_1"
+   ]
+  },
+  {
+   "id": "E016",
+   "lang": "en",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "How much is a tune-up for members?",
+   "expect": [
+    "k_tuneup_2"
+   ],
+   "forbid": [
+    "k_tuneup_1"
+   ]
+  },
+  {
+   "id": "E017",
+   "lang": "en",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "until when can people cancel for free",
+   "expect": [
+    "k_cancel_2"
+   ],
+   "forbid": [
+    "k_cancel_1"
+   ]
+  },
+  {
+   "id": "E018",
+   "lang": "en",
+   "category": "changed-fact",
+   "tool": "memory",
+   "query": "how many days ahead can people book",
+   "expect": [
+    "k_booking_window_2"
+   ],
+   "forbid": [
+    "k_booking_window_1"
+   ]
+  },
+  {
+   "id": "E019",
+   "lang": "en",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "cancellation window",
+   "expect": [
+    "k_cancel_1"
+   ],
+   "forbid": [
+    "k_cancel_2"
+   ],
+   "as_of": "k_reduced"
+  },
+  {
+   "id": "E020",
+   "lang": "en",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "membership price",
+   "expect": [
+    "k_member_fee_1"
+   ],
+   "forbid": [
+    "k_member_fee_2"
+   ],
+   "as_of": "k_abandoned"
+  },
+  {
+   "id": "E021",
+   "lang": "en",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "when do reminder SMS go out",
+   "expect": [
+    "k_reminder_1"
+   ],
+   "forbid": [
+    "k_reminder_2"
+   ],
+   "as_of": "k_backup"
+  },
+  {
+   "id": "E022",
+   "lang": "en",
+   "category": "temporal",
+   "tool": "memory",
+   "query": "how far ahead can members book",
+   "expect": [
+    "k_booking_window_1"
+   ],
+   "forbid": [
+    "k_booking_window_2"
+   ],
+   "as_of": "k_webhook"
+  },
+  {
+   "id": "E023",
+   "lang": "en",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "workshop opening hours",
+   "expect": [
+    "k_hours"
+   ],
+   "flag": "stale"
+  },
+  {
+   "id": "E024",
+   "lang": "en",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "price of brake pads and chains",
+   "expect": [
+    "k_parts_prices"
+   ],
+   "flag": "stale"
+  },
+  {
+   "id": "E025",
+   "lang": "en",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "How long are backups kept?",
+   "expect": [
+    "k_backup"
+   ],
+   "flag": "disputed"
+  },
+  {
+   "id": "E026",
+   "lang": "en",
+   "category": "flagged",
+   "tool": "memory",
+   "query": "What is the tech stack?",
+   "expect": [
+    "k_stack"
+   ],
+   "flag": "disputed"
+  },
+  {
+   "id": "E027",
+   "lang": "en",
+   "category": "abstention",
+   "tool": "both",
+   "query": "How much does wheel truing cost?",
+   "expect": []
+  },
+  {
+   "id": "E028",
+   "lang": "en",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Do we rent out bikes?",
+   "expect": []
+  },
+  {
+   "id": "E029",
+   "lang": "en",
+   "category": "abstention",
+   "tool": "both",
+   "query": "What is the Wi-Fi password at the workshop?",
+   "expect": []
+  },
+  {
+   "id": "E030",
+   "lang": "en",
+   "category": "abstention",
+   "tool": "both",
+   "query": "Which insurance company covers the co-op?",
+   "expect": []
+  },
+  {
+   "id": "E031",
+   "lang": "en",
+   "category": "abstention",
+   "tool": "both",
+   "query": "membership fee for corporate sponsors",
+   "expect": []
+  },
+  {
+   "id": "E032",
+   "lang": "en",
+   "category": "abstention",
+   "tool": "both",
+   "query": "When does the workshop close for the winter holidays?",
+   "expect": []
+  },
+  {
+   "id": "E033",
+   "lang": "en",
+   "category": "permission",
+   "tool": "both",
+   "query": "tool cabinet code",
+   "expect": [],
+   "forbid": [
+    "e1#0",
+    "e1#1"
+   ]
+  },
+  {
+   "id": "E034",
+   "lang": "en",
+   "category": "permission",
+   "tool": "both",
+   "query": "Is Tom planning to leave the co-op?",
+   "expect": [],
+   "forbid": [
+    "e1#2",
+    "e1#3"
+   ]
+  },
+  {
+   "id": "E035",
+   "lang": "en",
+   "category": "permission",
+   "tool": "both",
+   "query": "How much rent does the landlord want from March?",
+   "expect": [],
+   "forbid": [
+    "d1#0",
+    "d1#1",
+    "k_lease"
+   ]
+  },
+  {
+   "id": "E036",
+   "lang": "en",
+   "category": "permission",
+   "tool": "both",
+   "query": "how many volunteers does the food bank pantry need per shift",
+   "expect": [],
+   "forbid": [
+    "o1#0",
+    "o1#1"
+   ]
+  },
+  {
+   "id": "E037",
+   "lang": "en",
+   "category": "semantic",
+   "tool": "memory",
+   "query": "Is the yearly membership going up to fifty dollars?",
+   "expect": [
+    "k_member_fee_2"
+   ],
+   "forbid": [
+    "k_member_fee_1"
+   ]
+  },
+  {
+   "id": "E038",
+   "lang": "en",
+   "category": "semantic",
+   "tool": "memory",
+   "query": "What does it cost to join if you're out of work?",
+   "expect": [
+    "k_reduced"
+   ]
+  },
+  {
+   "id": "E039",
+   "lang": "en",
+   "category": "semantic",
+   "tool": "memory",
+   "query": "Which messenger do we use to reach the crew?",
+   "expect": [
+    "k_staff_channel"
+   ]
+  },
+  {
+   "id": "E040",
+   "lang": "en",
+   "category": "semantic",
+   "tool": "memory",
+   "query": "Are reminder texts sent at 8 pm?",
+   "expect": [
+    "k_reminder_2"
+   ],
+   "forbid": [
+    "k_reminder_1"
+   ]
+  }
+ ]
+}

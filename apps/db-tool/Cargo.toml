@@ -1,0 +1,17 @@
+[package]
+name = "aidrive-db"
+version = "0.0.1"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+description = "AIDrive database migration tool (validates and applies the AIDrive PostgreSQL schema)."
+readme = "../../README.md"
+keywords = ["postgresql", "migrations", "aidrive"]
+categories = ["development-tools"]
+
+[dependencies]
+sqlx.workspace = true
+tokio.workspace = true

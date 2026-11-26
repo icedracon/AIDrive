@@ -1,0 +1,25 @@
+/target/
+/apps/web/node_modules/
+/apps/web/.next/
+/apps/web/out/
+.env
+.env.*
+!.env.example
+*.log
+coverage/
+
+# Local tooling and captures, never part of the repository
+/.claude/
+mitm_mcp_traffic.db
+*.dump
+/apps/web/tsconfig.tsbuildinfo
+
+# Adviser (separate product) output stays outside this repository
+ADVISER*.md
+
+__pycache__/
+*.py[cod]
+/eval/t4/cache-*.json
+# Release folders built by scripts/package-release.sh
+/dist/
+/dist-*/

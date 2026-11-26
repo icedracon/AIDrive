@@ -1,0 +1,98 @@
+AIDrive - pilot build (Windows 10/11 x64, Linux x64)
+====================================================
+
+RU
+--
+AIDrive хранит общее состояние проекта (файлы, решения, передачи работы, записи
+сессий) для Claude Code, Codex и OpenCode. Всё работает только на вашем
+компьютере: сервер слушает 127.0.0.1, ничего не отправляется наружу, интернет
+для установки не нужен.
+
+Нужно: Windows 10/11 64-bit или Linux x86_64, и хотя бы один из Claude Code
+(claude), Codex (codex) или OpenCode. Права администратора, WSL, Rust, Node,
+Docker и PostgreSQL не нужны (PostgreSQL 17 уже внутри).
+
+Установка (1-2 минуты):
+1. Распакуйте архив в любую папку, например C:\AIDrive-setup (или ~/AIDrive-setup).
+2. Откройте терминал в папке СВОЕГО ПРОЕКТА (где работаете с Claude Code / Codex).
+3. Запустите установщик из распакованной папки:
+     Windows:  C:\AIDrive-setup\AIDrive\install.cmd
+     Linux:    sh ~/AIDrive-setup/AIDrive/install.sh
+4. Установщик проверит SHA-256, поставит AIDrive (Windows: %LOCALAPPDATA%\AIDrive\bin,
+   Linux: ~/.local/share/AIDrive/bin и ссылка в ~/.local/bin), запустит его,
+   установит хуки и подключит найденные Claude Code, Codex и OpenCode к этой папке.
+   На вопрос о записи сессий ответьте Y или n (записи хранятся у вас, секреты
+   вырезаются, видите их только вы). У OpenCode хуков нет: его сессии не
+   записываются, ассистент сам пишет заметку и handoff.
+5. Откройте http://localhost:7480 (адрес "Web app" из вывода; вход уже выполнен).
+6. Перезапустите Claude Code / Codex / OpenCode в папке проекта и скажите:
+   "Get the AIDrive project brief".
+
+Другой проект: запустите в его папке  aidrive up
+Команды:  aidrive status · aidrive down (остановить) · aidrive up (запустить снова)
+
+Обновление: распакуйте новый архив и запустите его install.cmd / install.sh так же,
+как в шаге 3. Программы заменятся, данные и подключения останутся.
+
+Удаление:
+  aidrive uninstall
+Он остановит AIDrive, уберёт хуки и сервер aidrive из Claude Code и Codex
+(для OpenCode покажет, что удалить вручную) и напечатает три папки, которые
+можно удалить: программы, данные AIDrive, профили подключений.
+
+Где данные: Windows %LOCALAPPDATA%\AIDrive, Linux ~/.local/share/AIDrive
+(база PostgreSQL, лог logs/api.log). Профили подключений: %APPDATA%\AIDrive
+или ~/.config/AIDrive.
+
+Если что-то пошло не так: пришлите вывод установщика и файл лога (путь
+показывает aidrive status).
+
+EN
+--
+AIDrive keeps one shared project state (files, decisions, handoffs, session
+records) for Claude Code, Codex and OpenCode. Everything stays on your computer:
+the server listens on 127.0.0.1, nothing is sent out, and the install needs no
+internet.
+
+Needs: 64-bit Windows 10/11 or x86_64 Linux, and at least one of Claude Code
+(claude), Codex (codex) or OpenCode. No admin rights, WSL, Rust, Node, Docker or
+PostgreSQL (PostgreSQL 17 is bundled).
+
+Install (1-2 minutes):
+1. Extract the archive anywhere, e.g. C:\AIDrive-setup (or ~/AIDrive-setup).
+2. Open a terminal in YOUR PROJECT folder (where you use Claude Code / Codex).
+3. Run the installer from the extracted folder:
+     Windows:  C:\AIDrive-setup\AIDrive\install.cmd
+     Linux:    sh ~/AIDrive-setup/AIDrive/install.sh
+4. It checks the SHA-256, installs AIDrive (Windows: %LOCALAPPDATA%\AIDrive\bin,
+   Linux: ~/.local/share/AIDrive/bin, linked from ~/.local/bin), starts it,
+   installs the hooks and connects the Claude Code, Codex and OpenCode it finds
+   to this folder. Answer the session-capture question Y or n (records stay on
+   your computer, secrets are redacted, only you see them). OpenCode has no
+   hooks: its sessions are not captured; the assistant writes a note and a
+   handoff instead.
+5. Open http://localhost:7480 (the "Web app" address it prints; already signed in).
+6. Restart Claude Code / Codex / OpenCode in the project folder and say:
+   "Get the AIDrive project brief".
+
+Another project: run  aidrive up  in its folder.
+Commands:  aidrive status · aidrive down (stop) · aidrive up (start again)
+
+Update: extract the newer archive and run its install.cmd / install.sh the same
+way as step 3. The programs are replaced; your data and connections stay.
+
+Uninstall:
+  aidrive uninstall
+It stops AIDrive, removes the hooks and the aidrive server from Claude Code and
+Codex (for OpenCode it prints what to delete by hand) and lists the three
+folders you can then delete: programs, AIDrive data, connection profiles.
+
+Where data lives: Windows %LOCALAPPDATA%\AIDrive, Linux ~/.local/share/AIDrive
+(PostgreSQL database, log in logs/api.log). Connection profiles: %APPDATA%\AIDrive
+or ~/.config/AIDrive.
+
+If anything fails, send the installer output and the log file (its path is
+shown by aidrive status).
+
+Licenses: AIDrive is MIT OR Apache-2.0 (LICENSE-MIT, LICENSE-APACHE). The bundled
+PostgreSQL and other third-party notices are in THIRD-PARTY-NOTICES.md.

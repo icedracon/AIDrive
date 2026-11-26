@@ -1,0 +1,3 @@
+[env]
+# PostgreSQL major version bundled into aidrive-api (embedded-db feature).
+POSTGRESQL_VERSION = "=17.12.0"

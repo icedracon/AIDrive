@@ -1,0 +1,150 @@
+/* Panel components (knowledge, review, handoffs, messages, files, activity, sessions, AI access). */
+:root { --ease-out: cubic-bezier(.23, 1, .32, 1); }
+
+/* Press feedback on every pressable control; hover only where a real pointer hovers. */
+:is(.primary-button, .secondary-button, .link-button, .inbox-row, .inbox-group-head, .file-row) {
+  transition: transform 160ms var(--ease-out), background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+:is(.primary-button, .secondary-button, .link-button, .file-row):active:not(:disabled) { transform: scale(.97); }
+:is(.inbox-row, .inbox-group-head):active { transform: scale(.995); }
+@media (hover: none) {
+  :is(.auth-card, .agent-access, .files-panel, .file-editor) .primary-button:hover:not(:disabled) { background: #7ce8b0; border-color: #7ce8b0; }
+  :is(.auth-card, .agent-access, .files-panel, .file-editor) .secondary-button:hover:not(:disabled) { background: #182d21; border-color: var(--legacy-control-line); }
+}
+
+/* One focus ring everywhere, not only in the Map. */
+:is(.agent-access, .files-panel, .file-editor) :is(button, a, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--legacy-accent);
+  outline-offset: 2px;
+}
+:is(.agent-access, .files-panel, .file-editor) :is(input[type=radio], input[type=checkbox]):focus-visible { outline-offset: 3px; }
+
+/* Armed two-step confirm. */
+:is(.agent-access, .files-panel) .secondary-button.is-armed,
+:is(.agent-access, .files-panel) .secondary-button.is-armed:hover:not(:disabled) {
+  background: #3a2119;
+  border-color: #e0896b;
+  color: #ffd6c6;
+}
+
+/* Panel scaffolding. */
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+.panel-head :is(h2, h3) { margin: 0; display: flex; align-items: center; gap: 10px; min-width: 0; }
+.panel-intro { max-width: 68ch; margin: 0 0 14px; }
+.panel-loading, .empty-line { color: var(--muted) !important; }
+.empty-line { padding: 14px 16px; border: 1px dashed var(--line); border-radius: 10px; }
+.panel-error { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border: 1px solid #a26a50; border-radius: 10px; background: #302019; }
+.panel-error p { margin: 0; color: #f2d2bc !important; }
+.count-pill { display: inline-flex; align-items: center; min-height: 22px; padding: 0 8px; border-radius: 99px; background: #3b3220; color: #f0cc78; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: 0; white-space: nowrap; }
+.count-pill.muted { background: #1c3127; color: #a5b8af; }
+.list-more { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+.list-more small { color: var(--muted); font-variant-numeric: tabular-nums; }
+.link-button { border: 0; background: none; padding: 4px 0; min-height: 32px; color: #8de8b7; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; justify-self: start; text-underline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .link-button:hover { text-decoration: underline; } }
+.saved-note { color: #8de8b7; font-size: 13px; }
+
+/* Long text: wrap anything, clamp what can be expanded. */
+.clamp-text { margin: 4px 0; white-space: pre-line; overflow-wrap: anywhere; }
+.clamp-text.is-clamped { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--lines, 3); line-clamp: var(--lines, 3); overflow: hidden; }
+.handoff :is(p, li, strong), .knowledge-list li > *, .message-list li > *, .activity-text, .session-list li div > * { min-width: 0; overflow-wrap: anywhere; }
+.knowledge-list li { min-width: 0; }
+
+/* Uppercase belongs to short labels, not to sentences or names (#10). */
+.handoff small, .knowledge-list strong { text-transform: none; letter-spacing: 0; }
+.field-label, .reason-line > small, .handoff-sources > small { display: inline-block; margin-right: 6px; color: var(--muted); font-size: 11px !important; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.field-label { display: block; margin: 10px 0 2px !important; }
+.reason-line { margin: 6px 0; font-size: 13px !important; }
+.handoff-head { align-items: baseline; }
+.handoff-head strong { min-width: 0; }
+
+/* Review inbox: grouped, one line per item until opened, collapses out on decision. */
+.inbox-list { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
+.inbox-item { display: grid; grid-template-rows: 1fr; opacity: 1; transition: grid-template-rows 200ms var(--ease-out), opacity 200ms var(--ease-out); }
+.inbox-item > .inbox-item-inner { min-height: 0; overflow: hidden; }
+.inbox-item.is-leaving { grid-template-rows: 0fr; opacity: 0; pointer-events: none; }
+.inbox-list > .inbox-item.is-leaving { margin-bottom: -8px; }
+.knowledge .inbox-item-inner.handoff { padding: 0; }
+.inbox-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 10px 14px; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; border-radius: inherit; }
+.inbox-kind { color: #f0cc78; font-size: 12px; font-weight: 700; white-space: nowrap; max-width: 22ch; overflow: hidden; text-overflow: ellipsis; }
+.inbox-statement { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #e5eee9; }
+.is-open > .inbox-row .inbox-statement { color: var(--muted); }
+.inbox-chevron { width: 8px; height: 8px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); color: var(--muted); transition: transform 160ms var(--ease-out); }
+[aria-expanded=true] > .inbox-chevron { transform: rotate(-135deg) translateY(-2px); }
+.inbox-body { padding: 0 14px 14px; }
+.inbox-body .inbox-meta { margin: 0 0 4px; }
+.inbox-full { white-space: pre-line; overflow-wrap: anywhere; color: #e5eee9 !important; }
+.inbox-body .auth-actions { margin-top: 10px; }
+.inbox-group { border: 1px solid #8d733d; border-radius: 10px; background: #1f1b12; padding: 4px; }
+.inbox-group-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 10px 12px; border: 0; background: none; color: #f2e3bf; font: inherit; font-weight: 600; text-align: left; cursor: pointer; border-radius: 8px; }
+.inbox-group-head q { overflow-wrap: anywhere; }
+.inbox-group > .inbox-list { margin: 0; padding: 0 4px 4px; }
+@media (hover: hover) and (pointer: fine) {
+  .inbox-row:hover, .inbox-group-head:hover { background: #ffffff08; }
+}
+.knowledge-conflict label { min-height: 36px; }
+.decision-note { flex: 1 1 220px; }
+.knowledge-list li.is-leaving { opacity: 0; transition: opacity 200ms var(--ease-out); }
+
+/* Files. */
+.file-list { display: grid; gap: 6px; margin: 10px 0; }
+.file-list li { margin: 0 !important; }
+.file-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 44px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: #122018; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.file-row small { flex: none; color: var(--muted); font-variant-numeric: tabular-nums; }
+.file-name { min-width: 0; overflow-wrap: anywhere; }
+.file-list li.is-selected .file-row { border-color: #7ce8b0; background: #12291c; }
+@media (hover: hover) and (pointer: fine) { .file-row:hover { border-color: #5b7969; } }
+.file-title { overflow-wrap: anywhere; }
+.file-history li { flex-wrap: wrap; }
+.file-history small { min-width: 0; }
+
+/* Messages. */
+.message-to { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.message-to label { display: grid; gap: 7px; }
+.message-meta { display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.message-who { min-width: 0; overflow-wrap: anywhere; }
+.message-subject { overflow-wrap: anywhere; }
+.message-reply { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; margin: 0; overflow-wrap: anywhere; }
+.message-list li { gap: 4px; }
+.delivery { display: inline-flex; align-items: center; gap: 6px; }
+.delivery::before { content: ""; width: 7px; height: 7px; flex: none; border-radius: 50%; background: currentColor; }
+.delivery.delivered { color: #8de8b7 !important; }
+.delivery.pending { color: #f0cc78 !important; }
+.message-list .link-button { padding: 2px 0; }
+
+/* Activity and sessions. */
+.activity-list li { grid-template-columns: 150px minmax(0, 1fr); }
+.session-list li { align-items: flex-start; }
+.session-list li > div { min-width: 0; flex: 1 1 240px; }
+
+/* AI access. */
+.agent-list li > div { flex: 1 1 260px; }
+.agent-list small { overflow-wrap: anywhere; }
+
+@media (max-width: 560px) {
+  .message-to { grid-template-columns: 1fr; }
+  .activity-list li { grid-template-columns: 1fr; }
+  .inbox-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .inbox-kind { grid-column: 1 / -1; max-width: none; }
+  .inbox-row .inbox-chevron { grid-row: 2; grid-column: 2; }
+  .panel-head .secondary-button { min-height: 40px; }
+}
+
+/* Inputs at 16px on touch screens so focusing one never zooms the page. */
+@media (pointer: coarse) {
+  :is(.agent-access, .files-panel, .file-editor) :is(input, select, textarea) { font-size: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.primary-button, .secondary-button, .link-button, .inbox-row, .inbox-group-head, .file-row, .inbox-chevron) { transition: none; }
+  :is(.primary-button, .secondary-button, .link-button, .file-row, .inbox-row, .inbox-group-head):active:not(:disabled) { transform: none; }
+  .inbox-item, .knowledge-list li.is-leaving { transition: opacity 120ms linear; }
+  html { scroll-behavior: auto; }
+}
+.group-loaded { margin-left: 6px; color: var(--muted); font-weight: 400; font-size: 12px; white-space: nowrap; }
+
+/* Map tree: a thread or file titled with a long URL must wrap, not widen the page. */
+.map-tree summary > :is(strong, span:not(.map-dot):not(.map-count)) { min-width: 0; overflow-wrap: anywhere; }
+.map-tree summary :is(.map-dot, .map-count, .map-panel-link) { flex: none; }
+.map-panel { min-width: 0; }

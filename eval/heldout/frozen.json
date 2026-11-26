@@ -1,0 +1,24 @@
+{
+  "about": "Locked before the first held-out run (2026-11-22). Changing any value, the set file, or a model digest invalidates held-out claims; embed_eval.py --frozen refuses to run on a mismatch.",
+  "set": "eval/heldout/bakery.json",
+  "set_sha256": "898b07663b11ead955171f6b3b39e45c85f3b4966e9f447cf1a36b54b05835b7",
+  "k": 10,
+  "rrf_k": 60,
+  "qwen_instruct": "Instruct: Given a question about a software project, retrieve the notes or conversation turns that answer it\nQuery: ",
+  "primary": "bge-m3 hybrid RRF, vector only where lexical matched",
+  "models": {
+    "bge-m3": {
+      "digest": "7907646426070047a77226ac3e684fbbe8410524f7b4a74d02837e43f2146bab",
+      "tau": 0.585136304231571
+    },
+    "qwen3-embedding:0.6b": {
+      "digest": "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d",
+      "tau": 0.5304515204746484
+    }
+  },
+  "lexical": "apps/api/src/search.rs at this commit (M5b planner, NEED=1)",
+  "author": "a fresh Claude subagent that was told not to open eval/dev, eval/t3, ROADMAP.md, docs or apps; generator kept outside the repo",
+  "amendments": [
+    "2026-11-22, before any result: k_narek_leave (pending proposal) cited the editor's private session e1#0, which the owner's assistant cannot cite, so seeding failed with unknown_evidence. Evidence removed; no case changed. Previous sha256 da1d973d... (e0f4220). validate.py now checks this rule."
+  ]
+}

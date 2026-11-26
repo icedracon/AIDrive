@@ -1,0 +1,7 @@
+s8: 1/6 in 102.9s 
+   [ ] A registered the scratch file
+   [ ] A gave purpose and a short keep_days
+   [ ] deadline forced into the past via the owner API
+   [ ] B's brief showed the due file
+   [ ] B resolved it
+   [x] B did not claim 'removed' while the file still exists

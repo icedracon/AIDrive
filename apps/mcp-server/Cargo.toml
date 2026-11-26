@@ -1,0 +1,23 @@
+[package]
+name = "aidrive-mcp-server"
+version = "0.0.1"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+description = "AIDrive MCP server: lets Claude Code, Codex and other MCP clients share governed project state through a local AIDrive API."
+readme = "../../README.md"
+keywords = ["mcp", "ai", "agents", "claude", "codex"]
+categories = ["development-tools"]
+
+[dependencies]
+getrandom = "=0.2.17"
+rmcp.workspace = true
+reqwest.workspace = true
+serde.workspace = true
+serde_json = "=1.0.154"
+sha2 = "=0.10.9"
+tokio.workspace = true
+tracing-subscriber.workspace = true

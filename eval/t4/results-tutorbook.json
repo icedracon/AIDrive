@@ -1,0 +1,507 @@
+{
+  "rows": [
+    {
+      "setting": "lexical planner",
+      "recall": 0.9509803921568627,
+      "en": 0.92,
+      "hy": 0.9807692307692307,
+      "session": 0.975,
+      "knowledge": 1.0,
+      "changed": 0.8333333333333334,
+      "temporal": 1.0,
+      "flags": "3/4",
+      "abstention": "5/6",
+      "abst_hits": 2,
+      "violations": 0,
+      "semantic": null,
+      "targets": {},
+      "misses": [
+        "C11(1/2 got s2#0,s2#1)",
+        "C39(0/1 got k_beta_testers)",
+        "C50(0/1 got k_hosting)",
+        "C51(abstain:2)"
+      ]
+    },
+    {
+      "setting": "bge-m3 hybrid RRF (ungated)",
+      "recall": 1.0,
+      "en": 1.0,
+      "hy": 1.0,
+      "session": 1.0,
+      "knowledge": 1.0,
+      "changed": 1.0,
+      "temporal": 1.0,
+      "flags": "4/4",
+      "abstention": "0/6",
+      "abst_hits": 120,
+      "violations": 0,
+      "semantic": null,
+      "targets": {},
+      "misses": [
+        "C51(abstain:20)",
+        "C52(abstain:20)",
+        "C53(abstain:20)",
+        "C54(abstain:20)",
+        "C55(abstain:20)",
+        "C56(abstain:20)"
+      ]
+    },
+    {
+      "setting": "J1: hybrid + qwen3.5:9b abstains",
+      "recall": 0.9803921568627451,
+      "en": 1.0,
+      "hy": 0.9615384615384616,
+      "session": 1.0,
+      "knowledge": 1.0,
+      "changed": 0.8333333333333334,
+      "temporal": 1.0,
+      "flags": "4/4",
+      "abstention": "6/6",
+      "abst_hits": 0,
+      "violations": 0,
+      "semantic": null,
+      "targets": {},
+      "misses": [
+        "C41(0/1 got )"
+      ]
+    },
+    {
+      "setting": "J2: hybrid + qwen3.5:9b abstains and filters",
+      "recall": 0.9313725490196079,
+      "en": 0.96,
+      "hy": 0.9038461538461539,
+      "session": 0.925,
+      "knowledge": 1.0,
+      "changed": 0.8333333333333334,
+      "temporal": 1.0,
+      "flags": "4/4",
+      "abstention": "6/6",
+      "abst_hits": 0,
+      "violations": 0,
+      "semantic": null,
+      "targets": {},
+      "misses": [
+        "C13(1/2 got s2#6)",
+        "C17(0/1 got s3#9)",
+        "C41(0/1 got )",
+        "C58(0/1 got s1#4,s1#5)"
+      ]
+    }
+  ],
+  "latency": {
+    "embed_query_median_ms": 23.208699998576776,
+    "embed_query_p95_ms": 26.850300000660354,
+    "judge_median_ms": 627.1006500010117,
+    "judge_p95_ms": 1601.416400000744,
+    "judge_max_ms": 23045.079200001055,
+    "judge_calls_timed": 60
+  },
+  "verdicts": {
+    "C01": {
+      "answerable": true,
+      "relevant": [
+        "s1#0",
+        "s1#1"
+      ],
+      "ms": 594
+    },
+    "C02": {
+      "answerable": true,
+      "relevant": [
+        "s1#3"
+      ],
+      "ms": 551
+    },
+    "C03": {
+      "answerable": true,
+      "relevant": [
+        "s1#5"
+      ],
+      "ms": 531
+    },
+    "C04": {
+      "answerable": true,
+      "relevant": [
+        "s1#9"
+      ],
+      "ms": 567
+    },
+    "C05": {
+      "answerable": true,
+      "relevant": [
+        "s1#13"
+      ],
+      "ms": 544
+    },
+    "C06": {
+      "answerable": true,
+      "relevant": [
+        "s3#1"
+      ],
+      "ms": 509
+    },
+    "C07": {
+      "answerable": true,
+      "relevant": [
+        "s3#3"
+      ],
+      "ms": 522
+    },
+    "C08": {
+      "answerable": true,
+      "relevant": [
+        "s3#8"
+      ],
+      "ms": 494
+    },
+    "C09": {
+      "answerable": true,
+      "relevant": [
+        "s4#5"
+      ],
+      "ms": 1601
+    },
+    "C10": {
+      "answerable": true,
+      "relevant": [
+        "s4#6",
+        "s4#7"
+      ],
+      "ms": 662
+    },
+    "C11": {
+      "answerable": true,
+      "relevant": [
+        "s2#1",
+        "s2#4"
+      ],
+      "ms": 645
+    },
+    "C12": {
+      "answerable": true,
+      "relevant": [
+        "s2#3"
+      ],
+      "ms": 530
+    },
+    "C13": {
+      "answerable": true,
+      "relevant": [
+        "s2#6"
+      ],
+      "ms": 513
+    },
+    "C14": {
+      "answerable": true,
+      "relevant": [
+        "s2#10"
+      ],
+      "ms": 580
+    },
+    "C15": {
+      "answerable": true,
+      "relevant": [
+        "s2#12",
+        "s2#11"
+      ],
+      "ms": 645
+    },
+    "C16": {
+      "answerable": true,
+      "relevant": [
+        "s2#14"
+      ],
+      "ms": 533
+    },
+    "C17": {
+      "answerable": true,
+      "relevant": [
+        "s3#9"
+      ],
+      "ms": 614
+    },
+    "C18": {
+      "answerable": true,
+      "relevant": [
+        "s3#12"
+      ],
+      "ms": 610
+    },
+    "C19": {
+      "answerable": true,
+      "relevant": [
+        "s4#1"
+      ],
+      "ms": 562
+    },
+    "C20": {
+      "answerable": true,
+      "relevant": [
+        "s4#10",
+        "s4#11"
+      ],
+      "ms": 23045
+    },
+    "C21": {
+      "answerable": true,
+      "relevant": [
+        "k_audience"
+      ],
+      "ms": 19798
+    },
+    "C22": {
+      "answerable": true,
+      "relevant": [
+        "k_reminders"
+      ],
+      "ms": 20452
+    },
+    "C23": {
+      "answerable": true,
+      "relevant": [
+        "k_sms_attempt"
+      ],
+      "ms": 591
+    },
+    "C24": {
+      "answerable": true,
+      "relevant": [
+        "k_csv"
+      ],
+      "ms": 616
+    },
+    "C25": {
+      "answerable": true,
+      "relevant": [
+        "k_xlsx"
+      ],
+      "ms": 613
+    },
+    "C26": {
+      "answerable": true,
+      "relevant": [
+        "k_demo"
+      ],
+      "ms": 671
+    },
+    "C27": {
+      "answerable": true,
+      "relevant": [
+        "k_hosting"
+      ],
+      "ms": 702
+    },
+    "C28": {
+      "answerable": true,
+      "relevant": [
+        "k_isolation"
+      ],
+      "ms": 605
+    },
+    "C29": {
+      "answerable": true,
+      "relevant": [
+        "k_paylink"
+      ],
+      "ms": 640
+    },
+    "C30": {
+      "answerable": true,
+      "relevant": [
+        "k_fee"
+      ],
+      "ms": 637
+    },
+    "C31": {
+      "answerable": true,
+      "relevant": [
+        "k_languages"
+      ],
+      "ms": 638
+    },
+    "C32": {
+      "answerable": true,
+      "relevant": [
+        "k_russian"
+      ],
+      "ms": 657
+    },
+    "C33": {
+      "answerable": true,
+      "relevant": [
+        "k_report"
+      ],
+      "ms": 669
+    },
+    "C34": {
+      "answerable": true,
+      "relevant": [
+        "k_calendar"
+      ],
+      "ms": 640
+    },
+    "C35": {
+      "answerable": true,
+      "relevant": [
+        "k_erasure"
+      ],
+      "ms": 733
+    },
+    "C36": {
+      "answerable": true,
+      "relevant": [
+        "k_logs"
+      ],
+      "ms": 664
+    },
+    "C37": {
+      "answerable": true,
+      "relevant": [
+        "k_price_v2"
+      ],
+      "ms": 710
+    },
+    "C38": {
+      "answerable": true,
+      "relevant": [
+        "k_price_v2"
+      ],
+      "ms": 652
+    },
+    "C39": {
+      "answerable": true,
+      "relevant": [
+        "k_price_v2"
+      ],
+      "ms": 614
+    },
+    "C40": {
+      "answerable": true,
+      "relevant": [
+        "k_launch_v2"
+      ],
+      "ms": 675
+    },
+    "C41": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 628
+    },
+    "C42": {
+      "answerable": true,
+      "relevant": [
+        "k_launch_v2"
+      ],
+      "ms": 615
+    },
+    "C43": {
+      "answerable": true,
+      "relevant": [
+        "k_price_v1"
+      ],
+      "ms": 514
+    },
+    "C44": {
+      "answerable": true,
+      "relevant": [
+        "k_price_v1"
+      ],
+      "ms": 493
+    },
+    "C45": {
+      "answerable": true,
+      "relevant": [
+        "k_launch_v1"
+      ],
+      "ms": 550
+    },
+    "C46": {
+      "answerable": true,
+      "relevant": [
+        "k_launch_v1"
+      ],
+      "ms": 564
+    },
+    "C47": {
+      "answerable": true,
+      "relevant": [
+        "k_mobile"
+      ],
+      "ms": 605
+    },
+    "C48": {
+      "answerable": true,
+      "relevant": [
+        "k_mobile"
+      ],
+      "ms": 626
+    },
+    "C49": {
+      "answerable": true,
+      "relevant": [
+        "k_retention"
+      ],
+      "ms": 628
+    },
+    "C50": {
+      "answerable": true,
+      "relevant": [
+        "k_retention"
+      ],
+      "ms": 689
+    },
+    "C51": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 731
+    },
+    "C52": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 785
+    },
+    "C53": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 715
+    },
+    "C54": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 721
+    },
+    "C55": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 727
+    },
+    "C56": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 685
+    },
+    "C57": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 551
+    },
+    "C58": {
+      "answerable": true,
+      "relevant": [
+        "s1#4",
+        "s1#5"
+      ],
+      "ms": 656
+    },
+    "C59": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 539
+    },
+    "C60": {
+      "answerable": false,
+      "relevant": [],
+      "ms": 600
+    }
+  }
+}
