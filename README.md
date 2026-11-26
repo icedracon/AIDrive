@@ -49,7 +49,9 @@ Using two or three AI coding assistants on one project means each session starts
 
 ## Install
 
-The release is one folder (or zip) for Windows and Linux. It needs no internet, admin rights, Rust, Node.js, Docker, WSL or system PostgreSQL. Open a terminal in your project folder and run its installer:
+**Public download status:** no prebuilt release archive is currently published on [GitHub Releases](https://github.com/icedracon/AIDrive/releases). For now, use the source-build instructions below if you want to evaluate the experimental preview. The installer commands in this section describe the intended full Windows/Linux package; the current tag-triggered workflow does not yet produce that complete package. Clean-machine installation remains a release gate.
+
+When a validated full package is available, open a terminal in your project folder and run its installer:
 
 ```powershell
 C:\path\to\AIDrive\install.cmd        # Windows
@@ -87,6 +89,8 @@ Then in each project folder: `aidrive-mcp-server connect --client claude` (or `c
 </details>
 
 ## Quick start
+
+After starting AIDrive and connecting the supported clients using one of the installation paths above:
 
 1. **Start a session** of Claude Code or Codex in the project folder. AIDrive puts a short project brief into it: project rules, approved decisions, what waits for you, where the last session stopped.
 2. **Work as usual.** The assistant reads and writes shared files with `read_file` and `update_file`, records decisions with `propose_memory` and hands work over with `record_handoff`.
@@ -158,7 +162,8 @@ Architecture, database and threat model: [docs/ARCHITECTURE.md](docs/ARCHITECTUR
 - [x] Knowledge and handoffs with evidence, staleness, review modes and `as_of`
 - [x] Automatic capture of Claude Code and Codex sessions in bound folders (redacted locally)
 - [x] Messages to exact chats, assistant roles, file index with review dates
-- [x] One-folder install for Windows and Linux with bundled PostgreSQL
+- [x] Local one-folder packaging implementation for Windows and Linux with bundled PostgreSQL
+- [ ] Public downloadable full installer and independent clean-machine acceptance
 - [ ] Pilot acceptance with real users
 - [ ] Semantic search (measured, not enabled)
 - [ ] Waking an idle Codex thread (not supported by the current integration)
