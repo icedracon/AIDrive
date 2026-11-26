@@ -1901,8 +1901,8 @@ mod tests {
         );
         assert!(clean("a\0b").is_some_and(|(c, _)| c == "ab"));
         if cfg!(windows) {
-            assert_eq!(normalize("/c/Users/USER"), "c:/users/USER");
-            assert_eq!(normalize("/mnt/c/Users/USER"), "c:/users/USER");
+            assert_eq!(normalize("/c/Users/USER"), "c:/users/user");
+            assert_eq!(normalize("/mnt/c/Users/USER"), "c:/users/user");
         }
     }
 

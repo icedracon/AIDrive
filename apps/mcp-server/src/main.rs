@@ -2760,7 +2760,8 @@ mod tests {
             "{unbound}"
         );
         assert!(
-            unbound.contains(r#"bind --client claude --profile NAME --project "C:\Users\USER\Side""#)
+            unbound
+                .contains(r#"bind --client claude --profile NAME --project "C:\Users\USER\Side""#)
                 && unbound.contains("record_handoff")
         );
         let off = capture_warning("codex", r"c:\p\a", Some(r"c:\p"), false).unwrap();
@@ -2834,7 +2835,9 @@ mod tests {
             "{w}"
         );
         assert!(
-            w.contains(r#"bind --client claude --profile NAME --project "C:\Users\USER\Documents""#),
+            w.contains(
+                r#"bind --client claude --profile NAME --project "C:\Users\USER\Documents""#
+            ),
             "{w}"
         );
         assert!(
