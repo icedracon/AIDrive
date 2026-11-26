@@ -1,5 +1,13 @@
 # Release 0.1.0 readiness — 2026-11-23 (re-checked 2026-11-24)
 
+## Glama build and inspection — 2026-11-26
+
+Maintainer GitHub authorization completed by the owner. Glama now reports verified maintainers. In Glama Admin, configured a Debian trixie inspection image using the existing public Linux x64 v0.0.1-alpha.2 release, pinned to source `19b961579460112c307c7da673e70e3ad5be32f1`. Build commands verify setup SHA256 `ad710aa21df920e9ecac92b528affc34d99a5d420d80ed6e03c6f0668ca0caee` and the nested payload SHA256SUMS before extraction. Startup is `aidrive-mcp-server serve` behind Glama's generated mcp-proxy. No production keys or project data were supplied; no local API exposure was configured.
+
+Actual [Glama test](https://glama.ai/mcp/servers/icedracon/AIDrive/admin/dockerfile/tests/01a218ae-63ed-7054-a64a-c876aaa49a9f) succeeded in 9.1 seconds. Logs confirm both checksums, MCP initialization and tool discovery. Published Glama container release `0.0.1-alpha.2`; public schema lists 27 tools. This is a release-binary inspection, not recompilation from source, live authorized API testing, clean-machine installation or security certification. Functional tools still need a separately reachable API, workspace ID and scoped key; container localhost is not the user's host. Automatic Glama release on new GitHub releases was disabled because this build spec pins one exact archive and source.
+
+Repository sync completed: the public listing now shows the new GitHub release download links. TDQS remains queued (0/27 evaluated at the last observation); discovery score 67% is a separate listing-completeness measure and is not a tool quality grade. Updated [Awesome MCP Servers PR 20841](https://github.com/punkpeye/awesome-mcp-servers/pull/20841) with exact evidence and queued-score caveat, and requested maintainer review. Its submission check had passed; directory inclusion remains the maintainers' decision.
+
 ## Glama listing and directory submission — 2026-11-26
 
 Observed the public [AIDrive listing](https://glama.ai/mcp/servers/icedracon/AIDrive) in the authenticated browser, including Knowledge & Memory, Developer Tools and File Systems categories. Ownership still shows Claim; Admin requires connecting the maintainer GitHub account before profile, repository sync and Docker build controls are available. Deploy Server is disabled. No automated inspection pass or deployability is established by this listing. Glama is still displaying an older README without the new release links.
