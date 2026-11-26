@@ -207,6 +207,8 @@ AIDrive itself stores everything on your computer and sends nothing anywhere. Th
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues as described in [SECURITY.md](SECURITY.md).
 
+Find AIDrive in the [Glama MCP directory](https://glama.ai/mcp/servers/icedracon/AIDrive). Directory listing does not establish automated inspection or pilot acceptance.
+
 ## MCP Registry preparation
 
 - Intended MCP Registry name: `mcp-name: io.github.icedracon/aidrive`

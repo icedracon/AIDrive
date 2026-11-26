@@ -1,5 +1,11 @@
 # Release 0.1.0 readiness — 2026-11-23 (re-checked 2026-11-24)
 
+## Glama listing and directory submission — 2026-11-26
+
+Observed the public [AIDrive listing](https://glama.ai/mcp/servers/icedracon/AIDrive) in the authenticated browser, including Knowledge & Memory, Developer Tools and File Systems categories. Ownership still shows Claim; Admin requires connecting the maintainer GitHub account before profile, repository sync and Docker build controls are available. Deploy Server is disabled. No automated inspection pass or deployability is established by this listing. Glama is still displaying an older README without the new release links.
+
+Added the real listing backlink to README and glama.json with icedracon as maintainer, validated against the official Glama schema. The [Awesome MCP Servers contribution rules](https://github.com/punkpeye/awesome-mcp-servers/blob/main/CONTRIBUTING.md) require a backlink, an accurate one-line description and alphabetical category placement. Preparing a Knowledge & Memory submission; directory inclusion is subject to its maintainers' review.
+
 ## GitHub candidate execution — 2026-11-26
 
 Published source changes normally to public main. Initial package candidate `v0.0.1-alpha.1` at `3f6be7f` passed all four CI jobs (run `45852590365`). Release run `45852617312` completed Linux, while Windows built its programs and web UI but failed the new bundle checksum parser: GNU sha256sum on Windows emits a `*` binary-mode filename marker. The installers already support that format. Commit `19b9615` fixes the bundler and adds the Windows format to the regression fixture; existing tags were not rewritten. Superseding candidate `v0.0.1-alpha.2` uses that exact source revision.
