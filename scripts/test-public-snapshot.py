@@ -1,4 +1,5 @@
 import json
+import hashlib
 import os
 import pathlib
 import subprocess
@@ -56,6 +57,32 @@ class SnapshotTests(unittest.TestCase):
         manifest = json.loads((out / "PUBLIC-SNAPSHOT-MANIFEST.json").read_text())
         self.assertEqual(sum(row["transformed"] for row in manifest["files"]), 1)
         self.assertNotEqual(self.run_export().returncode, 0)
+
+    def test_normalized_rust_still_passes_formatter_and_manifest_matches(self):
+        line = b'        unbound.contains(r#"bind --client claude --profile NAME --project "C:\\Users\\ab\\SideTest""#)'
+        self.assertEqual(len(line), 99)
+        original = b'fn main() {\n    assert!(\n' + line + b'\n    );\n}\n'
+        baseline = subprocess.run(
+            ["rustfmt", "--emit", "stdout", "--edition", "2024"],
+            input=original, capture_output=True, check=True,
+        )
+        self.assertEqual(baseline.stdout.replace(b"\r\n", b"\n"), original)
+        (self.repo / "main.rs").write_bytes(original)
+        self.commit()
+        result = self.run_export()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        out = self.root / "out"
+        data = (out / "main.rs").read_bytes()
+        self.assertIn(b"Users\\USER", data)
+        check = subprocess.run(
+            ["rustfmt", "--check", "--edition", "2024", str(out / "main.rs")],
+            capture_output=True,
+        )
+        self.assertEqual(check.returncode, 0, check.stdout + check.stderr)
+        manifest = json.loads((out / "PUBLIC-SNAPSHOT-MANIFEST.json").read_text())
+        row = next(row for row in manifest["files"] if row["path"] == "main.rs")
+        self.assertEqual(row["export_sha256"], hashlib.sha256(data).hexdigest())
+        self.assertEqual(row["source_sha256"], hashlib.sha256(original).hexdigest())
 
     def test_frozen_change_refused_before_output_created(self):
         path = self.repo / "eval/heldout"

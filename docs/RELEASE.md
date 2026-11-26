@@ -1,5 +1,11 @@
 # Release 0.1.0 readiness — 2026-11-23 (re-checked 2026-11-24)
 
+## Public CI follow-up — 2026-11-26
+
+Public initial commit `bf9bd89` failed Rust formatting in run `45820474095`; database, MSRV and web jobs passed. Reproduced locally: user-path normalization grew two source lines from 99 to 101 characters. Full local unit tests exposed two more fixture transformations: distinct watcher paths collapsed to the same normalized username, and a Windows lowercase-path expectation retained uppercase `USER`. Restored distinct profile folders and corrected case expectations; runtime behavior is unchanged.
+
+The exporter now formats only normalized Rust copies using the workspace edition, before creating output, and records final bytes in its hash manifest. Missing or failing rustfmt refuses export. Frozen evaluation transformations remain refused. Publication audit and snapshot regression tests now run in CI before Rust checks. Local validation: formatting, clippy, 118 Rust unit tests passed (27 integration tests ignored); three snapshot and six publication-audit tests passed. These checks do not replace live database or clean-machine package tests.
+
 ## Public snapshot preparation — 2026-11-26
 
 Selected-chat transcript implementation (2026-11-26, pending final integration): the workspace console now separates native conversation capture from AIDrive coordination messages. `GET /workspaces/{workspace}/chats/{chat}/transcript` resolves the exact workspace/client/native session ID (Claude `claude` maps to capture `claude-code`) under existing session visibility RLS, without guessing by folder, agent or recency. Pages use `(ordinal, event_key)` cursors, including tied ordinals. This reuses the progressive disclosure and capture/privacy decisions researched in [session-memory.md](research/session-memory.md) on 2026-11-20; the tradeoff is explicit page loading and manual refresh rather than an unbounded transcript download. Private captures remain private even to other workspace members.

@@ -5,6 +5,7 @@ import os
 import pathlib
 import re
 import subprocess
+import tomllib
 
 
 USER_PATH = re.compile(rb"(?i)([A-Z]:[\\/]+Users[\\/]+|/home/|/Users/)([A-Za-z0-9_.-]+)")
@@ -49,14 +50,25 @@ def main():
             frozen.add(config["set"])
         frozen.update(config.get("sets", {}))
         frozen.update(config.get("code", {}))
+    cargo = tomllib.loads(files["Cargo.toml"][1].decode()) if "Cargo.toml" in files else {}
+    edition = str(cargo.get("workspace", {}).get("package", {}).get("edition", "2024"))
     planned = []
     manifest = {"source_revision": revision, "history_included": False,
-                "note": "User path components normalized in listed text copies. Transformed evaluation reports are redacted copies, not byte-exact raw evidence. No Git identity, repository or publication created.",
+                "note": "User path components normalized in listed text copies; changed Rust sources formatted with rustfmt. Transformed evaluation reports are redacted copies, not byte-exact raw evidence. No Git identity, repository or publication created.",
                 "files": []}
     for path, (mode, original) in sorted(files.items()):
         data = original if b"\0" in original else USER_PATH.sub(lambda match: match[1] + b"USER", original)
         if path in frozen and data != original:
             raise SystemExit("A frozen evaluation file would change; export refused")
+        if path.endswith(".rs") and data != original:
+            try:
+                formatted = subprocess.run(
+                    ["rustfmt", "--emit", "stdout", "--edition", edition, "--config", "skip_children=true"],
+                    input=data, capture_output=True, check=True,
+                )
+            except (OSError, subprocess.CalledProcessError):
+                raise SystemExit("Cannot format normalized Rust source; export refused") from None
+            data = formatted.stdout
         planned.append((path, mode, data))
         manifest["files"].append({"path": path, "source_sha256": digest(original), "export_sha256": digest(data), "transformed": data != original})
     manifest_name = "PUBLIC-SNAPSHOT-MANIFEST.json"
