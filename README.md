@@ -209,10 +209,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues as described in [
 
 Find AIDrive in the [Glama MCP directory](https://glama.ai/mcp/servers/icedracon/AIDrive). Directory listing does not establish automated inspection or pilot acceptance.
 
-## MCP Registry preparation
+## MCP Registry
 
-- Intended MCP Registry name: `mcp-name: io.github.icedracon/aidrive`
-- [server.json](server.json) describes the current `0.0.1` Cargo package and stdio launch command. This is prepared metadata, not a published registry listing.
+- MCP Registry name: `mcp-name: io.github.icedracon/aidrive`
+- Published: [Official MCP Registry, version 0.0.1](https://registry.modelcontextprotocol.io/v0/servers/io.github.icedracon%2Faidrive/versions/0.0.1) and [aidrive-mcp-server on crates.io](https://crates.io/crates/aidrive-mcp-server/0.0.1). [server.json](server.json) records the package and stdio launch command.
+- Install the MCP client with `cargo install --locked aidrive-mcp-server --version 0.0.1` (requires Rust 1.92+). The Windows/Linux setup archives above provide the full application without a Rust toolchain.
 - Registry installation supplies the MCP client only. Start the local API separately and provide its URL, workspace ID and a scoped agent key. The regular `connect` workflow above manages profiles for supported assistants.
 
 ## License

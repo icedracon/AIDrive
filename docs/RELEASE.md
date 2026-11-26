@@ -1,5 +1,13 @@
 # Release 0.1.0 readiness — 2026-11-23 (re-checked 2026-11-24)
 
+## Official MCP Registry publication — 2026-11-26
+
+Published `aidrive-mcp-server 0.0.1` to crates.io after `cargo publish --dry-run --locked -p aidrive-mcp-server` and package build verification passed. The official `mcp-publisher v1.8.16` validate command accepted server.json against the production registry. Cargo version remains distinct from the GitHub experimental setup tag `v0.0.1-alpha.2`; the protocol self-reported version is currently `0.0.23`, a separate existing version inconsistency to align in a later product change.
+
+Published `io.github.icedracon/aidrive` version `0.0.1` through the production Registry API. Used the official publisher source's GitHub token-exchange and publish endpoints directly in memory to avoid persisting another credential file; no token was printed or committed. HTTP200 publication succeeded. Independent unauthenticated GET of the exact Registry version confirms the Cargo identifier and stdio transport; crates.io version GET confirms `0.0.1`. Metadata specifies serve, local API URL, workspace ID and secret agent-key input. This publishes the MCP client and metadata, not the API crate or a hosted local workspace. A separate reachable AIDrive API and authorized key remain necessary for functional tools. Existing package unit/build and stdio discovery checks do not establish final clean-machine pilot acceptance.
+
+Sources rechecked: official Registry package types, authentication guide and publisher implementation (cmd/publisher/auth/github-at.go and cmd/publisher/commands/publish.go) on 2026-11-26. Chose native Cargo over a wrapper to retain the existing Rust package; tradeoff: source installation needs Rust, while complete prebuilt setup archives remain the toolchain-free path.
+
 ## Glama build and inspection — 2026-11-26
 
 Maintainer GitHub authorization completed by the owner. Glama now reports verified maintainers. In Glama Admin, configured a Debian trixie inspection image using the existing public Linux x64 v0.0.1-alpha.2 release, pinned to source `19b961579460112c307c7da673e70e3ad5be32f1`. Build commands verify setup SHA256 `ad710aa21df920e9ecac92b528affc34d99a5d420d80ed6e03c6f0668ca0caee` and the nested payload SHA256SUMS before extraction. Startup is `aidrive-mcp-server serve` behind Glama's generated mcp-proxy. No production keys or project data were supplied; no local API exposure was configured.
