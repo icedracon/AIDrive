@@ -545,7 +545,7 @@ mod tests {
     #[test]
     fn watcher_port_is_per_profile_and_in_range() {
         let a = port_for("C:\\Users\\USER\\AppData\\Roaming\\AIDrive\\profiles");
-        let b = port_for("C:\\Users\\USER\\AppData\\Roaming\\AIDrive\\profiles");
+        let b = port_for("C:\\Users\\USER\\AppData\\Roaming\\AIDrive\\profiles-other");
         assert!((47000..49000).contains(&a) && (47000..49000).contains(&b));
         assert_ne!(a, b);
         assert_eq!(
