@@ -33,7 +33,7 @@
 > **Experimental source preview.** Initial pilot testing has been completed. Final clean-machine package acceptance remains open. [ROADMAP.md](ROADMAP.md) records what is verified and what is not. Read [Limits](#limits) before you rely on it.
 
 > [!IMPORTANT]
-> **Security fix after the pilot review (2026-11-26).** The review found that any program on the computer could make itself the owner of a packaged install, and that an assistant's proposed rule could skip review. Both are fixed on `main` and in `aidrive-mcp-server` 0.0.2: owner sign-in now needs a one-time link from `aidrive open`, and assistant rules wait for you. The `v0.0.1-alpha.2` setup archives were built before this fix; build from source or wait for the next release. Details: [security review, P1 and P2](docs/SECURITY-REVIEW-2026-11.md).
+> **Security fix after the pilot review (2026-11-26).** The review found that any program on the computer could make itself the owner of a packaged install, and that an assistant's proposed rule could skip review. Both are fixed in `v0.0.1-alpha.3` and `aidrive-mcp-server` 0.0.2: owner sign-in now needs a one-time link from `aidrive open`, and assistant rules wait for you. Do not use the older `alpha.2` archives. Details: [security review, P1 and P2](docs/SECURITY-REVIEW-2026-11.md).
 
 <p align="center">
   <img src="docs/media/project-gallery.webp" width="100%" alt="AIDrive project gallery: distinct visual identities for synthetic projects in a dark local workspace">
@@ -51,7 +51,7 @@ Claude Code and Codex can capture sessions in bound folders, with local redactio
 
 ## Install
 
-**Experimental packages (built before the security fix above):** [Windows x64 ZIP](https://github.com/icedracon/AIDrive/releases/download/v0.0.1-alpha.2/AIDrive-setup-windows-x86_64.zip) · [Linux x64 tar.gz](https://github.com/icedracon/AIDrive/releases/download/v0.0.1-alpha.2/AIDrive-setup-linux-x86_64.tar.gz) · [release notes and checksums](https://github.com/icedracon/AIDrive/releases/tag/v0.0.1-alpha.2).
+**Experimental packages:** [Windows x64 ZIP](https://github.com/icedracon/AIDrive/releases/download/v0.0.1-alpha.3/AIDrive-setup-windows-x86_64.zip) · [Linux x64 tar.gz](https://github.com/icedracon/AIDrive/releases/download/v0.0.1-alpha.3/AIDrive-setup-linux-x86_64.tar.gz) · [release notes and checksums](https://github.com/icedracon/AIDrive/releases/tag/v0.0.1-alpha.3).
 
 Extract the setup archive, open a terminal in **your project folder**, then run `C:\path\to\AIDrive\install.cmd` on Windows or `sh /path/to/AIDrive/install.sh` on Linux. The setup contains the programs, web UI, PostgreSQL and local installers. The installer opens the web app at **http://localhost:7480**, signed in; later, run `aidrive open`. Clean-machine pilot acceptance remains open; review [Limits](#limits) before use.
 
@@ -215,6 +215,8 @@ AIDrive itself stores everything on your computer and sends nothing anywhere. Th
 See [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues as described in [SECURITY.md](SECURITY.md).
 
 ## MCP Registry
+
+<a href="https://glama.ai/mcp/servers/icedracon/AIDrive"><img width="380" src="https://glama.ai/mcp/servers/icedracon/AIDrive/badge" alt="AIDrive on Glama: license, quality and maintenance scores" /></a>
 
 Find AIDrive in the [Glama MCP directory](https://glama.ai/mcp/servers/icedracon/AIDrive). Directory listing does not establish automated inspection or pilot acceptance.
 
