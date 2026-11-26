@@ -1,14 +1,16 @@
 name: Release
 
-# Builds aidrive-api (with the embedded PostgreSQL 17 bundled) and
-# aidrive-mcp-server for each platform and attaches them to a draft GitHub
-# release. Runs only when a v* tag is pushed; nothing is published to crates.io.
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -16,63 +18,55 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - target: x86_64-unknown-linux-gnu
-            os: ubuntu-24.04
-          - target: aarch64-unknown-linux-gnu
-            os: ubuntu-24.04-arm
-          - target: x86_64-pc-windows-msvc
+          - platform: windows-x86_64
             os: windows-latest
-          - target: aarch64-apple-darwin
-            os: macos-14
-          - target: x86_64-apple-darwin
-            os: macos-13
+          - platform: linux-x86_64
+            os: ubuntu-24.04
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
     steps:
-      # First-party actions only (SECURITY-REVIEW-2026-11 F4). The checkout
-      # token is not left in .git/config, where every build script could read it.
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - name: Rust toolchain
         shell: bash
         run: |
-          rustup toolchain install stable --profile minimal --target "${{ matrix.target }}"
+          rustup toolchain install stable --profile minimal --component rustfmt --component clippy
           rustup default stable
-      # No cache: a release must not reuse artefacts written by branch builds.
-      # The token is read-only (workflow default) and only lets the
-      # postgresql_embedded build download avoid GitHub's anonymous rate limit.
-      - name: Build
+      - name: Source checks
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: cargo build --release --locked --target ${{ matrix.target }} -p aidrive-api -p aidrive-mcp-server
-      - name: Package
-        shell: bash
         run: |
-          name="aidrive-${GITHUB_REF_NAME}-${{ matrix.target }}"
-          mkdir "$name"
-          ext=""
-          [[ "${{ matrix.target }}" == *windows* ]] && ext=".exe"
-          cp "target/${{ matrix.target }}/release/aidrive-api$ext" "target/${{ matrix.target }}/release/aidrive-mcp-server$ext" "$name/"
-          cp README.md LICENSE-APACHE LICENSE-MIT THIRD-PARTY-NOTICES.md "$name/"
-          if [[ -n "$ext" ]]; then
-            7z a "$name.zip" "$name" >/dev/null
-            echo "ASSET=$name.zip" >> "$GITHUB_ENV"
-          else
-            tar czf "$name.tar.gz" "$name"
-            echo "ASSET=$name.tar.gz" >> "$GITHUB_ENV"
-          fi
-      - name: Checksum
+          python -I -B scripts/test-bundle-release.py
+          cargo fmt --all -- --check
+          cargo clippy --locked --workspace --all-targets -- -D warnings
+          cargo test --locked --workspace
+      - name: Build complete release folder
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          NEXT_TELEMETRY_DISABLED: 1
         run: |
-          if command -v sha256sum >/dev/null; then sha256sum "$ASSET" > "$ASSET.sha256"; else shasum -a 256 "$ASSET" > "$ASSET.sha256"; fi
+          bash scripts/package-release.sh
+          (cd apps/web && npm run lint && npx tsc --noEmit && npm test)
+      - name: Verify and bundle installers with payload
+        shell: bash
+        run: python scripts/bundle-release.py --dist dist --platform "${{ matrix.platform }}" --revision "$GITHUB_SHA"
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.target }}
+          name: setup-${{ matrix.platform }}
+          if-no-files-found: error
           path: |
-            ${{ env.ASSET }}
-            ${{ env.ASSET }}.sha256
+            dist/AIDrive-setup-*.zip
+            dist/AIDrive-setup-*.tar.gz
+            dist/BUILD-*.json
 
   release:
+    if: startsWith(github.ref, 'refs/tags/')
     needs: build
     runs-on: ubuntu-24.04
     permissions:
@@ -82,9 +76,12 @@ jobs:
         with:
           path: dist
           merge-multiple: true
-      # The write token goes only to the preinstalled gh CLI, never to a
-      # third-party action.
-      - name: Draft release
+      - name: Checksums
+        working-directory: dist
+        run: sha256sum AIDrive-setup-* BUILD-*.json > SHA256SUMS
+      - name: Draft experimental prerelease
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --draft --verify-tag --generate-notes
+        run: |
+          printf '%s\n' 'Experimental source preview packaged for Windows x64 and Linux x64.' '' 'Download the setup archive for your platform, extract it, open a terminal in your project folder, then run the installer inside AIDrive/.' '' 'Includes the web UI and bundled PostgreSQL. SHA256SUMS covers downloads; BUILD files identify the source commit.' '' 'Clean-machine pilot acceptance remains open. Idle Codex wake is not supported by the current integration.' > release-notes.txt
+          gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --draft --prerelease --verify-tag --title "AIDrive $GITHUB_REF_NAME — experimental preview" --notes-file release-notes.txt
