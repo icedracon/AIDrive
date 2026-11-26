@@ -30,7 +30,7 @@ def main():
         raise SystemExit("Release payload missing: " + ", ".join(sorted(missing)))
     expected = hashlib.sha256(payload.read_bytes()).hexdigest()
     checksums = (dist / "SHA256SUMS").read_text(encoding="utf-8").splitlines()
-    if not any(line.split() == [expected, payload.name] for line in checksums):
+    if not any(line.split() in ([expected, payload.name], [expected, "*" + payload.name]) for line in checksums):
         raise SystemExit("Payload checksum missing or incorrect")
     bundle_name = "AIDrive-setup-" + args.platform
     extension = ".zip" if windows else ".tar.gz"

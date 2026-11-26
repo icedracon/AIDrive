@@ -30,7 +30,8 @@ class BundleTests(unittest.TestCase):
                     entry.size = 17
                     archive.addfile(entry, io.BytesIO(b"synthetic fixture"))
         digest = hashlib.sha256((root / name).read_bytes()).hexdigest()
-        (root / "SHA256SUMS").write_text(digest + "  " + name + "\n")
+        marker = " *" if windows else "  "
+        (root / "SHA256SUMS").write_text(digest + marker + name + "\n")
         for path in ["README.md", "LICENSE-APACHE", "LICENSE-MIT", "THIRD-PARTY-NOTICES.md", "install.cmd", "install.ps1", "install.sh"]:
             (root / path).write_text("synthetic fixture")
 
