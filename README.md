@@ -203,6 +203,12 @@ AIDrive itself stores everything on your computer and sends nothing anywhere. Th
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues as described in [SECURITY.md](SECURITY.md).
 
+## MCP Registry preparation
+
+- Intended MCP Registry name: `mcp-name: io.github.icedracon/aidrive`
+- [server.json](server.json) describes the current `0.0.1` Cargo package and stdio launch command. This is prepared metadata, not a published registry listing.
+- Registry installation supplies the MCP client only. Start the local API separately and provide its URL, workspace ID and a scoped agent key. The regular `connect` workflow above manages profiles for supported assistants.
+
 ## License
 
 Licensed under either of [Apache License, Version 2.0](LICENSE-APACHE) or [MIT license](LICENSE-MIT) at your option. Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in AIDrive by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.

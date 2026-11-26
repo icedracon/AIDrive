@@ -1,5 +1,13 @@
 # Release 0.1.0 readiness — 2026-11-23 (re-checked 2026-11-24)
 
+## MCP Registry preparation — 2026-11-26
+
+Checked the official [package types](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/package-types.mdx), [registry requirements](https://github.com/modelcontextprotocol/registry/blob/main/docs/reference/server-json/official-registry-requirements.md) and [2025-12-11 schema](https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json). Cargo is supported directly through crates.io; its ownership marker must be visible in the rendered package README. Compared native Cargo distribution with an MCPB prebuilt bundle: prepared Cargo metadata for the existing crate, avoiding a wrapper; the tradeoff is that users still need Rust and a separately running AIDrive API. Toolchain-free installers remain a separate release deliverable.
+
+Root `server.json` uses the current crate version `0.0.1`, explicit `serve`, API URL, workspace ID and a secret agent-key input with no credential value. Validated against the downloaded official JSON schema and checked crate name/version and visible README marker. `cargo package --locked --allow-dirty -p aidrive-mcp-server` passed packaging and build verification; inspected the resulting archive's README marker. This is not publication, registry namespace ownership verification or a complete clean-machine install. Before publication, select the release version, synchronize crate and metadata, publish the crate with owner authorization, then authenticate and publish via mcp-publisher. No registry or crates.io publication was performed.
+
+Glama source-server submission was accepted for review in the real authenticated browser on 2026-11-26. The receipt is submission only; approval, listing URL and automated Docker-based safety/quality checks are pending. Add a backlink only once the real listing exists.
+
 ## Public CI follow-up — 2026-11-26
 
 Public initial commit `bf9bd89` failed Rust formatting in run `45820474095`; database, MSRV and web jobs passed. Reproduced locally: user-path normalization grew two source lines from 99 to 101 characters. Full local unit tests exposed two more fixture transformations: distinct watcher paths collapsed to the same normalized username, and a Windows lowercase-path expectation retained uppercase `USER`. Restored distinct profile folders and corrected case expectations; runtime behavior is unchanged.

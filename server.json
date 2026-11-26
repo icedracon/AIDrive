@@ -1,0 +1,41 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.icedracon/aidrive",
+  "title": "AIDrive",
+  "description": "Versioned files, evidence-linked memory and governed handoffs through a local AIDrive API.",
+  "repository": {
+    "url": "https://github.com/icedracon/AIDrive",
+    "source": "github",
+    "subfolder": "apps/mcp-server"
+  },
+  "version": "0.0.1",
+  "packages": [
+    {
+      "registryType": "cargo",
+      "registryBaseUrl": "https://crates.io",
+      "identifier": "aidrive-mcp-server",
+      "version": "0.0.1",
+      "transport": { "type": "stdio" },
+      "packageArguments": [{ "type": "positional", "value": "serve" }],
+      "environmentVariables": [
+        {
+          "name": "AIDRIVE_API_URL",
+          "description": "URL of your running local AIDrive API. Start and set up the API separately.",
+          "default": "http://127.0.0.1:8080",
+          "isRequired": true
+        },
+        {
+          "name": "AIDRIVE_WORKSPACE_ID",
+          "description": "Workspace UUID issued by your local AIDrive setup.",
+          "isRequired": true
+        },
+        {
+          "name": "AIDRIVE_AGENT_TOKEN",
+          "description": "Workspace-scoped agent key issued by the owner. Supply at runtime.",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
