@@ -15,6 +15,7 @@
   <img alt="Status: experimental preview" src="https://img.shields.io/badge/status-experimental%20preview-c9a227">
   <img alt="License: Apache-2.0 OR MIT" src="https://img.shields.io/badge/license-Apache--2.0%20OR%20MIT-2f6f4f">
   <a href="https://github.com/icedracon/AIDrive/actions/workflows/ci.yml"><img alt="CI status" src="https://github.com/icedracon/AIDrive/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://crates.io/crates/aidrive-mcp-server"><img alt="crates.io: aidrive-mcp-server" src="https://img.shields.io/crates/v/aidrive-mcp-server?label=crates.io"></a>
   <img alt="MCP over stdio" src="https://img.shields.io/badge/MCP-stdio-1f9e63">
 </p>
 
@@ -30,6 +31,9 @@
 
 > [!WARNING]
 > **Experimental source preview.** Initial pilot testing has been completed. Final clean-machine package acceptance remains open. [ROADMAP.md](ROADMAP.md) records what is verified and what is not. Read [Limits](#limits) before you rely on it.
+
+> [!IMPORTANT]
+> **Security fix after the pilot review (2026-11-26).** The review found that any program on the computer could make itself the owner of a packaged install, and that an assistant's proposed rule could skip review. Both are fixed on `main` and in `aidrive-mcp-server` 0.0.2: owner sign-in now needs a one-time link from `aidrive open`, and assistant rules wait for you. The `v0.0.1-alpha.2` setup archives were built before this fix; build from source or wait for the next release. Details: [security review, P1 and P2](docs/SECURITY-REVIEW-2026-11.md).
 
 <p align="center">
   <img src="docs/media/project-gallery.webp" width="100%" alt="AIDrive project gallery: distinct visual identities for synthetic projects in a dark local workspace">
@@ -47,7 +51,7 @@ Claude Code and Codex can capture sessions in bound folders, with local redactio
 
 ## Install
 
-**Experimental packages:** [Windows x64 ZIP](https://github.com/icedracon/AIDrive/releases/download/v0.0.1-alpha.2/AIDrive-setup-windows-x86_64.zip) · [Linux x64 tar.gz](https://github.com/icedracon/AIDrive/releases/download/v0.0.1-alpha.2/AIDrive-setup-linux-x86_64.tar.gz) · [release notes and checksums](https://github.com/icedracon/AIDrive/releases/tag/v0.0.1-alpha.2).
+**Experimental packages (built before the security fix above):** [Windows x64 ZIP](https://github.com/icedracon/AIDrive/releases/download/v0.0.1-alpha.2/AIDrive-setup-windows-x86_64.zip) · [Linux x64 tar.gz](https://github.com/icedracon/AIDrive/releases/download/v0.0.1-alpha.2/AIDrive-setup-linux-x86_64.tar.gz) · [release notes and checksums](https://github.com/icedracon/AIDrive/releases/tag/v0.0.1-alpha.2).
 
 Extract the setup archive, open a terminal in **your project folder**, then run `C:\path\to\AIDrive\install.cmd` on Windows or `sh /path/to/AIDrive/install.sh` on Linux. The setup contains the programs, web UI, PostgreSQL and local installers. The installer opens the web app at **http://localhost:7480**, signed in; later, run `aidrive open`. Clean-machine pilot acceptance remains open; review [Limits](#limits) before use.
 
@@ -187,6 +191,7 @@ Architecture, database and threat model: [docs/ARCHITECTURE.md](docs/ARCHITECTUR
 - [x] Messages to exact chats, assistant roles, file index with review dates
 - [x] One-folder install for Windows and Linux with bundled PostgreSQL
 - [x] Initial pilot testing completed
+- [x] Pilot security review: owner sign-in and assistant-rule findings fixed
 - [ ] Final clean-machine package acceptance
 - [ ] Semantic search (measured, not enabled)
 - [ ] Waking an idle Codex thread (not supported by the current integration)
@@ -209,12 +214,12 @@ AIDrive itself stores everything on your computer and sends nothing anywhere. Th
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues as described in [SECURITY.md](SECURITY.md).
 
-Find AIDrive in the [Glama MCP directory](https://glama.ai/mcp/servers/icedracon/AIDrive). Directory listing does not establish automated inspection or pilot acceptance.
-
 ## MCP Registry
 
+Find AIDrive in the [Glama MCP directory](https://glama.ai/mcp/servers/icedracon/AIDrive). Directory listing does not establish automated inspection or pilot acceptance.
+
 - MCP Registry name: `mcp-name: io.github.icedracon/aidrive`
-- Published: [Official MCP Registry, version 0.0.1](https://registry.modelcontextprotocol.io/v0/servers/io.github.icedracon%2Faidrive/versions/0.0.1) and [aidrive-mcp-server on crates.io](https://crates.io/crates/aidrive-mcp-server/0.0.1). [server.json](server.json) records the package and stdio launch command.
+- Published: [Official MCP Registry, version 0.0.1](https://registry.modelcontextprotocol.io/v0/servers/io.github.icedracon%2Faidrive/versions/0.0.1) and [aidrive-mcp-server on crates.io](https://crates.io/crates/aidrive-mcp-server) (now 0.0.2, with the security fix). [server.json](server.json) records the package and stdio launch command.
 - Install the MCP client with `cargo install --locked aidrive-mcp-server --version 0.0.2` (requires Rust 1.92+). The Windows/Linux setup archives above provide the full application without a Rust toolchain.
 - Registry installation supplies the MCP client only. Start the local API separately and provide its URL, workspace ID and a scoped agent key. The regular `connect` workflow above manages profiles for supported assistants.
 
