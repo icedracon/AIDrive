@@ -322,9 +322,17 @@ async fn send(
     } else {
         None
     };
-    tx.commit().await.map_err(db_error)?;
+    if let Err(error) = tx.commit().await {
+        if let Some(job) = job {
+            let _ = tokio::task::spawn_blocking(move || crate::codex_queue::abandon(job)).await;
+        }
+        return Err(db_error(error));
+    }
     if let Some(job) = job {
-        let _ = tokio::task::spawn_blocking(move || crate::codex_queue::run(job)).await;
+        // Usually done in well under a second; a slow queue call keeps
+        // running and the receipt shows "prepared" until it finishes.
+        let dispatch = tokio::task::spawn_blocking(move || crate::codex_queue::run(job));
+        let _ = tokio::time::timeout(std::time::Duration::from_secs(2), dispatch).await;
     }
     message.codex_queue = crate::codex_queue::receipt(&workspace, message.to_chat.as_deref(), &id);
     Ok((StatusCode::CREATED, Json(message)))

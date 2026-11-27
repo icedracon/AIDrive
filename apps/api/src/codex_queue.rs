@@ -110,6 +110,7 @@ fn reserve(
     static LOCK: OnceLock<Mutex<()>> = OnceLock::new();
     let _guard = LOCK.get_or_init(|| Mutex::new(())).lock().ok()?;
     fs::create_dir_all(&dir).ok()?;
+    prune(&dir);
     let path = dir.join(format!("{message}.json"));
     let mut file = OpenOptions::new()
         .write(true)
@@ -124,25 +125,30 @@ fn reserve(
         .filter_map(|e| fs::read(e.path()).ok())
         .filter_map(|v| serde_json::from_slice(&v).ok())
         .collect();
-    let recent: Vec<_> = previous
-        .iter()
-        .filter(|r| {
-            r.chat_id == cfg.chat_id
-                && at.saturating_sub(r.at) < 3600
-                && matches!(
-                    r.state.as_str(),
-                    "prepared"
-                        | "queued"
-                        | "needs_reconciliation"
-                        | "cancelled_after_retrieval"
-                        | "retrieved_before_queue"
-                )
-        })
-        .collect();
-    let blocked = recent.len() >= 6
-        || recent.iter().any(|r| at.saturating_sub(r.at) < 30)
+    // The chat cooldown and hourly cap count attempts that can start a turn;
+    // the conversation cap also counts attempts cancelled after retrieval,
+    // since those were real exchanges between assistants.
+    let recent = |states: &[&str]| -> Vec<&Receipt> {
+        previous
+            .iter()
+            .filter(|r| {
+                r.chat_id == cfg.chat_id
+                    && at.saturating_sub(r.at) < 3600
+                    && states.contains(&r.state.as_str())
+            })
+            .collect()
+    };
+    let turns = recent(&["prepared", "queued", "needs_reconciliation"]);
+    let exchanges = recent(&[
+        "prepared",
+        "queued",
+        "needs_reconciliation",
+        "cancelled_after_retrieval",
+    ]);
+    let blocked = turns.len() >= 6
+        || turns.iter().any(|r| at.saturating_sub(r.at) < 30)
         || (!owner
-            && recent
+            && exchanges
                 .iter()
                 .any(|r| r.thread_id == thread && at.saturating_sub(r.at) < 600));
     let receipt = Receipt {
@@ -164,6 +170,32 @@ fn reserve(
         path,
         receipt,
     })
+}
+
+const KEEP: Duration = Duration::from_secs(7 * 24 * 3600);
+
+fn prune(dir: &Path) {
+    let Ok(entries) = fs::read_dir(dir) else {
+        return;
+    };
+    for entry in entries.flatten() {
+        let old = entry
+            .metadata()
+            .and_then(|m| m.modified())
+            .ok()
+            .and_then(|t| t.elapsed().ok())
+            .is_some_and(|age| age > KEEP);
+        if old {
+            let _ = fs::remove_file(entry.path());
+        }
+    }
+}
+
+// The message was never stored (its transaction failed), so the
+// reservation must not count against the budget as a pending attempt.
+pub fn abandon(mut job: Job) {
+    job.receipt.state = "abandoned".into();
+    let _ = persist(&job.path, &job.receipt);
 }
 
 fn persist(path: &Path, receipt: &Receipt) -> std::io::Result<()> {
@@ -400,6 +432,89 @@ pub fn cancel_retrieved(workspace: &str, chat: &str, ids: &[String]) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn only_turn_starting_attempts_spend_the_hourly_budget() {
+        let dir = std::env::temp_dir().join(format!(
+            "aidrive-queue-spend-{}-{}",
+            std::process::id(),
+            now()
+        ));
+        fs::create_dir_all(&dir).unwrap();
+        let cfg = || Config {
+            codex_exe: std::env::current_exe().unwrap(),
+            workspace_id: "ws".into(),
+            chat_id: "chat".into(),
+            native_thread_id: "native".into(),
+        };
+        for (i, state) in [
+            "retrieved_before_queue",
+            "abandoned",
+            "rate_limited",
+            "failed",
+        ]
+        .iter()
+        .cycle()
+        .take(8)
+        .enumerate()
+        {
+            let r = Receipt {
+                message_id: format!("old{i}"),
+                chat_id: "chat".into(),
+                state: (*state).into(),
+                at: now() - 60,
+                thread_id: format!("t{i}"),
+            };
+            persist(&dir.join(format!("old{i}.json")), &r).unwrap();
+        }
+        let job = reserve(
+            cfg(),
+            dir.clone(),
+            "new".into(),
+            "ws".into(),
+            "t-new".into(),
+            false,
+        )
+        .expect("no turn-starting attempt in the last hour, so nothing blocks");
+        abandon(job);
+        let saved: Receipt =
+            serde_json::from_slice(&fs::read(dir.join("new.json")).unwrap()).unwrap();
+        assert_eq!(saved.state, "abandoned");
+        assert!(
+            reserve(
+                cfg(),
+                dir.clone(),
+                "next".into(),
+                "ws".into(),
+                "t-new".into(),
+                false
+            )
+            .is_some(),
+            "an abandoned reservation neither cools down the chat nor uses the conversation budget"
+        );
+        fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn receipts_older_than_a_week_are_pruned() {
+        let dir = std::env::temp_dir().join(format!(
+            "aidrive-queue-prune-{}-{}",
+            std::process::id(),
+            now()
+        ));
+        fs::create_dir_all(&dir).unwrap();
+        let old = dir.join("old.json");
+        let fresh = dir.join("fresh.json");
+        fs::write(&old, b"{}").unwrap();
+        fs::write(&fresh, b"{}").unwrap();
+        let file = OpenOptions::new().write(true).open(&old).unwrap();
+        file.set_modified(SystemTime::now() - KEEP - Duration::from_secs(60))
+            .unwrap();
+        drop(file);
+        prune(&dir);
+        assert!(!old.exists() && fresh.exists());
+        fs::remove_dir_all(dir).unwrap();
+    }
 
     #[test]
     fn cleanup_matches_only_the_exact_owned_notification() {
