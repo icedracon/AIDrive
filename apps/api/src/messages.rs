@@ -62,6 +62,7 @@ struct Message {
     to_chat: Option<String>,
     // Which chat took it, per receiving key.
     deliveries: Vec<Delivery>,
+    codex_queue: Option<crate::codex_queue::Receipt>,
 }
 
 #[derive(Serialize)]
@@ -168,6 +169,7 @@ async fn load(
                     delivered_at: d.5.clone(),
                 })
                 .collect();
+            let codex_queue = crate::codex_queue::receipt(workspace, to_chat.as_deref(), &id);
             Ok(Message {
                 id,
                 thread_id: row.try_get(1)?,
@@ -185,6 +187,7 @@ async fn load(
                 sources: cited,
                 from_chat,
                 to_chat,
+                codex_queue,
                 deliveries: delivered,
             })
         })
@@ -302,11 +305,28 @@ async fn send(
             _ => db_error(error),
         },
     )?;
-    let message = load(&mut tx, &workspace, Some(&id), None, false, false, 1)
+    let mut message = load(&mut tx, &workspace, Some(&id), None, false, false, 1)
         .await?
         .pop()
         .ok_or(ApiError(StatusCode::NOT_FOUND, "not_found"))?;
+    let job = if message.deliveries.is_empty() {
+        crate::codex_queue::prepare(
+            &mut tx,
+            &workspace,
+            message.to_chat.as_deref(),
+            &id,
+            &message.thread_id,
+            message.from_agent_id.is_none(),
+        )
+        .await
+    } else {
+        None
+    };
     tx.commit().await.map_err(db_error)?;
+    if let Some(job) = job {
+        let _ = tokio::task::spawn_blocking(move || crate::codex_queue::run(job)).await;
+    }
+    message.codex_queue = crate::codex_queue::receipt(&workspace, message.to_chat.as_deref(), &id);
     Ok((StatusCode::CREATED, Json(message)))
 }
 
@@ -544,6 +564,17 @@ async fn claim(
             .await
             .map_err(chat_error)?;
     tx.commit().await.map_err(db_error)?;
+    let ids: Vec<String> = claimed["messages"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(|m| m["id"].as_str().map(str::to_owned))
+        .collect();
+    if !ids.is_empty() {
+        tokio::task::spawn_blocking(move || {
+            crate::codex_queue::cancel_retrieved(&workspace, &chat, &ids)
+        });
+    }
     Ok(Json(claimed))
 }
 

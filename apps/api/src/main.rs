@@ -4,6 +4,7 @@ mod artifacts;
 mod auth;
 #[cfg(feature = "embedded-db")]
 mod cli;
+mod codex_queue;
 #[cfg(feature = "embedded-db")]
 mod detach;
 #[cfg(feature = "embedded-db")]

@@ -194,7 +194,7 @@ Architecture, database and threat model: [docs/ARCHITECTURE.md](docs/ARCHITECTUR
 - [x] Pilot security review: owner sign-in and assistant-rule findings fixed
 - [ ] Final clean-machine package acceptance
 - [ ] Semantic search (measured, not enabled)
-- [ ] Waking an idle Codex thread (not supported by the current integration)
+- [ ] Waking an idle Codex desktop chat: experimental and off by default (one opted-in local chat via `codex queue`); see docs/pilot/PRODUCT-PLAN.md
 - [ ] macOS release, hosted or multi-user deployment
 
 ## Limits

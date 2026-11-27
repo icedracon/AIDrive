@@ -1438,6 +1438,12 @@ fn sent_status(m: &serde_json::Value) -> String {
     };
     let delivery = if m["to"] == "owner" {
         "The owner sees it in AIDrive.".to_owned()
+    } else if m["codex_queue"]["state"] == "queued" {
+        "Codex queue accepted a notification for the exact chat. Inbox delivery, turn start and reply are not yet confirmed.".to_owned()
+    } else if let Some(state) = m["codex_queue"]["state"].as_str() {
+        format!(
+            "Codex queue attempt: {state}. The message remains pending until the chat retrieves it; an ambiguous attempt must be reconciled before retrying."
+        )
     } else if let Some(chat) = m["to_chat"].as_str() {
         format!(
             "Delivery: pending for chat {chat} only; it is pushed into that chat on its next turn, or wakes it if it is an idle Claude Code chat (an idle Codex thread gets it on its next prompt)."
@@ -2668,6 +2674,14 @@ mod tests {
 
     #[test]
     fn sent_messages_say_where_they_will_be_delivered() {
+        let queued = sent_status(
+            &serde_json::json!({"id":"m", "thread_id":"t", "to":"agent", "to_chat":"c1", "codex_queue":{"state":"queued"}}),
+        );
+        assert!(queued.contains("not yet confirmed") && !queued.contains("woke it"));
+        let ambiguous = sent_status(
+            &serde_json::json!({"id":"m", "thread_id":"t", "to":"agent", "to_chat":"c1", "codex_queue":{"state":"needs_reconciliation"}}),
+        );
+        assert!(ambiguous.contains("must be reconciled before retrying"));
         let to_chat = sent_status(
             &serde_json::json!({"id": "m", "thread_id": "t", "to": "agent", "to_agent_name": "codex", "to_chat": "c1", "from_chat": "c0"}),
         );
