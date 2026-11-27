@@ -17,6 +17,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  identity:
+    # Public history carries only GitHub noreply identities: a commit made
+    # with a personal git identity fails here before anyone relies on it.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Only noreply authors and committers
+        run: |
+          bad=$(git log --format='%ae%n%ce' | sort -u | grep -vE '^([0-9]+\+)?[A-Za-z0-9-]+@users\.noreply\.github\.com$|^noreply@github\.com$' || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Commits with a non-noreply identity (values withheld):"
+            echo "$bad" | wc -l
+            exit 1
+          fi
+
   rust:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
