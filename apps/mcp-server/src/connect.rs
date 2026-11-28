@@ -915,13 +915,19 @@ pub async fn open(args: &[String]) -> Result<(), String> {
         }
     }
     let api_url = api_url.trim_end_matches('/').to_owned();
-    let device = load_device(&api_url).ok_or(
-        "This computer has no AIDrive device key yet. Run: aidrive-mcp-server connect --client claude",
-    )?;
     let http = reqwest::Client::builder()
         .timeout(Duration::from_secs(10))
         .build()
         .map_err(|e| e.to_string())?;
+    // A fresh install opens the web app before any assistant is connected;
+    // claim the device key the same way connect does (the local key proves
+    // the caller is this computer's AIDrive user) instead of failing.
+    let device = match load_device(&api_url) {
+        Some(d) => d,
+        None => claim_device(&http, &api_url).await?.ok_or(
+            "This computer could not get an AIDrive device key (local sign-in is off, or another account owns this install). Run: aidrive-mcp-server connect --client claude",
+        )?,
+    };
     let response = http
         .post(format!("{api_url}/agent/local/login"))
         .bearer_auth(&device.token)
