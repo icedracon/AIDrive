@@ -7,6 +7,9 @@ import tempfile
 import zipfile
 import shutil
 
+# Visual C++ 2015-2022 runtime the bundled PostgreSQL needs on a clean Windows.
+VC_RUNTIME = ("vcruntime140.dll", "vcruntime140_1.dll", "msvcp140.dll")
+
 
 def main():
     parser = argparse.ArgumentParser(description="Verify a release payload and bundle its local installers.")
@@ -23,7 +26,7 @@ def main():
     else:
         with tarfile.open(payload) as archive:
             names = {name.removeprefix("./") for name in archive.getnames()}
-    required = {"aidrive.exe", "aidrive-mcp-server.exe"} if windows else {"aidrive", "aidrive-mcp-server"}
+    required = {"aidrive.exe", "aidrive-mcp-server.exe", *VC_RUNTIME} if windows else {"aidrive", "aidrive-mcp-server"}
     required.update({"web/index.html", "LICENSE-APACHE", "LICENSE-MIT", "THIRD-PARTY-NOTICES.md"})
     missing = required - names
     if missing:

@@ -41,3 +41,7 @@ IN NO EVENT SHALL Theseus BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, 
 
 Theseus SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE PROVIDED HEREUNDER IS ON AN “AS IS” BASIS, AND Theseus HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 ```
+
+## Microsoft Visual C++ Redistributable (Windows only)
+
+The Windows archive contains `vcruntime140.dll`, `vcruntime140_1.dll` and `msvcp140.dll` from the Microsoft Visual C++ 2015-2022 Redistributable (x64), copied unmodified from the Visual Studio `VC\Redist\MSVC\<version>d\Microsoft.VC143.CRT` folder. They are distributable code under the Microsoft Visual Studio license terms (Distributable Code), deployed app-local so the bundled PostgreSQL starts on a Windows that lacks the runtime. Copyright (c) Microsoft Corporation.

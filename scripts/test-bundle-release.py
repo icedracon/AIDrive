@@ -15,7 +15,7 @@ BUNDLER = pathlib.Path(__file__).with_name("bundle-release.py")
 class BundleTests(unittest.TestCase):
     def fixture(self, root, windows, missing=False):
         name = "aidrive-windows-x86_64.zip" if windows else "aidrive-linux-x86_64.tar.gz"
-        required = ["aidrive.exe", "aidrive-mcp-server.exe"] if windows else ["aidrive", "aidrive-mcp-server"]
+        required = ["aidrive.exe", "aidrive-mcp-server.exe", "vcruntime140.dll", "vcruntime140_1.dll", "msvcp140.dll"] if windows else ["aidrive", "aidrive-mcp-server"]
         required += ["web/index.html", "LICENSE-APACHE", "LICENSE-MIT", "THIRD-PARTY-NOTICES.md"]
         if missing:
             required.remove("web/index.html")

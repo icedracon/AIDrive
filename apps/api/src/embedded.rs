@@ -100,6 +100,47 @@ fn scram_hba(text: &str) -> (String, bool) {
     (lines.join("\n") + "\n", changed)
 }
 
+#[cfg(windows)]
+const VC_RUNTIME: [&str; 3] = ["vcruntime140.dll", "vcruntime140_1.dll", "msvcp140.dll"];
+
+// Copies the runtime DLLs shipped next to this program into PostgreSQL's bin
+// folder when they are missing there; returns how many were copied.
+#[cfg(windows)]
+fn place_runtime(pg_bin: &std::path::Path) -> io::Result<usize> {
+    let Some(shipped) = env::current_exe()?.parent().map(PathBuf::from) else {
+        return Ok(0);
+    };
+    if !pg_bin.is_dir() {
+        return Ok(0);
+    }
+    let mut copied = 0;
+    for name in VC_RUNTIME {
+        let (from, to) = (shipped.join(name), pg_bin.join(name));
+        if from.is_file() && !to.is_file() {
+            fs::copy(&from, &to)?;
+            copied += 1;
+        }
+    }
+    Ok(copied)
+}
+
+#[cfg(windows)]
+fn runtime_hint(pg_bin: &std::path::Path) -> Option<String> {
+    let system = env::var_os("SystemRoot")
+        .map(PathBuf::from)?
+        .join("System32");
+    let missing: Vec<&str> = VC_RUNTIME
+        .into_iter()
+        .filter(|n| !pg_bin.join(n).is_file() && !system.join(n).is_file())
+        .collect();
+    (!missing.is_empty()).then(|| {
+        format!(
+            "PostgreSQL needs the Microsoft Visual C++ 2015-2022 runtime and {} was not found. Install AIDrive from the complete release folder (it ships these files), or install the Visual C++ Redistributable (x64) from Microsoft.",
+            missing.join(", ")
+        )
+    })
+}
+
 fn bundled_version() -> String {
     Settings::default()
         .version
@@ -150,8 +191,29 @@ pub async fn start() -> Result<Embedded, Box<dyn std::error::Error>> {
     #[cfg(unix)]
     let admin = admin.socket(root.join("socket"));
     let data_dir = root.join("data");
+    #[cfg(windows)]
+    let pg_bin = settings.installation_dir.join("bin");
     let mut server = PostgreSQL::new(settings);
-    server.setup().await?;
+    // The PostgreSQL build links the Visual C++ 2015-2022 runtime, which a
+    // clean Windows does not have (initdb then exits with 0xC0000135 and no
+    // output). The release ships those DLLs next to aidrive.exe; they go into
+    // PostgreSQL's bin folder, where they load before an older System32 copy.
+    #[cfg(windows)]
+    place_runtime(&pg_bin)?;
+    #[cfg(windows)]
+    let setup = match server.setup().await {
+        Err(_) if place_runtime(&pg_bin)? > 0 => server.setup().await,
+        other => other,
+    };
+    #[cfg(not(windows))]
+    let setup = server.setup().await;
+    setup.map_err(|e| {
+        #[cfg(windows)]
+        if let Some(hint) = runtime_hint(&pg_bin) {
+            return format!("embedded PostgreSQL setup failed ({e}). {hint}");
+        }
+        format!("embedded PostgreSQL setup failed ({e})")
+    })?;
     let hba_changed = require_scram(&data_dir)?;
     // A previous API process that was killed leaves its server running.
     // Adopt it only if it is the server of our own data folder. On Windows

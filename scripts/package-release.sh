@@ -36,6 +36,22 @@ rm -rf "$stage" && mkdir -p "$stage"
 cp "${CARGO_TARGET_DIR:-target}/release/aidrive-api$ext" "$stage/aidrive$ext"
 cp "${CARGO_TARGET_DIR:-target}/release/aidrive-mcp-server$ext" "$stage/"
 cp -r apps/web/out "$stage/web"
+# The bundled PostgreSQL links the Visual C++ 2015-2022 runtime, which a clean
+# Windows lacks; ship Microsoft's redistributable DLLs next to aidrive.exe
+# (app-local deployment). AIDRIVE_CRT_DIR overrides where they come from.
+if [ -n "$ext" ]; then
+    crt="${AIDRIVE_CRT_DIR:-}"
+    if [ -z "$crt" ]; then
+        vswhere="/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
+        vs="$("$vswhere" -latest -products '*' -property installationPath 2>/dev/null | tr -d '\r')"
+        [ -n "$vs" ] && crt="$(ls -d "$(cygpath -u "$vs")"/VC/Redist/MSVC/*/x64/Microsoft.VC14*.CRT 2>/dev/null | sort -V | tail -1)"
+    fi
+    for dll in vcruntime140.dll vcruntime140_1.dll msvcp140.dll; do
+        [ -f "$crt/$dll" ] || { echo "Visual C++ redistributable $dll not found (set AIDRIVE_CRT_DIR)" >&2; exit 1; }
+        cp "$crt/$dll" "$stage/"
+    done
+    echo "Visual C++ runtime from $crt"
+fi
 cp README.md LICENSE-APACHE LICENSE-MIT "$stage/"
 [ -f THIRD-PARTY-NOTICES.md ] && cp THIRD-PARTY-NOTICES.md "$stage/"
 
