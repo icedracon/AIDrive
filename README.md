@@ -17,6 +17,7 @@
   <a href="https://github.com/icedracon/AIDrive/actions/workflows/ci.yml"><img alt="CI status" src="https://github.com/icedracon/AIDrive/actions/workflows/ci.yml/badge.svg"></a>
   <a href="https://crates.io/crates/aidrive-mcp-server"><img alt="crates.io: aidrive-mcp-server" src="https://img.shields.io/crates/v/aidrive-mcp-server?label=crates.io"></a>
   <img alt="MCP over stdio" src="https://img.shields.io/badge/MCP-stdio-1f9e63">
+  <a href="https://mcprush.com/to/aidrive-mcp?ref=badge"><img alt="AIDrive MCP on MCPRush" src="https://mcprush.com/badge/aidrive-mcp/compact.svg"></a>
 </p>
 
 <p align="center">
@@ -218,7 +219,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues as described in [
 
 <a href="https://glama.ai/mcp/servers/icedracon/AIDrive"><img width="380" src="https://glama.ai/mcp/servers/icedracon/AIDrive/badge" alt="AIDrive on Glama: license, quality and maintenance scores" /></a>
 
-Find AIDrive in the [Glama MCP directory](https://glama.ai/mcp/servers/icedracon/AIDrive). Directory listing does not establish automated inspection or pilot acceptance.
+<a href="https://mcprush.com/to/aidrive-mcp?ref=badge"><img width="380" src="https://mcprush.com/badge/aidrive-mcp/card.svg" alt="AIDrive MCP server listing on MCPRush" /></a>
+
+Find AIDrive in the [Glama MCP directory](https://glama.ai/mcp/servers/icedracon/AIDrive) and on [MCPRush](https://mcprush.com/to/aidrive-mcp?ref=badge). Directory badges and scores are third-party signals; pilot acceptance remains open.
 
 - MCP Registry name: `mcp-name: io.github.icedracon/aidrive`
 - Published: [Official MCP Registry, version 0.0.1](https://registry.modelcontextprotocol.io/v0/servers/io.github.icedracon%2Faidrive/versions/0.0.1) and [aidrive-mcp-server on crates.io](https://crates.io/crates/aidrive-mcp-server) (now 0.0.2, with the security fix). [server.json](server.json) records the package and stdio launch command.
