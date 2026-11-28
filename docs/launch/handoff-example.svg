@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">
+  <title id="title">A handoff decision whose source changed</title>
+  <desc id="description">An illustrative handoff file cites a payment plan version. A later change to that plan marks the checkout decision for review.</desc>
+  <rect width="1600" height="900" fill="#f4f1e9"/>
+  <path d="M0 0h25v900H0z" fill="#315f4b"/>
+  <text x="94" y="103" font-family="Arial, sans-serif" font-size="25" font-weight="700" letter-spacing="4" fill="#315f4b">FIELD NOTE  /  ASSISTANT HANDOFF</text>
+  <text x="94" y="210" font-family="Georgia, serif" font-size="71" font-weight="700" fill="#192620">A decision needs</text>
+  <text x="94" y="294" font-family="Georgia, serif" font-size="71" font-weight="700" fill="#192620">a source.</text>
+  <text x="98" y="362" font-family="Arial, sans-serif" font-size="27" fill="#536158">Keep the evidence beside the instruction.</text>
+  <rect x="91" y="433" width="792" height="354" rx="20" fill="#fffefa" stroke="#c9d1c5" stroke-width="2"/>
+  <rect x="91" y="433" width="792" height="66" rx="20" fill="#e7eee5"/>
+  <rect x="91" y="478" width="792" height="21" fill="#e7eee5"/>
+  <circle cx="129" cy="466" r="8" fill="#9baea0"/>
+  <circle cx="156" cy="466" r="8" fill="#9baea0"/>
+  <circle cx="183" cy="466" r="8" fill="#9baea0"/>
+  <text x="225" y="474" font-family="Consolas, monospace" font-size="24" font-weight="700" fill="#315f4b">HANDOFF.md</text>
+  <text x="129" y="553" font-family="Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="2" fill="#68766d">DECISION</text>
+  <text x="129" y="593" font-family="Consolas, monospace" font-size="29" fill="#192620">Use hosted checkout</text>
+  <line x1="129" y1="618" x2="843" y2="618" stroke="#e1e6dc" stroke-width="2"/>
+  <text x="129" y="659" font-family="Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="2" fill="#68766d">SOURCE</text>
+  <text x="129" y="699" font-family="Consolas, monospace" font-size="27" fill="#315f4b">docs/payment-plan.md  @  abc123</text>
+  <text x="129" y="753" font-family="Arial, sans-serif" font-size="21" fill="#536158">Recheck if the payment plan changes.</text>
+  <path d="M917 600h83" fill="none" stroke="#bb724e" stroke-width="5"/>
+  <path d="m986 587 21 13-21 13" fill="none" stroke="#bb724e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="1025" y="460" width="488" height="299" rx="20" fill="#213f34"/>
+  <text x="1063" y="520" font-family="Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="2" fill="#b5d5bd">CURRENT SOURCE</text>
+  <text x="1063" y="571" font-family="Consolas, monospace" font-size="26" fill="#ffffff">payment-plan.md</text>
+  <text x="1063" y="617" font-family="Consolas, monospace" font-size="23" fill="#dce9df">Now: on-site flow</text>
+  <rect x="1063" y="652" width="277" height="60" rx="10" fill="#eed2bc"/>
+  <text x="1090" y="690" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#6a3523">RECHECK DECISION</text>
+  <text x="97" y="851" font-family="Arial, sans-serif" font-size="19" fill="#68766d">Illustrative example  ·  Source versions make handoffs reviewable.</text>
+</svg>
